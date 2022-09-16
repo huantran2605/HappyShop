@@ -198,6 +198,8 @@ public class UserController {
 		
 		model.addAttribute("users", listUser );
 		
+		model.addAttribute("usersCurrentPerPage", pageUser.getNumberOfElements());
+		model.addAttribute("usersPerPage", userService.SIZE_PAGE_USER);
 		model.addAttribute("message", message.orElse(null));
 		
 		model.addAttribute("keyWord", keyWord.get());

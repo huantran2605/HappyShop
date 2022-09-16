@@ -12,7 +12,7 @@ import com.seafoodshop.common.entity.User;
 
 public interface UserService {
 
-	int SIZE_PAGE_USER = 3;
+	int SIZE_PAGE_USER = 2;
 
 	User getById(Long id);
 

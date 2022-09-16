@@ -63,23 +63,38 @@
 	  <div class="text-center text-info">
 		<p class="fs-1">Manage Users </p>	
 	  </div>
-	  <div>
-		<a th:href="@{/user/new}">Add new User</a>
+	  <div >
+		<a th:href="@{/user/new}" class="btn btn-outline-success m-3 ms-0">Add new User</a>
 	  </div>
 	  <div class="alert alert-primary" th:if="${message != null}" role="alert">
 		<strong>[[${message}]]</strong>
 	  </div>
-	  
+	  <!-- search-->
+	  <div class="row">
+		<div class="col-sm-3">
+			<form th:action="@{'/user/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+			class="form-inline float-start">
+				<input type="hidden" name="sortField" th:value="${sortField}" />
+				<input type="hidden" name="sortDir" th:value="${sortDir}" />
+			  <input class="form-control " th:value="${keyWord}" name="keyWord" type="search" placeholder="Search" aria-label="Search">
+			  <button class="btn btn-outline-success m-3 ms-0" type="submit">Search</button>
+		  </form>
+		  <a th:href="@{/user/listUser} " class="btn btn-outline-success ms-3">Clear</a>
+
+		</div>
+
+	  </div>
+
 		<table class="table table-active table-striped table-inverse
 		table-hover table-responsive mt-2">
 			<thead class="thead-inverse ">
 				<tr>
-					<th>Id</th>
+					<th th:replace="fragments :: column_link('id', 'ID')"></th>
 					<th>Photo</th>				
-					<th>Email</th>
-					<th>First Name</th>
-					<th>Last Name</th>
-					<th>Enabled</th>
+					<th th:replace="fragments :: column_link('email', 'Email')"></th>
+					<th th:replace="fragments :: column_link('firstName', 'First Name')"></th>
+					<th th:replace="fragments :: column_link('lastName', 'Last Name')"></th>
+					<th th:replace="fragments :: column_link('enable', 'Enable')"></th>
 					<th>Roles</th>
 					<th></th>
 				</tr>
@@ -136,7 +151,112 @@
 		  </div>
 		</div>
 	  </div>
-	  
+	  <!-- Count User per page -->
+	  <div class="text-center " th:if="${totalElement > 1}">
+		<span th:if="${usersPerPage > 1 }">
+			<span th:if="${usersCurrentPerPage == usersPerPage }">
+				Users: [[${currentPage * usersPerPage - usersPerPage + 1}]] to [[${currentPage * usersPerPage}]] of [[${totalElement}]]
+			
+			</span>
+			<span th:if="${usersCurrentPerPage < usersPerPage }">
+				<span th:if="${usersCurrentPerPage > 1 }">				
+				Users: [[${totalElement - usersCurrentPerPage -1 }]] to [[${totalElement}]] of [[${totalElement}]]
+				</span>
+				<span th:if="${usersCurrentPerPage == 1 }">				
+				Users: [[${totalElement}]] of [[${totalElement}]]
+				</span>
+			
+			</span>
+			
+		</span> 
+		<span th:if="${usersPerPage == 1}">
+			Users: [[${currentPage * usersPerPage}]] of [[${totalElement}]]
+		</span>
+	  </div>
+
+	  <!-- Pagination -->
+	  <div class="">
+		  <nav aria-label="Page navigation example" th:if="${totalPage < 11 && totalElement > 1} ">
+			  <ul class="pagination justify-content-center">
+				  <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a class="page-link"
+					   th:href="@{'/user/page/1?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}" >First</a></li>
+				  <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a class="page-link" 
+					  th:href="@{'/user/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+				  <li th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a class="page-link"
+					  th:href="@{'/user/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+
+				  <th:block th:each=" i: ${#numbers.sequence(1, totalPage)}">
+					  <li th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a class="page-link" th:text="${i}"
+						   th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
+						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+					  
+				  </th:block>
+  
+				  <li th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a class="page-link" 
+					  th:href="@{'/user/page/' + ${totalPage} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+			  </ul>
+		  </nav>
+	  </div> 
+	  <!-- Pagination2 -->
+	  <div class="">
+		  <nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
+			  <ul class="pagination justify-content-center">
+				  <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a class="page-link"
+					   th:href="@{'/user/page/1?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}" >First</a></li>
+				  <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a class="page-link" 
+					  th:href="@{'/user/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+				  <li th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a class="page-link"
+					  th:href="@{'/user/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+
+				  <th:block th:if="${currentPage < 6 || currentPage > totalPage - 5 }">
+					<span th:each=" i: ${#numbers.sequence(1, 5)}">
+						<li th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a class="page-link" th:text="${i}"
+							 th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+							
+					</span>
+						<li th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}"><a class="page-link"
+							th:href="@{'/user/page/6' + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+
+					<span th:each=" i: ${#numbers.sequence(totalPage-4, totalPage)}">
+						<li th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a class="page-link" th:text="${i}"
+								th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+							
+					</span>
+				  </th:block>
+				  
+				  <th:block th:if="${currentPage >5 && currentPage< totalPage - 4 }">
+					  <li th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}"><a class="page-link"
+						  th:href="@{'/user/page/' +${currentPage - 5} + '?sortField=' + ${sortField}+
+						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+					<span th:each=" i: ${#numbers.sequence(currentPage, currentPage + 5)}">
+						<li th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a class="page-link" th:text="${i}"
+							 th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+							
+					</span>
+					<li th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}"><a class="page-link"
+						th:href="@{${currentPage + 6 > totalPage ? '/user/page/'+totalPage : '/user/page/'+ (currentPage + 6)} + '?sortField=' + ${sortField}+
+						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+
+				  </th:block>
+
+				  <li th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a class="page-link" 
+					  th:href="@{'/user/page/' + ${totalPage} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+			  </ul>
+		  </nav>
+	  </div> 
+
 	</div>
 	<div class="text-center bg-light"> Hải Sản Huyền Yêu số 3 Giải Phóng, Lộc Vượng, Nam Định</div>
 	<!-- Bootstrap JavaScript Libraries -->
