@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+
+
+.fa-red:hover{
+	color: red;
+}
+
+.fa-dark{
+	color: gray;
+}

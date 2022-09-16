@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<title>Create Users</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- jquery -->
+
+	<!-- Bootstrap CSS v5.2.0-beta1 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"  integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+	<div class="container-fluid">
+	  <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> 
+		  <a class="navbar-brand" th:href="@{/}">
+			<img th:src="@{/images/haisanhuyenyeu.png}" height="80" width="120"/>
+		  </a>
+		 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+		 data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" 
+		 aria-expanded="true" aria-label="Toggle navigation">
+      		<span class="navbar-toggler-icon"></span>
+    	 </button>
+		  <div class="collapse navbar-collapse" id="collapsibleNavId">
+			  <ul class="navbar-nav me-auto mt-2 mt-lg-0">				
+				  <li class="nav-item">
+					  <a class="nav-link" th:href="@{/user/listUser}">User</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Categories</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Brands</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Products</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Customers</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Shipping</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Sale Report</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Orders</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Articles</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Setting</a>
+				  </li>
+			  </ul>
+		  </div>
+	  </nav>
+	  <div class="text-center text-info">
+		<p class="fs-1">
+			Manage Users | <span class="fs-2" th:if="${message != null}">[[${message}]]</span>
+						<span class="fs-2" th:if="${message == null}">Create New User</span>
+		</p>	
+	  </div>     
+	  <form th:action="@{/user/save}" method="post" th:object="${user}" 
+	  	onsubmit="return checkEmailUnique(this);" enctype="multipart/form-data">
+		<input type="hidden" th:field="*{id} "> 
+		<div class="row">
+			<div class="border border-dark col-sm-8 offset-sm-2" >
+				<!-- new user that means email is null -->
+				<div class="m-1 row" th:if="*{email == null}">
+					<label for="staticEmail" class="col-sm-2 col-form-label ">Email:</label>
+					<div class="col-sm-6 offset-sm-2">
+					<input type="email" id="email" class="form-control border border-success" 
+					th:field="*{email}" required minlength="8" maxlength="128"   />
+					</div>
+				</div>
+				<!--  user existed that means email is null -->
+				<div class="m-1 row" th:if="*{email != null}">
+					<label for="staticEmail" class="col-sm-2 col-form-label ">Email:</label>
+					<div class="col-sm-6 offset-sm-2">
+					<input type="email" id="email" class="form-control border border-success" 
+					th:field="*{email}" required minlength="8" maxlength="128"  readonly />
+					</div>
+				</div>
+				<div class="m-1 row" th:if="*{password == null}"> 
+					<label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
+					<div class="col-sm-6 offset-sm-2">
+					<input type="password"  th:field="*{password}" class="form-control border border-success"
+					minlength="6" maxlength="128" required  />
+					</div>
+				</div>
+				<div class="m-1 row" th:if="*{password != null}"> 
+					
+					<div class="col-sm-6 offset-sm-2">
+					<input type="hidden"  th:field="*{password}" class="form-control border border-success"
+					minlength="6" maxlength="128" required  />
+					</div>
+				</div>
+				<div class="m-1 row ">
+					<label for="staticEmail" class="col-sm-2 col-form-label">First Name:</label>
+					<div class="col-sm-6 offset-sm-2">
+					<input type="text" th:field="*{firstName}" class="form-control border border-success" 
+					minlength="3" maxlength="128" required  />
+					</div>
+				</div>
+				<div class="m-1 row ">
+					<label for="staticEmail" class="col-sm-2 col-form-label">Last Name:</label>
+					<div class="col-sm-6 offset-sm-2">
+					<input type="text" th:field="*{lastName}" class="form-control border border-success" 
+					minlength="3" maxlength="128" required  />
+					</div>
+				</div>
+				<div class="m-1 row ">
+					<label for="staticEmail" class="col-sm-2 col-form-label">Roles:</label>
+					<div class="col-sm-6 offset-sm-2">
+					<th:block  th:each="role : ${roles}">
+						<input type="checkbox" th:field="*{roles}" th:value="${role.id}" th:text="${role.name}">
+							-<small th:text="${role.description}"></small>
+							<br>
+					</th:block>	
+					</div>
+				</div>
+				<div class="m-1 row ">
+					<label for="staticEmail" class="col-sm-2 col-form-label">Enable:</label>
+					<div class="col-sm-6 offset-sm-2">
+						<input type="checkbox" th:field="*{enable}" th:value="true"/>
+					</div>
+				</div>
+				<div class="m-1 row ">
+					<label for="userPhoto" class="col-sm-2 col-form-label">Photo</label>
+					<div class="col-sm-4 offset-sm-2">  
+						<input type="file" name= "image" id="inputUserPhoto" 
+							accept="image/png, image/jpeg, image/jpg" />
+						</div>
+					<div class="col-sm-3">
+						<span th:if="*{photo == null}">
+							<img th:src="@{/images/default_person.jpg}" 
+								id="userPhoto" alt="Default Photo" width="150" height="200">					
+						</span>
+						<span th:if="*{photo != null}">
+							<img th:src="@{*{getUserPhotoPath}}"
+								id="userPhoto" alt="Default Photo" width="150" height="200">					
+						</span>
+					</div>
+				</div>
+
+				<div class="text-center m-2">
+					<button type="submit"  id="Save"  
+						class="btn btn-primary m-3"
+						 th:if="*{id == null}" >Save</button>
+					<button type="submit" th:href="@{/user/processUpdate}" id="Update" th:if="*{id != null}" 
+						class="btn btn-primary m-3">Update</button>
+					<a th:href="@{/user/listUser}" class="btn btn-primary">Cancel</a>
+				</div>
+
+			</div>
+		</div>
+	  </form>
+	  <!-- modal -->
+	  <div class="modal" id ="ModalDialog" >
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title"  id="modal-title">Warning</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="modal-body">
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+
+	</div>
+
+	<!-- Bootstrap JavaScript Libraries -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#inputUserPhoto").change(function(){
+				var size = this.files[0].size;
+				if(size > 1048576){
+					alert("the file is larger than 1MB!");
+					this.setCustomValidity ("You must choose the file is less than 1MB!");
+					this.reportValidity();
+				}
+				else
+					ReviewUserPhoto (this);
+			});
+			
+		});
+		function ReviewUserPhoto (fileInput){
+			var file = fileInput.files[0];
+			var reader = new FileReader();
+			reader.onload = function(e){
+				$("#userPhoto").attr("src", e.target.result);
+			};
+			reader.readAsDataURL(file);
+		}
+
+		function checkEmailUnique(form) {
+			$("#Save"). click(function(){
+				url = "[[@{/users/check_email}]]";
+				userEmail = $("#email").val();
+				csrfValue = $("input[name='_csrf']").val();
+				
+				params = {email: userEmail, _csrf: csrfValue};
+				$.post(url, params, function(response) {
+						var result = response;
+					if (response == "OK") {
+						form.submit();						
+					} else if (response == "Duplicated") {
+					 	return false;
+						showWarningModal("There is another user having the email " + userEmail);				
+					} 	
+					else{
+						alert ="has fault";
+					}
+				});				 
+			
+				 return false;
+			});
+			$("#Update"). click(function(){
+				form.submit();
+			});
+		};
+
+	
+	
+
+		function showWarningModal(message){
+			$("#modal-title").text("Warning!");
+			$("#modal-body").text(message);
+			$("#ModalDialog").modal("show");
+		};
+	
+	  </script>
+	  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>   
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<title>List Users</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS v5.2.0-beta1 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"  integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+	<!--Fontawesome -->
+	<script src="https://kit.fontawesome.com/d6c67536ea.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/customIcon.css}">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+	<div class="container-fluid">
+	  <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> 
+		  <a class="navbar-brand" th:href="@{/}">
+			<img th:src="@{/images/haisanhuyenyeu.png}" height="80" width="120"/>
+		  </a>
+		 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+		 data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" 
+		 aria-expanded="true" aria-label="Toggle navigation">
+      		<span class="navbar-toggler-icon"></span>
+    	 </button>
+		  <div class="collapse navbar-collapse" id="collapsibleNavId">
+			  <ul class="navbar-nav me-auto mt-2 mt-lg-0">				
+				  <li class="nav-item">
+					  <a class="nav-link" th:href="@{/user/listUser}">User</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Categories</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Brands</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Products</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Customers</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Shipping</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Sale Report</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Orders</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Articles</a>
+				  </li>
+				  <li class="nav-item">
+					  <a class="nav-link" href="#">Setting</a>
+				  </li>
+			  </ul>
+		  </div>
+	  </nav>
+	  <div class="text-center text-info">
+		<p class="fs-1">Manage Users </p>	
+	  </div>
+	  <div>
+		<a th:href="@{/user/new}">Add new User</a>
+	  </div>
+	  <div class="alert alert-primary" th:if="${message != null}" role="alert">
+		<strong>[[${message}]]</strong>
+	  </div>
+	  
+		<table class="table table-active table-striped table-inverse
+		table-hover table-responsive mt-2">
+			<thead class="thead-inverse ">
+				<tr>
+					<th>Id</th>
+					<th>Photo</th>				
+					<th>Email</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Enabled</th>
+					<th>Roles</th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody>
+					<tr th:each=" user: ${users}">
+						<td scope="row" th:text="${user.id}"></td>
+						<td >
+							<span th:if="${user.photo == null}" >
+								<img th:src="@{/images/default_person.jpg}" alt="user photo" width="100" height="100"/>								
+							</span>
+							<span th:if="${user.photo != null}"> 
+								<img th:src="@{${user.getUserPhotoPath}}" alt="user photo" width="100" height="100"/>
+							</span>
+						</td>
+						<td th:text="${user.email}" ></td>
+						<td th:text="${user.firstName}"></td>
+						<td th:text="${user.lastName}"></td>
+						<td >
+							<a th:href="@{'/user/updateEnabled/' + ${user.id}}" title="Enable Status">
+							 <i th:if="${user.enable} == true" class="fa-solid fa-circle-check"></i>
+							 <i th:if="${user.enable} == false" class="fa-solid fa-circle fa-dark"></i>
+							</a>
+							
+						</td>	
+						<td th:text="${user.roles}"></td>
+						<td> 
+							<a th:href="@{'/user/delete/' + ${user.id}}"
+								class="me-5 link-delete del" th:email="${user.email}" title="Delete">
+							 	<i class="fa-solid fa-trash fa-red"></i>
+							</a>
+							<a th:href="@{'/user/update/' + ${user.id}}" id="update" title="Update" class="me-2">
+							 	<i class="fa-solid fa-pen-to-square fa-red"></i>
+							</a>
+						</td>
+					</tr>
+					
+				</tbody>
+		</table>
+		<!-- Modal -->
+	<div class="modal" id ="ModalDialog" >
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title"  id="modal-title">Warning</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="modal-body">
+			</div>
+			<div class="modal-footer">
+			  <a class="btn btn-secondary" id="deleteOption"  href="">Delete</a>
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  
+	</div>
+	<div class="text-center bg-light"> Hải Sản Huyền Yêu số 3 Giải Phóng, Lộc Vượng, Nam Định</div>
+	<!-- Bootstrap JavaScript Libraries -->
+  	<script type="text/javascript">
+  		$(document).ready(function(){
+  			$(".del").click (function (e){
+  				e.preventDefault();
+  				emailName = $(this).attr("email");
+  				$("#modal-title").text("Confirmation");
+  				$("#modal-body").text("Are you sure to delete the user "+ emailName+"?" );
+  				$("#ModalDialog").modal("show");	
+  				$("#deleteOption").attr("href", $(this).attr("href"));
+  			});
+  		
+  		});
+  		
+  		
+  	
+  	</script> 
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+</html>

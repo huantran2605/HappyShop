@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th th:fragment="column_link(fieldName, colTitle)">
+		<span th:if="${sortField == fieldName}">
+		
+						<a  style="text-decoration: none"   class="text-reset"
+						 	th:href="@{'/user/page/' + ${pageNum} +
+							'?sortField=' + ${sortField}+ '&sortDir=' +
+							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">
+							[[${colTitle}]]</a>
+						<i class="fa-sharp fa-solid fa-caret-up" th:if="${sortDir == 'asc'}"></i>
+		    			<i class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
+		</span>
+					<span th:if="${sortField != fieldName}">
+					
+						<a  style="text-decoration: none"  class="text-reset"
+						 	th:href="@{'/user/page/' + ${pageNum} +
+							'?sortField=' + ${fieldName} + '&sortDir=' + ${reserveDir} +
+							 ${keyWord != null ? '&keyWord=' + keyWord : ''}}">
+							[[${colTitle}]]</a>
+					</span>
+	</th>
+</body>
+</html>
