@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 
 import org.apache.commons.io.FileUtils;
@@ -205,6 +206,13 @@ public class UserController {
 		model.addAttribute("keyWord", keyWord.get());
 
 		return"user/listUser";
+	}
+	@GetMapping("/export/csv")
+	public void exportCsv(HttpServletResponse response) throws IOException {
+		List<User> listUser = userService.findAll();
+		UserCsvExporter userCsvExporter = new UserCsvExporter();
+		userCsvExporter.export(listUser, response);
+
 	}
 	
 }

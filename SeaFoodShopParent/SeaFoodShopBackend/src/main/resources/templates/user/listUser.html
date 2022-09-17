@@ -80,7 +80,12 @@
 			  <button class="btn btn-outline-success m-3 ms-0" type="submit">Search</button>
 		  </form>
 		  <a th:href="@{/user/listUser} " class="btn btn-outline-success ms-3">Clear</a>
-
+		</div>
+		<div class="">
+		  	<!-- export Csv -->
+		  	<a th:href="@{/user/export/csv}" title="Export to CSV">
+				<i class="fa-sharp fa-solid fa-file-csv fa-2x"></i>
+		  	</a>
 		</div>
 
 	  </div>
@@ -127,7 +132,7 @@
 							 	<i class="fa-solid fa-trash fa-red"></i>
 							</a>
 							<a th:href="@{'/user/update/' + ${user.id}}" id="update" title="Update" class="me-2">
-							 	<i class="fa-solid fa-pen-to-square fa-red"></i>
+							 	<i class="fa-solid fa-pen-to-square fa-red "></i>
 							</a>
 						</td>
 					</tr>
