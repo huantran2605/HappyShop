@@ -214,5 +214,12 @@ public class UserController {
 		userCsvExporter.export(listUser, response);
 
 	}
+	@GetMapping("/export/excel")
+	public void exportExcel(HttpServletResponse response) throws IOException {
+		List<User> listUser = userService.findAll();
+		UserExcelExporter userExcelExporter = new UserExcelExporter();
+		userExcelExporter.export(listUser, response);
+		
+	}
 	
 }

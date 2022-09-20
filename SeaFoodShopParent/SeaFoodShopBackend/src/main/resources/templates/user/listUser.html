@@ -81,12 +81,16 @@
 		  </form>
 		  <a th:href="@{/user/listUser} " class="btn btn-outline-success ms-3">Clear</a>
 		</div>
-		<div class="">
+		<div class="row">
 		  	<!-- export Csv -->
+		  	<div class="col-sm-3">
 		  	<a th:href="@{/user/export/csv}" title="Export to CSV">
 				<i class="fa-sharp fa-solid fa-file-csv fa-2x"></i>
 		  	</a>
-		</div>
+		  	<a th:href="@{/user/export/excel}" title="Export to Excel">
+				<i class="fa-sharp fa-solid fa-file-excel fa-2x ms-3"></i>
+		  	</a>
+		  	</div>
 
 	  </div>
 
