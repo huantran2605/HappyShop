@@ -11,6 +11,7 @@
 	<!--Fontawesome -->
 	<script src="https://kit.fontawesome.com/d6c67536ea.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/customIcon.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/mediaQuery.css}">
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
@@ -63,39 +64,53 @@
 	  <div class="text-center text-info">
 		<p class="fs-1">Manage Users </p>	
 	  </div>
-	  <div >
-		<a th:href="@{/user/new}" class="btn btn-outline-success m-3 ms-0">Add new User</a>
-	  </div>
 	  <div class="alert alert-primary" th:if="${message != null}" role="alert">
 		<strong>[[${message}]]</strong>
 	  </div>
-	  <!-- search-->
-	  <div class="row">
-		<div class="col-sm-3">
-			<form th:action="@{'/user/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
-			class="form-inline float-start">
-				<input type="hidden" name="sortField" th:value="${sortField}" />
-				<input type="hidden" name="sortDir" th:value="${sortDir}" />
-			  <input class="form-control " th:value="${keyWord}" name="keyWord" type="search" placeholder="Search" aria-label="Search">
-			  <button class="btn btn-outline-success m-3 ms-0" type="submit">Search</button>
-		  </form>
-		  <a th:href="@{/user/listUser} " class="btn btn-outline-success ms-3">Clear</a>
+	  
+	  <div class="m-2 ms-0">
+			<a th:href="@{/user/new}" class="" title="Add new user">
+				<i class="fa-sharp fa-solid fa-user-plus fa-2x fa-gray"></i>
+				</a>
 		</div>
-		<div class="row">
-		  	<!-- export Csv -->
-		  	<div class="col-sm-3">
-		  	<a th:href="@{/user/export/csv}" title="Export to CSV">
-				<i class="fa-sharp fa-solid fa-file-csv fa-2x"></i>
-		  	</a>
-		  	<a th:href="@{/user/export/excel}" title="Export to Excel">
-				<i class="fa-sharp fa-solid fa-file-excel fa-2x ms-3"></i>
-		  	</a>
-		  	</div>
+		<div class="d-flex justify-content-start">
+		<!-- export Csv -->
+			<a th:href="@{/user/export/csv}" title="Export to CSV" class="m-3 ms-0">
+				<i class="fa-sharp fa-solid fa-file-csv fa-2x fa-gray"></i>			
+			</a>
+			 <a th:href="@{/user/export/excel}" title="Export to Excel"
+				class="m-3 ms-0"> 
+				<i class="fa-sharp fa-solid fa-file-excel fa-2x fa-gray"></i>
+			</a>
+			 <a th:href="@{/user/export/pdf}" title="Export to Excel"
+				class="m-3 ms-0">
+				<i class="fa-sharp fa-solid fa-file-pdf fa-2x fa-gray"></i>
+			</a>
+		</div>
+		
+	  <!-- search-->
+	  <div class="row ">
+		<div class="col-6 d-flex justify-content-start ">
+			<form th:action="@{'/user/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+			class="form-inline ">
+				<input type="hidden" name="sortField" th:value="${sortField}" />
+				<input type="hidden" name="sortDir" th:value="${sortDir}" />			
+				<input class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord" type="search" placeholder="Search" aria-label="Search">		
+				<button class="btn btn-outline-success m-3 ms-0" type="submit">
+					<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+				</button>
+			   <a th:href="@{/user/listUser} " class="btn btn-outline-success m-3 ">
+			   		<i class="fa-solid fa-reply-all"></i>
+			   </a>
 
-	  </div>
+		  </form>
+		</div>			
+		
 
+		</div>
+		<div class="full-details">
 		<table class="table table-active table-striped table-inverse
-		table-hover table-responsive mt-2">
+		table-hover table-responsive mt-4 ">
 			<thead class="thead-inverse ">
 				<tr>
 					<th th:replace="fragments :: column_link('id', 'ID')"></th>
@@ -125,7 +140,7 @@
 						<td >
 							<a th:href="@{'/user/updateEnabled/' + ${user.id}}" title="Enable Status">
 							 <i th:if="${user.enable} == true" class="fa-solid fa-circle-check"></i>
-							 <i th:if="${user.enable} == false" class="fa-solid fa-circle fa-dark"></i>
+							 <i th:if="${user.enable} == false" class="fa-solid fa-circle fa-gray"></i>
 							</a>
 							
 						</td>	
@@ -143,6 +158,45 @@
 					
 				</tbody>
 		</table>
+		</div>
+		<div class="less-details">
+			<div th:each=" user: ${users}" class="row">
+				<div class="col-4">
+					<div class="m-2 ms-0">
+						<span th:if="${user.photo == null}"> <img
+							th:src="@{/images/default_person.jpg}" alt="user photo"
+							width="100" height="100" />
+						</span> <span th:if="${user.photo != null}"> <img
+							th:src="@{${user.getUserPhotoPath}}" alt="user photo" width="100"
+							height="100" />
+						</span>
+					</div>
+				</div>
+				<div class="col-8">
+					<div class="m-2">
+						<div th:text="${user.getFullName}">							
+						</div>
+					
+						<div th:text="${user.roles}" class=""></div>
+						<div class="mt-2">
+							<a th:href="@{'/user/updateEnabled/' + ${user.id}}" title="Enable Status">
+							 <i th:if="${user.enable} == true" class="fa-solid fa-circle-check"></i>
+							 <i th:if="${user.enable} == false" class="fa-solid fa-circle fa-gray"></i>
+							</a>
+							&nbsp;
+							<a th:href="@{'/user/delete/' + ${user.id}}"
+								class=" link-delete del" th:email="${user.email}" title="Delete">
+							 	<i class="fa-solid fa-trash fa-red"></i>
+							</a>
+							&nbsp;
+							<a th:href="@{'/user/update/' + ${user.id}}" id="update" title="Update" class="">
+							 	<i class="fa-solid fa-pen-to-square fa-red "></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- Modal -->
 	<div class="modal" id ="ModalDialog" >
 		<div class="modal-dialog">
@@ -186,7 +240,7 @@
 	  <!-- Pagination -->
 	  <div class="">
 		  <nav aria-label="Page navigation example" th:if="${totalPage < 11 && totalElement > 1} ">
-			  <ul class="pagination justify-content-center">
+			  <ul class="pagination justify-content-center d-flex flex-wrap">
 				  <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a class="page-link"
 					   th:href="@{'/user/page/1?sortField=' + ${sortField}+
 					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}" >First</a></li>
@@ -213,7 +267,7 @@
 	  <!-- Pagination2 -->
 	  <div class="">
 		  <nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
-			  <ul class="pagination justify-content-center">
+			  <ul class="pagination justify-content-center d-flex flex-wrap">
 				  <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a class="page-link"
 					   th:href="@{'/user/page/1?sortField=' + ${sortField}+
 					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}" >First</a></li>

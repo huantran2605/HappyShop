@@ -63,10 +63,13 @@ public class User {
 			return "/images/default_person.jpg";
 		return "/users-photo/"+ this.id+"/" + this.photo ; 
 	}
-//	
-//	public long getId() {
-//		return id;
-//	}
+	
+	@Transient
+	public String getFullName () {
+		
+		return this.firstName + " " + this.lastName ; 
+	}
+	
 
 		
 	

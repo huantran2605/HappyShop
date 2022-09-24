@@ -192,8 +192,10 @@
 					this.setCustomValidity ("You must choose the file is less than 1MB!");
 					this.reportValidity();
 				}
-				else
+				else{
+					this.setCustomValidity ("");
 					ReviewUserPhoto (this);
+				}
 			});
 			
 		});
