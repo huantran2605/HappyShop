@@ -9,8 +9,8 @@ public class MainController {
 	private String viewHomePage() {
 		return "index";
 	}
-	@GetMapping("test")
-	private String viewHomePa() {
-		return "test";
+	@GetMapping("/login")
+	private String viewLoginPage() {
+		return "login";
 	}
 }
