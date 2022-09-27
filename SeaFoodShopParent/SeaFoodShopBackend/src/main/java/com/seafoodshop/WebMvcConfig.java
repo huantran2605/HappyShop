@@ -1,4 +1,4 @@
-package com.seafoodshop.config;
+package com.seafoodshop;
 
 
 import java.nio.file.Path;

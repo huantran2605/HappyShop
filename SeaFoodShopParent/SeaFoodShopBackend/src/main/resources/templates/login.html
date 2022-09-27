@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>List Users</title>
+<title>Login</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport"
@@ -25,9 +25,15 @@
 	<img th:src="@{/images/haisanhuyenyeu.png}" alt="Hai san huyen yeu" width="250" height="200" class="img-fluid rounded"/>
 </div>
 
-<div class="container-fluid" style="max-width: 350px; margin: auto">  
-  <form>
+<div class="container-fluid border border-secondary " style="max-width: 350px; margin: auto;">  
+  <form class="p-2" th:action="@{/login}" method="post">
     <h2 class="text-center ">LOGIN</h2>
+    <div th:if="${param.logout}" class="text-success text-center" >
+    	Logged out successful!
+    </div>
+    <div th:if="${param.error}" class="text-danger text-center" >
+    	User name or password is not correct!
+    </div>
     <div class="form-group">
       <label for="exampleInputEmail1" class="mb-2" >Email </label>
       <input type="email" name="email" class="form-control mb-2" id="exampleInputEmail1" required placeholder="Enter email">
