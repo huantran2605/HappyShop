@@ -1,3 +1,4 @@
+
 package com.seafoodshop.security;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class UserDetailsClass implements UserDetails {
 		this.user = user;
 	}
 
-	@Override
+	@Override  
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> listAuth = new ArrayList<>();
 		
@@ -71,4 +72,12 @@ public class UserDetailsClass implements UserDetails {
 	public String getFullname () {
 		return user.getFirstName() +" " +user.getLastName();
 	}
+	
+	public void setFirstname (String firstName) {
+		user.setFirstName(firstName);
+	}
+	public void setLastname (String lastName) {
+		user.setLastName(lastName);
+	}
+	
 }

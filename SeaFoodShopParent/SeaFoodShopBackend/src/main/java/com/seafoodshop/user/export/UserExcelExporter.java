@@ -1,4 +1,4 @@
-package com.seafoodshop.user;
+package com.seafoodshop.user.export;
 
 import java.io.IOException;
 

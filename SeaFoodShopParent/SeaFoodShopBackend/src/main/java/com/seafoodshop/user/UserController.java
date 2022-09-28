@@ -35,6 +35,9 @@ import com.seafoodshop.FileUploadUtil;
 import com.seafoodshop.common.entity.Role;
 import com.seafoodshop.common.entity.User;
 import com.seafoodshop.role.RoleService;
+import com.seafoodshop.user.export.UserCsvExporter;
+import com.seafoodshop.user.export.UserExcelExporter;
+import com.seafoodshop.user.export.UserPdfExporter;
 
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
@@ -59,13 +62,15 @@ public class UserController {
 	
 	@GetMapping("/new")
 	private String form_User(Model model, User user,
-			@RequestParam("message")  Optional<String> message) {
+			@RequestParam("message")  Optional<String> message,
+			@RequestParam("update")  Optional<String> update) {
 //		User user = new User();
 		List<Role> list = roleService.findAll();
 		user.setEnable(true);
 		model.addAttribute("user", user);  
 		model.addAttribute("roles", list);
 		model.addAttribute("message", message.orElse(null));
+		
 		return "user/form_create_user";
 	}
 	@RequestMapping("/save")
@@ -107,19 +112,31 @@ public class UserController {
 		}
 		else {
 			re.addAttribute("user", user.get());
-			re.addAttribute("message","Update User");			
+			re.addAttribute("message","Update User");
 			return "redirect:/user/new";
 		}
 			
 	}
-	@GetMapping("/processUpdate")
+	@PostMapping("/processUpdate")
 	private String processUpdate(User user,
+			@RequestParam("image") MultipartFile mutipartFile,
 			RedirectAttributes re,
-			Model model) {
+			Model model) throws IOException {
 		Optional<User> oldUser = userService.findById(user.getId());
-		
+		// upload photo
+		if (!mutipartFile.isEmpty()) {
+			String fileName = StringUtils.cleanPath(mutipartFile.getOriginalFilename());
+			user.setPhoto(fileName);
+			User savedUser = userService.save(user);
+			String fileDir = "users-photo/" + savedUser.getId();
+			// delete old photos if have
+			FileUploadUtil.cleanDir(fileDir);
+			FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
+
+		} else {
+			user.setPhoto(oldUser.get().getPhoto());
+		}
 		BeanUtils.copyProperties(user, oldUser);
-		
 		userService.save(oldUser.get());
 		re.addAttribute("message", "Update successfully!");
 		return "redirect:/user/listUser";

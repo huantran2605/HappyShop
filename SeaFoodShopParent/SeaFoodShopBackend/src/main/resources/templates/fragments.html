@@ -1,29 +1,46 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:fragment="page_head(title)">
+<title>[[${title}]]</title>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Bootstrap CSS v5.2.0-beta1 -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+	integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+	crossorigin="anonymous">
+<!--Fontawesome -->
+<script src="https://kit.fontawesome.com/d6c67536ea.js"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/customIcon.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/mediaQuery.css}">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <body>
-	<th th:fragment="column_link(fieldName, colTitle)">
-		<span th:if="${sortField == fieldName}">
-		
-						<a  style="text-decoration: none"   class="text-reset"
-						 	th:href="@{'/user/page/' + ${pageNum} +
+	<th th:fragment="column_link(fieldName, colTitle)"><span
+		th:if="${sortField == fieldName}"> <a
+			style="text-decoration: none" class="text-reset"
+			th:href="@{'/user/page/' + ${pageNum} +
 							'?sortField=' + ${sortField}+ '&sortDir=' +
 							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">
-							[[${colTitle}]]</a>
-						<i class="fa-sharp fa-solid fa-caret-up" th:if="${sortDir == 'asc'}"></i>
-		    			<i class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
-		</span>
-					<span th:if="${sortField != fieldName}">
-					
-						<a  style="text-decoration: none"  class="text-reset"
-						 	th:href="@{'/user/page/' + ${pageNum} +
+				[[${colTitle}]]</a> <i class="fa-sharp fa-solid fa-caret-up"
+			th:if="${sortDir == 'asc'}"></i> <i
+			class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
+	</span> <span th:if="${sortField != fieldName}"> <a
+			style="text-decoration: none" class="text-reset"
+			th:href="@{'/user/page/' + ${pageNum} +
 							'?sortField=' + ${fieldName} + '&sortDir=' + ${reserveDir} +
 							 ${keyWord != null ? '&keyWord=' + keyWord : ''}}">
-							[[${colTitle}]]</a>
-					</span>
-	</th>
+				[[${colTitle}]]</a>
+	</span></th>
+	<!-- footer -->
+	<div th:fragment="footer" class="text-center m-3">Hải Sản Huyền Yêu số 3 Giải Phóng, Lộc
+			Vượng, Nam Định</div>
 </body>
 </html>
