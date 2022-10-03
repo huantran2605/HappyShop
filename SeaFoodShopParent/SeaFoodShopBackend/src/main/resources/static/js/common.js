@@ -1,5 +1,5 @@
 
-
+//logout
 $(document).ready(function() {
 	$("#logoutLink").on("click", function(e) {
 		e.preventDefault();
@@ -57,7 +57,6 @@ function checkEmailUnique(form) {
 		form.submit();
 	});
 };
-
 
 
 

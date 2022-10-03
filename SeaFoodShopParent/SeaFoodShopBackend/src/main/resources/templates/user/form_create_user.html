@@ -19,27 +19,21 @@
 						<span class="fs-2" th:if="${message == null}">Create New User</span>
 		</p>	
 	  </div>     
-	  <form th:action="@{/user/save}" method="post" th:object="${user}" 
-	  	onsubmit="return checkEmailUnique(this);" enctype="multipart/form-data">
+	  <form th:action="@{/user/saveOrUpdate}" method="post"th:object="${user}" 
+	  	onsubmit="return checkEmailUnique(this);"
+	  	 enctype="multipart/form-data">
 		<input type="hidden" th:field="*{id} "> 
 		<div class="row">
 			<div class="border border-dark" style="max-width: 600px; margin: auto;" >
-				<!-- new user that means email is null -->
-				<div class="m-1 row" th:if="*{email == null}">
+				
+				<div class="m-1 row">
 					<label for="staticEmail" class="col-sm-2 col-form-label ">Email:</label>
 					<div class="col-sm-6 offset-sm-2">
 					<input type="email" id="email" class="form-control border border-success" 
 					th:field="*{email}" required minlength="8" maxlength="128"   />
 					</div>
 				</div>
-				<!--  user existed that means email is null -->
-				<div class="m-1 row" th:if="*{email != null}">
-					<label for="staticEmail" class="col-sm-2 col-form-label ">Email:</label>
-					<div class="col-sm-6 offset-sm-2">
-					<input type="email" id="email" class="form-control border border-success" 
-					th:field="*{email}" required minlength="8" maxlength="128"  readonly />
-					</div>
-				</div>
+				
 				<div class="m-1 row" th:if="*{password == null}"> 
 					<label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
 					<div class="col-sm-6 offset-sm-2">
@@ -47,7 +41,7 @@
 					minlength="6" maxlength="128" required  />
 					</div>
 				</div>
-				<div class="m-1 row" th:if="*{password != null}"> 
+					<div class="m-1 row" th:if="*{password != null}"> 
 					
 					<div class="col-sm-6 offset-sm-2">
 					<input type="hidden"  th:field="*{password}" class="form-control border border-success"
@@ -105,8 +99,9 @@
 				<div class="text-center m-2">
 					<button type="submit"  id="Save"  
 						class="btn btn-primary m-3"
+						
 						 th:if="*{id == null}" >Save</button>
-					<button type="submit" th:href="@{/user/processUpdate}" id="Update" th:if="*{id != null}" 
+					<button type="submit"  id="Update" th:if="*{id != null}" 
 						class="btn btn-primary m-3">Update</button>
 					<a th:href="@{/user/listUser}" class="btn btn-primary">Cancel</a>
 				</div>

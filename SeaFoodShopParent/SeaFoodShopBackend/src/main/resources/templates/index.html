@@ -7,10 +7,21 @@
 	<div class="container-fluid">
 		<!-- navigation -->
 		<div th:replace="navigation :: nav"></div>
+		<div>
+			Welcome 
+			<a th:href="@{/account/information}" sec:authentication="principal.fullname"></a>
+			&nbsp;
+			<span sec:authentication="principal.authorities"></span>
+		</div>
+		
 		<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
 	</div>
-
+	
+	
+	
+	
+	
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

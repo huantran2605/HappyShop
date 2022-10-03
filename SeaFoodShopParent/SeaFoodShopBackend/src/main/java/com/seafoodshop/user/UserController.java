@@ -61,27 +61,58 @@ public class UserController {
 	}
 	
 	@GetMapping("/new")
-	private String form_User(Model model, User user,
-			@RequestParam("message")  Optional<String> message,
-			@RequestParam("update")  Optional<String> update) {
-//		User user = new User();
+	private String form_User(Model model, User user) {
 		List<Role> list = roleService.findAll();
 		user.setEnable(true);
 		model.addAttribute("user", user);  
 		model.addAttribute("roles", list);
-		model.addAttribute("message", message.orElse(null));
 		
 		return "user/form_create_user";
 	}
-	@RequestMapping("/save")
-	private String saveUser(User user, @RequestParam("image")  MultipartFile mutipartFile,
-			RedirectAttributes re,
+
+	@RequestMapping("/saveProcess")
+	private String saveUser(User user, @RequestParam("image") MultipartFile mutipartFile, RedirectAttributes re,
 			Model model) throws IOException {
-		//encode pass
+
+		// encode pass
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String password = user.getPassword();
 		String passEncoder = encoder.encode(password);
 		user.setPassword(passEncoder);
+		// upload photo
+		if (!mutipartFile.isEmpty()) {
+			String fileName = StringUtils.cleanPath(mutipartFile.getOriginalFilename());
+			user.setPhoto(fileName);
+			User savedUser = userService.save(user);
+			String fileDir = "users-photo/" + savedUser.getId();
+			// delete old photos if have
+			FileUploadUtil.cleanDir(fileDir);
+			FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
+
+		} else {
+			user.setPhoto(null);
+			userService.save(user);
+			re.addAttribute("message", "Added new User successfully!");
+		}
+		String firstPartEmail = user.getEmail().split("@")[0];
+		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + firstPartEmail;
+	}
+	@RequestMapping("/updateProcess")
+	private String saveUser(User user, @RequestParam("image")  MultipartFile mutipartFile,
+			RedirectAttributes re,
+			@RequestParam("id") Optional<Long> id ,
+			Model model) throws IOException {
+		
+		Optional<User> oldUser = userService.findById(id.get());
+		//encode pass
+		if(!user.getPassword().isEmpty()) {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String passEncoder = encoder.encode(user.getPassword());
+			user.setPassword(passEncoder);			
+		}
+		else {
+			user.setPassword(oldUser.get().getPassword());
+		}	
 		//upload photo
 		if(!mutipartFile.isEmpty()) {
 			String fileName= StringUtils.cleanPath(mutipartFile.getOriginalFilename());
@@ -94,53 +125,36 @@ public class UserController {
 			
 		}
 		else {
-			user.setPhoto(null);
-			userService.save(user);
-		}
-		re.addAttribute("message", "Added new User successfully!");
+			//if when update no photo set old photo, update option
+		
+				user.setPhoto(oldUser.get().getPhoto());	
+				
+				BeanUtils.copyProperties(user, oldUser.get());
+				userService.save(oldUser.get());
+				re.addAttribute("message", "Updated User successfully!");
+		
+	}
 		String firstPartEmail = user.getEmail().split("@")[0];
 		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord="+ firstPartEmail;
 	}
-	
+
 	@GetMapping("update/{id}")
 	private String updateUser(@PathVariable("id") Long id,
-			RedirectAttributes re,Model model) {
+					Model model) {
 		Optional<User> user =  userService.findById(id);
 		if (user.isEmpty()) {
-			re.addAttribute("message", "The user is not exist!");
+			model.addAttribute("message", "The user is not exist!");
 			return "redirect:/user/listUser";
 		}
 		else {
-			re.addAttribute("user", user.get());
-			re.addAttribute("message","Update User");
-			return "redirect:/user/new";
+			List<Role> list = roleService.findAll();
+			model.addAttribute("roles", list);
+			model.addAttribute("user", user.get());
+			return "user/update";
 		}
 			
 	}
-	@PostMapping("/processUpdate")
-	private String processUpdate(User user,
-			@RequestParam("image") MultipartFile mutipartFile,
-			RedirectAttributes re,
-			Model model) throws IOException {
-		Optional<User> oldUser = userService.findById(user.getId());
-		// upload photo
-		if (!mutipartFile.isEmpty()) {
-			String fileName = StringUtils.cleanPath(mutipartFile.getOriginalFilename());
-			user.setPhoto(fileName);
-			User savedUser = userService.save(user);
-			String fileDir = "users-photo/" + savedUser.getId();
-			// delete old photos if have
-			FileUploadUtil.cleanDir(fileDir);
-			FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
-
-		} else {
-			user.setPhoto(oldUser.get().getPhoto());
-		}
-		BeanUtils.copyProperties(user, oldUser);
-		userService.save(oldUser.get());
-		re.addAttribute("message", "Update successfully!");
-		return "redirect:/user/listUser";
-	}
+	
 	
 	@GetMapping("/delete/{id}")
 	private String deleteUser(@PathVariable("id") Long id,
