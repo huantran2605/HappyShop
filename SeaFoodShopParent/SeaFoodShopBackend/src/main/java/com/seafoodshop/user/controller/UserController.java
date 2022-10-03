@@ -1,4 +1,4 @@
-package com.seafoodshop.user;
+package com.seafoodshop.user.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +35,7 @@ import com.seafoodshop.FileUploadUtil;
 import com.seafoodshop.common.entity.Role;
 import com.seafoodshop.common.entity.User;
 import com.seafoodshop.role.RoleService;
+import com.seafoodshop.user.UserService;
 import com.seafoodshop.user.export.UserCsvExporter;
 import com.seafoodshop.user.export.UserExcelExporter;
 import com.seafoodshop.user.export.UserPdfExporter;
@@ -94,8 +95,7 @@ public class UserController {
 			userService.save(user);
 			re.addAttribute("message", "Added new User successfully!");
 		}
-		String firstPartEmail = user.getEmail().split("@")[0];
-		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + firstPartEmail;
+		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + user.getEmail();
 	}
 	@RequestMapping("/updateProcess")
 	private String saveUser(User user, @RequestParam("image")  MultipartFile mutipartFile,
@@ -134,8 +134,7 @@ public class UserController {
 				re.addAttribute("message", "Updated User successfully!");
 		
 	}
-		String firstPartEmail = user.getEmail().split("@")[0];
-		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord="+ firstPartEmail;
+		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord="+ user.getEmail();
 	}
 
 	@GetMapping("update/{id}")

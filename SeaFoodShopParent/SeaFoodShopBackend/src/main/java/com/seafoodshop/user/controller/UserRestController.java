@@ -1,4 +1,4 @@
-package com.seafoodshop.user;
+package com.seafoodshop.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.seafoodshop.user.UserService;
+
 @RestController
-@RequestMapping("users")
+@RequestMapping("user")
 public class UserRestController {
 	
 	@Autowired
