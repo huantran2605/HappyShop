@@ -41,7 +41,6 @@ function checkEmailUnique(form) {
 			}
 		});
 
-		return false;
 	
 };
 
@@ -79,3 +78,19 @@ function checkPasswordMatch(confirmPassword) {
 		confirmPassword.setCustomValidity("");
 	}
 }
+$(document).ready(
+				function() {
+					$(".del").click(
+							function(e) {
+								e.preventDefault();
+								emailName = $(this).attr("email");
+								$("#modal-title").text("Confirmation");
+								$("#modal-body").text(
+										"Are you sure to delete the user "
+												+ emailName + "?");
+								$("#ModalDialog").modal("show");
+								$("#deleteOption").attr("href",
+										$(this).attr("href"));
+							});
+
+				});

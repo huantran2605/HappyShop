@@ -1,13 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-	<div th:if="${message == null}">
+
 		<head  th:replace="fragments :: page_head('Create new user')"></head>
-	</div>
-	<div th:if="${message != null}">
-		<head  th:replace="fragments :: page_head('Update user')"></head>
-	</div>
-</head>
+
+
+
   <body>
 	<div class="container-fluid">
 	  <!-- navigation -->
@@ -15,11 +13,10 @@
 		
 	  <div class="text-center text-info">
 		<p class="fs-1">
-			Manage Users | <span class="fs-2" th:if="${message != null}">[[${message}]]</span>
-						<span class="fs-2" th:if="${message == null}">Create New User</span>
+			Manage Users | <span class="fs-2">Create New User</span>
 		</p>	
 	  </div>     
-	  <form th:action="@{/user/saveOrUpdate}" method="post"th:object="${user}" 
+	  <form th:action="@{/user/saveProcess}" method="post"th:object="${user}" 
 	  	onsubmit="return checkEmailUnique(this);"
 	  	 enctype="multipart/form-data">
 		<input type="hidden" th:field="*{id} "> 
@@ -34,17 +31,10 @@
 					</div>
 				</div>
 				
-				<div class="m-1 row" th:if="*{password == null}"> 
+				<div class="m-1 row"> 
 					<label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
 					<div class="col-sm-6 offset-sm-2">
 					<input type="password"  th:field="*{password}" class="form-control border border-success"
-					minlength="6" maxlength="128" required  />
-					</div>
-				</div>
-					<div class="m-1 row" th:if="*{password != null}"> 
-					
-					<div class="col-sm-6 offset-sm-2">
-					<input type="hidden"  th:field="*{password}" class="form-control border border-success"
 					minlength="6" maxlength="128" required  />
 					</div>
 				</div>
@@ -85,12 +75,8 @@
 							accept="image/png, image/jpeg, image/jpg" />
 						</div>
 					<div class="col-sm-3">
-						<span th:if="*{photo == null}">
+						<span>
 							<img th:src="@{/images/default_person.jpg}" 
-								id="userPhoto" alt="Default Photo" width="150" height="200">					
-						</span>
-						<span th:if="*{photo != null}">
-							<img th:src="@{*{getUserPhotoPath}}"
 								id="userPhoto" alt="Default Photo" width="150" height="200">					
 						</span>
 					</div>
@@ -98,11 +84,7 @@
 
 				<div class="text-center m-2">
 					<button type="submit"  id="Save"  
-						class="btn btn-primary m-3"
-						
-						 th:if="*{id == null}" >Save</button>
-					<button type="submit"  id="Update" th:if="*{id != null}" 
-						class="btn btn-primary m-3">Update</button>
+						class="btn btn-primary m-3" >Save</button>
 					<a th:href="@{/user/listUser}" class="btn btn-primary">Cancel</a>
 				</div>
 
@@ -130,6 +112,7 @@
 	</div>
 	<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
+		<script th:src="@{/js/common_form.js}"></script>
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

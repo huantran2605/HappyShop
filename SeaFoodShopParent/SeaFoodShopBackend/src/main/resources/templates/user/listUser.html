@@ -299,24 +299,7 @@
 	<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
 	<!-- Bootstrap JavaScript Libraries -->
-	<script type="text/javascript">
-		$(document).ready(
-				function() {
-					$(".del").click(
-							function(e) {
-								e.preventDefault();
-								emailName = $(this).attr("email");
-								$("#modal-title").text("Confirmation");
-								$("#modal-body").text(
-										"Are you sure to delete the user "
-												+ emailName + "?");
-								$("#ModalDialog").modal("show");
-								$("#deleteOption").attr("href",
-										$(this).attr("href"));
-							});
-
-				});
-	</script>
+		<script th:src="@{/js/common_form.js}"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
