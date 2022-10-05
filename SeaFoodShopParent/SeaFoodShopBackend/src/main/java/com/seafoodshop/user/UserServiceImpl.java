@@ -14,13 +14,14 @@ import com.seafoodshop.common.entity.User;
 
 @Service
 public class UserServiceImpl implements UserService {
-	@Override
-	public Page<User> searchUser(String keyWord, Pageable pageable) {
-		return userRepo.searchUser(keyWord, pageable);
-	}
 
 	@Autowired
 	UserRepository userRepo;
+	
+	@Override
+	public Page<User> searchUser(String keyWord, Pageable pageable) {
+	    return userRepo.searchUser(keyWord, pageable);
+	}
 	
 	@Override
 	public Page<User> findAll (Pageable pageable, String keyword) {

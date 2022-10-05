@@ -50,6 +50,7 @@ public class UserController {
 	
 	@Autowired
 	RoleService roleService;
+	
 	@GetMapping("/listUser")
 	private String viewFirstPageUser(Model model,
 			RedirectAttributes re,

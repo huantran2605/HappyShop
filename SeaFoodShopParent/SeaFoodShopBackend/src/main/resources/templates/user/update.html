@@ -12,12 +12,11 @@
 
 		<div class="text-center text-info">
 			<p class="fs-1">
-				Manage Users | <span class="fs-2">Update
-					User</span>
+				Manage Users | <span class="fs-2">Update User</span>
 			</p>
 		</div>
 		<div>
-			<p th:if="${message != null}" class="text-center"> [[${message}]]</p>
+			<p th:if="${message != null}" class="text-center">[[${message}]]</p>
 		</div>
 		<form th:action="@{/user/updateProcess}" method="post"
 			th:object="${user}" enctype="multipart/form-data">
@@ -38,8 +37,8 @@
 					<div class="m-1 row">
 						<label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
 						<div class="col-sm-6 offset-sm-2">
-							<input type="password" th:field="*{password}" name="passwordUpdate"
-								id="password"
+							<input type="password" th:field="*{password}"
+								name="passwordUpdate" id="password"
 								oninput="checkPasswordMatch(document.getElementById('confirmPassword'))"
 								class="form-control border border-success" minlength="6"
 								maxlength="128" placeholder="ignore if don't want to change" />
@@ -50,8 +49,8 @@
 						<label for="inputPassword" class="col-sm-2 col-form-label">Confirm
 							Password:</label>
 						<div class="col-sm-6 offset-sm-2">
-							<input type="password"
-								id="confirmPassword" oninput="checkPasswordMatch(this)"
+							<input type="password" id="confirmPassword"
+								oninput="checkPasswordMatch(this)"
 								class="form-control border border-success" minlength="6"
 								maxlength="128" />
 						</div>
@@ -97,13 +96,16 @@
 							<input type="file" name="image" id="inputUserPhoto"
 								accept="image/png, image/jpeg, image/jpg" />
 						</div>
-						<div class="col-sm-3">
+
+					</div>
+					<div class="m-1 row ">
+						<div class="col-sm-4 offset-sm-4">
 							<span th:if="*{photo == null}"> <img
 								th:src="@{/images/default_person.jpg}" id="userPhoto"
-								alt="Default Photo" width="150" height="200">
+								alt="Default Photo" width="200" height="200">
 							</span> <span th:if="*{photo != null}"> <img
 								th:src="@{*{getUserPhotoPath}}" id="userPhoto"
-								alt="Default Photo" width="150" height="200">
+								alt="Default Photo" width="200" height="200">
 							</span>
 						</div>
 					</div>

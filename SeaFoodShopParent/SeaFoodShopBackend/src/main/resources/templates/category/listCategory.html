@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="fragments :: page_head('List Category')">
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- navigation -->
+		<div th:replace="navigation :: nav"></div>
+
+		<div class="text-center text-info">
+			<p class="fs-1">Manage Categories</p>
+		</div>
+		<div class="alert alert-primary" th:if="${message != null}"
+			role="alert">
+			<strong>[[${message}]]</strong>
+		</div>
+
+		<div class="m-2 ms-0">
+			<a th:href="@{/category/new}" class="" title="Add new category"> 
+				<i class="fa-brands fa-stack-overflow fa-2x fa-gray"></i>
+			</a>
+		</div>
+		<div class="d-flex justify-content-start">
+			<!-- export Csv -->
+			<a th:href="@{/category/export/csv}" title="Export to CSV"
+				class="m-3 ms-0"> <i
+				class="fa-sharp fa-solid fa-file-csv fa-2x fa-gray"></i>
+			</a> <a th:href="@{/category/export/excel}" title="Export to Excel"
+				class="m-3 ms-0"> <i
+				class="fa-sharp fa-solid fa-file-excel fa-2x fa-gray"></i>
+			</a> <a th:href="@{/category/export/pdf}" title="Export to Excel"
+				class="m-3 ms-0"> <i
+				class="fa-sharp fa-solid fa-file-pdf fa-2x fa-gray"></i>
+			</a>
+		</div>
+
+		<!-- search-->
+		<div class="row ">
+			<div class="col-6 d-flex justify-content-start ">
+				<form
+					th:action="@{'/category/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+					class="form-inline ">
+					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+						type="hidden" name="sortDir" th:value="${sortDir}" /> <input
+						class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
+						type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success m-3 ms-0" type="submit">
+						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+					</button>
+					<a th:href="@{/category/listCategory} "
+						class="btn btn-outline-success m-3 "> <i
+						class="fa-solid fa-reply-all"></i>
+					</a>
+
+				</form>
+			</div>
+
+
+		</div>
+		<div class="full-details">
+			<table
+				class="table table-active table-striped table-inverse
+		table-hover table-responsive mt-4 ">
+				<thead class="thead-inverse ">
+					<tr>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
+						<th>Category Image</th>
+						
+						<th
+							th:replace="fragments :: column_link('name', 'Category Name')"></th>
+							<th
+							th:replace="fragments :: column_link('name', 'Alias')"></th>
+						<th th:replace="fragments :: column_link('enable', 'Enable')"></th>
+					
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each=" category: ${categories}">
+						<td scope="row" th:text="${category.id}"></td>
+						<td><span th:if="${category.image == null}"> <img
+								th:src="@{/images/default_person.jpg}" alt="category image"
+								width="100" height="100" />
+						</span> <span th:if="${category.image != null}"> <img
+								th:src="@{${category.getCategoyPhotoPath}}" alt="category image"
+								width="100" height="100" />
+						</span></td>
+			
+						<td th:text="${category.name}"></td>
+						<td th:text="${category.alias}"></td>
+						<td><a th:href="@{'/category/updateEnabled/' + ${category.id}}"
+							title="Enable Status"> <i th:if="${category.enable} == true"
+								class="fa-solid fa-circle-check"></i> <i
+								th:if="${category.enable} == false"
+								class="fa-solid fa-circle fa-gray"></i>
+						</a></td>
+						
+						<td><a th:href="@{'/category/delete/' + ${category.id}}"
+							class="me-5 link-delete del" 
+							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+						</a> <a th:href="@{'/category/update/' + ${category.id}}" id="update"
+							title="Update" class="me-2"> <i
+								class="fa-solid fa-pen-to-square fa-red "></i>
+						</a></td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+		<div class="less-details">
+			<div th:each=" category: ${categories}" class="row">
+				<div class="col-4">
+					<div class="m-2 ms-0">
+						<span th:if="${category.image == null}"> <img
+							th:src="@{/images/default_person.jpg}" alt="category image"
+							width="100" height="100" />
+						</span> <span th:if="${category.image != null}"> <img
+							th:src="@{${category.getCategoyPhotoPath}}" alt="category image" width="100"
+							height="100" />
+						</span>
+					</div>
+				</div>
+				<div class="col-8">
+					<div class="m-2">
+						<div th:text="${category.name}"></div>
+
+						
+						<div class="mt-2">
+							<a th:href="@{'/category/updateEnabled/' + ${category.id}}"
+								title="Enable Status"> <i th:if="${category.enable} == true"
+								class="fa-solid fa-circle-check"></i> <i
+								th:if="${category.enable} == false"
+								class="fa-solid fa-circle fa-gray"></i>
+							</a> &nbsp; <a th:href="@{'/category/delete/' + ${category.id}}"
+								class=" link-delete del" title="Delete">
+								<i class="fa-solid fa-trash fa-red"></i>
+							</a> &nbsp; <a th:href="@{'/category/update/' + ${category.id}}" id="update"
+								title="Update" class=""> <i
+								class="fa-solid fa-pen-to-square fa-red "></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal" id="ModalDialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal-title">Warning</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body" id="modal-body"></div>
+					<div class="modal-footer">
+						<a class="btn btn-secondary" id="deleteOption" href="">Delete</a>
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Count Categoy per page -->
+		<div class="text-center " th:if="${totalElement > 1}">
+			<span th:if="${categoriesPerPage > 1 }"> <span
+				th:if="${categoriesCurrentPerPage == categoriesPerPage }"> Categories:
+					[[${currentPage * categoriesPerPage - categoriesPerPage + 1}]] to
+					[[${currentPage * categoriesPerPage}]] of [[${totalElement}]] </span> <span
+				th:if="${categoriesCurrentPerPage < categoriesPerPage }"> <span
+					th:if="${categoriesCurrentPerPage > 1 }"> Categories: [[${totalElement
+						- categoriesCurrentPerPage -1 }]] to [[${totalElement}]] of
+						[[${totalElement}]] </span> <span th:if="${categoriesCurrentPerPage == 1 }">
+						Categories: [[${totalElement}]] of [[${totalElement}]] </span>
+
+			</span>
+
+			</span> <span th:if="${categoriesPerPage == 1}"> Categories: [[${currentPage *
+				categoriesPerPage}]] of [[${totalElement}]] </span>
+		</div>
+
+		<!-- Pagination -->
+		<div class="">
+			<nav aria-label="Page navigation example"
+				th:if="${totalPage < 11 && totalElement > 1} ">
+				<ul class="pagination justify-content-center d-flex flex-wrap">
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/1?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+					<li
+						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+
+					<th:block th:each=" i: ${#numbers.sequence(1, totalPage)}">
+						<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+							class="page-link" th:text="${i}"
+							th:href="@{'/category/page/' + ${i} + '?sortField=' + ${sortField}+
+						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+					</th:block>
+
+					<li
+						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/' + ${totalPage} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- Pagination2 -->
+		<div class="">
+			<nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
+				<ul class="pagination justify-content-center d-flex flex-wrap">
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/1?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+					<li
+						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+
+					<th:block
+						th:if="${currentPage < 6 || currentPage > totalPage - 5 }">
+						<span th:each=" i: ${#numbers.sequence(1, 5)}">
+							<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+								class="page-link" th:text="${i}"
+								th:href="@{'/category/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+						</span>
+						<li
+							th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}"><a
+							class="page-link"
+							th:href="@{'/category/page/6' + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+
+						<span th:each=" i: ${#numbers.sequence(totalPage-4, totalPage)}">
+							<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+								class="page-link" th:text="${i}"
+								th:href="@{'/category/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+						</span>
+					</th:block>
+
+					<th:block th:if="${currentPage >5 && currentPage< totalPage - 4 }">
+						<li
+							th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}"><a
+							class="page-link"
+							th:href="@{'/category/page/' +${currentPage - 5} + '?sortField=' + ${sortField}+
+						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+						<span
+							th:each=" i: ${#numbers.sequence(currentPage, currentPage + 5)}">
+							<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+								class="page-link" th:text="${i}"
+								th:href="@{'/category/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+						</span>
+						<li
+							th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}"><a
+							class="page-link"
+							th:href="@{${currentPage + 6 > totalPage ? '/category/page/'+totalPage : '/category/page/'+ (currentPage + 6)} + '?sortField=' + ${sortField}+
+						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+
+					</th:block>
+
+					<li
+						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/category/page/' + ${totalPage} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+				</ul>
+			</nav>
+		</div>
+
+	</div>
+	<!-- footer -->
+		<div th:replace="fragments :: footer"></div>
+		<script th:src="@{/js/common_form.js}"></script>
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>
