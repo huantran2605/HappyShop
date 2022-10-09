@@ -39,13 +39,15 @@ public interface UserService {
 
 	User findByEmail(String email);
 
-	boolean hasEmailDb(String email);
 
 	String updateEnabledStatus(User user);
 
 	Page<User> searchUser(String keyWord, Pageable pageable);
 
 	Page<User> findAll(Pageable pageable, String keyword);
+
+    boolean IsEmailUnique(Long id, String email);  
+
 
 
 }

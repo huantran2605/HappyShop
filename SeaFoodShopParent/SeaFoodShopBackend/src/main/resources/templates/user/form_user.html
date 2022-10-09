@@ -1,10 +1,14 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div>
+<div th:if="${update == null}">
+	<head th:replace="fragments :: page_head('Create new user')"></head>
+</div>
+<div th:if="${update != null}" >
 	<head th:replace="fragments :: page_head('Update user')"></head>
 </div>
-</head>
+
+
 <body>
 	<div class="container-fluid">
 		<!-- navigation -->
@@ -12,15 +16,18 @@
 
 		<div class="text-center text-info">
 			<p class="fs-1">
-				Manage Users | <span class="fs-2">Update User</span>
+				Manage Users | <span class="fs-2" th:if="${update == null}">Create New User</span>
+				<span class="fs-2" th:if="${update != null}" th:text="${update}"></span>
 			</p>
 		</div>
 		<div>
 			<p th:if="${message != null}" class="text-center">[[${message}]]</p>
 		</div>
-		<form th:action="@{/user/updateProcess}" method="post"
-			th:object="${user}" enctype="multipart/form-data">
-			<input type="hidden" th:field="*{id}">
+		<form th:action="@{/user/saveOrUpdate}" method="post" name="save_form"
+			th:object="${user}"
+			onsubmit="return checkEmailUnique(this)"
+			enctype="multipart/form-data">
+			<input type="hidden" th:field="*{id}"  id="id">
 			<div class="row">
 				<div class="border border-dark"
 					style="max-width: 600px; margin: auto;">
@@ -34,47 +41,61 @@
 						</div>
 					</div>
 
-					<div class="m-1 row">
+					<div class="m-1 row" th:if="${update == null}">
 						<label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
 						<div class="col-sm-6 offset-sm-2">
 							<input type="password" th:field="*{password}"
-								name="passwordUpdate" id="password"
-								oninput="checkPasswordMatch(document.getElementById('confirmPassword'))"
 								class="form-control border border-success" minlength="6"
-								maxlength="128" placeholder="ignore if don't want to change" />
+								maxlength="128" required />
 						</div>
 					</div>
+					
+					<div th:if="${update != null}">
+						<div class="m-1 row">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
+							<div class="col-sm-6 offset-sm-2">
+								<input type="password" th:field="*{password}"
+									name="passwordUpdate" id="password"
+									oninput="checkPasswordMatch(document.getElementById('confirmPassword'))"
+									class="form-control border border-success" minlength="6"
+									maxlength="128" placeholder="ignore if don't want to change" />
+							</div>
+						</div>
 
-					<div class="m-1 row">
-						<label for="inputPassword" class="col-sm-2 col-form-label">Confirm
-							Password:</label>
-						<div class="col-sm-6 offset-sm-2">
-							<input type="password" id="confirmPassword"
-								oninput="checkPasswordMatch(this)"
-								class="form-control border border-success" minlength="6"
-								maxlength="128" />
+						<div class="m-1 row">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Confirm
+								Password:</label>
+							<div class="col-sm-6 offset-sm-2">
+								<input type="password" id="confirmPassword"
+									oninput="checkPasswordMatch(this)"
+									class="form-control border border-success" minlength="6"
+									maxlength="128" />
+							</div>
 						</div>
+
 					</div>
+					
+					
 					<div class="m-1 row ">
-						<label for="staticEmail" class="col-sm-2 col-form-label">First
+						<label for="" class="col-sm-2 col-form-label">First
 							Name:</label>
 						<div class="col-sm-6 offset-sm-2">
 							<input type="text" th:field="*{firstName}"
 								class="form-control border border-success" minlength="3"
-								maxlength="128" />
+								maxlength="128" required />
 						</div>
 					</div>
 					<div class="m-1 row ">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Last
+						<label for="" class="col-sm-2 col-form-label">Last
 							Name:</label>
 						<div class="col-sm-6 offset-sm-2">
 							<input type="text" th:field="*{lastName}"
 								class="form-control border border-success" minlength="3"
-								maxlength="128" />
+								maxlength="128" required />
 						</div>
 					</div>
 					<div class="m-1 row ">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Roles:</label>
+						<label for="" class="col-sm-2 col-form-label">Roles:</label>
 						<div class="col-sm-6 offset-sm-2">
 							<th:block th:each="role : ${roles}">
 								<input type="checkbox" th:field="*{roles}" th:value="${role.id}"
@@ -90,10 +111,11 @@
 							<input type="checkbox" th:field="*{enable}" th:value="true" />
 						</div>
 					</div>
+					
 					<div class="m-1 row ">
 						<label for="userPhoto" class="col-sm-2 col-form-label">Photo</label>
 						<div class="col-sm-4 offset-sm-2">
-							<input type="file" name="image" id="inputUserPhoto"
+							<input type="file" name="image" id="inputPhoto"
 								accept="image/png, image/jpeg, image/jpg" />
 						</div>
 
@@ -101,18 +123,18 @@
 					<div class="m-1 row ">
 						<div class="col-sm-4 offset-sm-4">
 							<span th:if="*{photo == null}"> <img
-								th:src="@{/images/default_person.jpg}" id="userPhoto"
+								th:src="@{/images/default_person.jpg}" id="Photo"
 								alt="Default Photo" width="200" height="200">
 							</span> <span th:if="*{photo != null}"> <img
-								th:src="@{*{getUserPhotoPath}}" id="userPhoto"
+								th:src="@{*{getUserPhotoPath}}" id="Photo"
 								alt="Default Photo" width="200" height="200">
 							</span>
 						</div>
 					</div>
 
 					<div class="text-center m-2">
-
-						<button type="submit" id="Update" class="btn btn-primary m-3">Update</button>
+						<input type="submit" id="Save" value="Save" th:if="${update == null}" class="btn btn-primary m-3">
+						<input type="submit" id="Update" value="Update" th:if="${update != null}" class="btn btn-primary m-3">
 						<a th:href="@{/user/listUser}" class="btn btn-primary">Cancel</a>
 					</div>
 
@@ -120,7 +142,7 @@
 			</div>
 		</form>
 		<!-- modal -->
-		<div class="modal" id="ModalDialog">
+		<div class="modal" id="modalDialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -136,9 +158,31 @@
 				</div>
 			</div>
 		</div>
-
-
 	</div>
+	<script>
+		function checkEmailUnique(form) {
+			url = "[[@{/users/check_email}]]";
+			userEmail = $("#email").val();
+			userId = $("#id").val();
+			let csrfValue = document.forms["save_form"]["_csrf"].value;
+	
+			params = { email: userEmail, id: userId, _csrf: csrfValue };
+			$.post(url, params, function(response) {
+				if (response == "OK") {
+					form.submit();
+				} else if (response == "Duplicated") {
+					showModal("Warning!", "There is another user having the email " + userEmail);
+				}
+				else {
+					showModal("Error", "Unknown response from server");
+				}
+			}).fail(function() {
+				showModal("Error", "Could not connect to the server");
+			});
+			return false;
+		};
+	</script>
+	
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
 	<script th:src="@{/js/common_form.js}"></script>

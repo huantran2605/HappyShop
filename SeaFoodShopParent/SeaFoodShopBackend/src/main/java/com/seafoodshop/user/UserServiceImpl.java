@@ -94,16 +94,31 @@ public class UserServiceImpl implements UserService {
 	public User findByEmail(String email) {
 		return userRepo.findByEmail(email);
 	}
-	
+
 	@Override
-	public boolean hasEmailDb(String email) {
-		User user = userRepo.findByEmail(email);
-		if(user != null)
-			return true;
-		else 
-			return  false;
-	}
-	
+    public boolean IsEmailUnique(Long id,String email) {
+	    if(id == null) {
+            User user = userRepo.findByEmail(email);
+            if(user != null)
+                return false;
+            else 
+                return true;            
+        }
+        else {
+            User user = userRepo.findByEmail(email);
+            if(user == null) return true;
+            if(user.getId() != null) {
+                if(user.getId() == id) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else
+                return true;
+        }       
+    }
 	@Override
 	public String updateEnabledStatus(User user){
 		String status= "";

@@ -13,11 +13,18 @@ public class WebMvcConfig implements WebMvcConfigurer{
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		Path fileDir = Paths.get("users-photo");
-		String filePath = fileDir.toFile().getAbsolutePath();
+		Path fileDir1 = Paths.get("users-photo");
+		String filePath1 = fileDir1.toFile().getAbsolutePath();
 		
+		Path fileDir2 = Paths.get("category-images");
+        String filePath2 = fileDir2.toFile().getAbsolutePath();
+        
 		registry.addResourceHandler("/users-photo/**")
-			.addResourceLocations("file:/" + filePath+"/");
+			.addResourceLocations("file:/" + filePath1+"/");
+		
+		registry.addResourceHandler("/category-images/**")
+        .addResourceLocations("file:/" + filePath2+"/");
+		
 	}
 	
 

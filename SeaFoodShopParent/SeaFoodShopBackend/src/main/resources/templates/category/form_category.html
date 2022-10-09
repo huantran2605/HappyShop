@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<div th:if="${update == null}">
+	<head th:replace="fragments :: page_head('Create new category')"></head>
+</div>
+<div th:if="${update != null}" >
+	<head th:replace="fragments :: page_head('Update category')"></head>
+</div>
+
+
+
+<body>
+	<div class="container-fluid">
+		<!-- navigation -->
+		<div th:replace="navigation :: nav"></div>
+
+		<div class="text-center text-info">
+			<p class="fs-1">
+				Manage Categories | <span class="fs-2" th:if="${update == null}">Create New Category</span>
+				<span class="fs-2" th:if="${update != null}" th:text="${update}"></span>
+			</p>
+		</div>
+		<form th:action="@{/category/saveOrUpdate}" method="post"
+			th:object="${category}"
+			enctype="multipart/form-data">
+			<input type="hidden" th:field="*{id}">
+			<div class="row">
+				<div class="border border-dark"
+					style="max-width: 600px; margin: auto;">
+
+					<div class="m-1 row">
+						<label for="" class="col-sm-2 col-form-label ">Category Name:</label>
+						<div class="col-sm-6 offset-sm-2">
+							<input type="text" 
+								class="form-control border border-success" th:field="*{name}"
+								required minlength="3" maxlength="128" />
+						</div>
+					</div>
+
+					<div class="m-1 row">
+						<label for="" class="col-sm-2 col-form-label">Alias:</label>
+						<div class="col-sm-6 offset-sm-2">
+							<input type="text" th:field="*{alias}"
+								class="form-control border border-success" minlength="3"
+								maxlength="128" required />
+						</div>
+					</div>
+					
+					<div class="m-1 row"  th:if="${update == null}">
+						<label for="" class="col-sm-2 col-form-label">
+							Parent Category:</label>
+						<div class="col-sm-6 offset-sm-2 mt-3">
+							<select class="form-select" th:field="*{parent}">
+								<option value="0">No Parent</option>
+								<th:block th:each="category : ${listCategory}">
+									<option th:value="${category.id}" th:text="${category.name}"></option>
+								</th:block>
+							</select>
+						</div>
+					</div>
+					
+					<div class="m-1 row " th:if="${update != null}">
+						<label for="" class="col-sm-2 col-form-label">
+							Parent Category:</label>
+						<div class="col-sm-6 offset-sm-2 mt-3">
+							<select class="form-select" th:field="*{parent}">
+								<option value="0">No Parent</option>
+								<th:block th:each="category : ${listCategory}">
+									<option th:if="${category.id != id}" th:value="${category.id}" th:text="${category.name}"></option>
+								</th:block>
+							</select>
+						</div>
+					</div>
+				
+					<div class="m-1 row ">
+						<label for="" class="col-sm-2 col-form-label">Enable:</label>
+						<div class="col-sm-6 offset-sm-2 mt-2">
+							<input type="checkbox" th:field="*{enable}" th:value="true" />
+						</div>
+					</div>
+					
+					<div class="m-1 row ">
+						<label for="" class="col-sm-2 col-form-label">Image:</label>
+						<div class="col-sm-4 offset-sm-2">
+							<input type="file" name="imageFile" id="inputPhoto"
+								accept="image/png, image/jpeg, image/jpg" />
+						</div>						
+					</div>
+					<div class="m-1 row ">					
+						<div class="col-sm-4 offset-sm-4">
+							<span th:if="${category.image == null}"> <img th:src="@{/images/default-thumbnail.jpg}"
+								id="Photo" alt="Default Image" width="200" height="200">
+							</span>	
+							<span  th:if="${category.image != null}"> 
+							<img th:src="@{*{getCategoryImagePath}}"
+								id="Photo" alt="Image Category" width="200" height="200">
+							</span>								
+						</div>						
+					</div>
+					
+					
+
+					<div class="text-center m-2">
+						<button type="submit" id="Save" class="btn btn-primary m-3" th:if="${update == null}">Save</button>
+						<button type="submit" id="Update" class="btn btn-primary m-3" th:if="${update != null}">Update</button>
+						<a th:href="@{/category/listCategory}" class="btn btn-primary">Cancel</a>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- footer -->
+	<div th:replace="fragments :: footer"></div>
+	<script th:src="@{/js/common_form.js}"></script>
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

@@ -58,7 +58,10 @@
 					</div>
 					<div class="m-1 row ">
 						<label for="staticEmail" class="col-sm-2 col-form-label">Roles:</label>
-						<p class="col-sm-6 offset-sm-2">[[${user.roles}]]</p>
+						<th:block th:each="role : ${roles}">								
+								<input type="hidden" th:value="${role.id}" th:attr="name='roles'"/>															
+							</th:block>
+						<p th:field="*{roles}" class="col-sm-6 offset-sm-2">[[${user.roles}]]</p>
 					</div>
 					<div class="m-1 row ">
 						<label for="staticEmail" class="col-sm-2 col-form-label">Enable:</label>
@@ -69,18 +72,18 @@
 					<div class="m-1 row ">
 						<label for="userPhoto" class="col-sm-2 col-form-label">Photo</label>
 						<div class="col-sm-4 offset-sm-2">
-							<input type="file" name="image" id="inputUserPhoto"
+							<input type="file" name="image" id="inputPhoto"
 								accept="image/png, image/jpeg, image/jpg" />
-						</div>
+						</div>  
 
 					</div>
 					<div class="m-1 row ">
 						<div class="col-sm-4 offset-sm-4">
 							<span th:if="*{photo == null}"> <img
-								th:src="@{/images/default_person.jpg}" id="userPhoto"
+								th:src="@{/images/default_person.jpg}" id="Photo"
 								alt="Default Photo" width="200" height="200">
 							</span> <span th:if="*{photo != null}"> <img
-								th:src="@{*{getUserPhotoPath}}" id="userPhoto"
+								th:src="@{*{getUserPhotoPath}}" id="Photo"
 								alt="Default Photo" width="200" height="200">
 							</span>
 						</div>
@@ -99,6 +102,7 @@
 	</div>
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
+	<script th:src="@{/js/common_form.js}"></script>
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

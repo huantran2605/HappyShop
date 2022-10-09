@@ -41,6 +41,12 @@ public interface CategoryService {
 
     Page<Category> findAll(Pageable pageable, String keyword);
 
+    void printSubCategory(List<Category> listInForm, Category parent, int level);
+
+    List<Category> showListCategoryForm();
+
+    Page<Category> showListCategoryPage(Pageable pageable, String keyword);
+
     
 
 }

@@ -80,10 +80,10 @@
 					<tr th:each=" category: ${categories}">
 						<td scope="row" th:text="${category.id}"></td>
 						<td><span th:if="${category.image == null}"> <img
-								th:src="@{/images/default_person.jpg}" alt="category image"
+								th:src="@{/images/default-thumbnail.jpg}" alt="category image"
 								width="100" height="100" />
 						</span> <span th:if="${category.image != null}"> <img
-								th:src="@{${category.getCategoyPhotoPath}}" alt="category image"
+								th:src="@{${category.getCategoryImagePath}}" alt="category image"
 								width="100" height="100" />
 						</span></td>
 			
@@ -116,7 +116,7 @@
 							th:src="@{/images/default_person.jpg}" alt="category image"
 							width="100" height="100" />
 						</span> <span th:if="${category.image != null}"> <img
-							th:src="@{${category.getCategoyPhotoPath}}" alt="category image" width="100"
+							th:src="@{${category.getCategoryImagePath}}" alt="category image" width="100"
 							height="100" />
 						</span>
 					</div>

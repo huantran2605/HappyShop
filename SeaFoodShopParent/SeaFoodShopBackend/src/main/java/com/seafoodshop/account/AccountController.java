@@ -35,6 +35,7 @@ public class AccountController {
 		User user = userService.findByEmail(loggedAcc.getUsername());
 		model.addAttribute("user", user);
 		model.addAttribute("message", message.orElse(null));
+		model.addAttribute("roles", user.getRoles());
 		return "account/profile";
 	}
 

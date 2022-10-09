@@ -1,25 +1,27 @@
 package com.seafoodshop.user.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seafoodshop.user.UserService;
 
 @RestController
-@RequestMapping("user")
+
 public class UserRestController {
 	
 	@Autowired
 	UserService userService;
-	@PostMapping("/check_email")
-	public String checkEmailDuplicate(@Param("email") String email){
-		return userService.hasEmailDb(email) ? "Duplicated" : "OK";
-		
+	
+	@PostMapping("/users/check_email")
+	public String checkEmailUnique(Long id, String email){
+		return userService.IsEmailUnique(id,email) ? "OK" : "Duplicated";		
 	}
 	
 }

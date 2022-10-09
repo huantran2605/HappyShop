@@ -1,23 +1,30 @@
 package com.seafoodshop.category;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.seafoodshop.FileUploadUtil;
 import com.seafoodshop.common.entity.Category;
+
+import antlr.StringUtils;
 
 @Controller
 @RequestMapping("category")
@@ -27,7 +34,7 @@ public class CategoryController {
         CategoryService categoryService;
         
         @GetMapping("/listCategory")
-        private String viewFirstPageUser(Model model,
+        private String viewFirstPageCategory(Model model,
                 RedirectAttributes re,
                 @RequestParam("message")  Optional<String> message) {
             List<Category> list = categoryService.findAll();
@@ -53,7 +60,7 @@ public class CategoryController {
             org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
                     categoryService.SIZE_PAGE_CATEGORY, sort);
             
-            Page<Category> pageCategory = categoryService.findAll(pageable, keyWord.get()); 
+            Page<Category> pageCategory = categoryService.showListCategoryPage(pageable, keyWord.get()); 
             List<Category> listCategory = pageCategory.getContent();
             //list user 
             
@@ -87,99 +94,68 @@ public class CategoryController {
             
             return"category/listCategory";
         }
+        
+        @GetMapping("/new")
+        private String form_Category(Category category,Model model) {
+            category.setEnable(true);
+            model.addAttribute("category", category);  
+            model.addAttribute("listCategory", categoryService.showListCategoryForm());
+            return "category/form_category";
+        }
+           
+        @PostMapping("/saveOrUpdate")
+        private String saveCategory(Category category, @RequestParam("imageFile") MultipartFile mutipartFile,
+                @RequestParam("id") Optional<Integer> id,
+                RedirectAttributes re,
+                Model model) throws IOException {
+       
+            // upload photo
+            if (!mutipartFile.isEmpty()) {
+                String fileName = org.springframework.util.StringUtils.cleanPath(mutipartFile.getOriginalFilename());
+                category.setImage(fileName);
+                Category savedCate = categoryService.save(category);
+                String fileDir = "category-images/" + savedCate.getId();
+                // delete old photos if have  
+                FileUploadUtil.cleanDir(fileDir);
+                FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
+            } else {
+                if(!id.isEmpty()) {
+                    Optional<Category> oldCategory = categoryService.findById(id.get());
+                    category.setImage(oldCategory.get().getImage()); 
+                    BeanUtils.copyProperties(category, oldCategory.get());
+                    categoryService.save(oldCategory.get());
+                    re.addAttribute("message", "Updated Category successfully!");
+                }
+                else {
+                    category.setImage(null);
+                    categoryService.save(category);                  
+                    re.addAttribute("message", "Added new Category successfully!");
+                }
+            }
+            
+            return "redirect:/category/listCategory";
+        }
+
+        @GetMapping("update/{id}")
+        private String updateCategory(@PathVariable("id") Integer  id,            
+                Model model) {
+            Optional<Category> cat = categoryService.findById(id);
+            if (cat.isEmpty()) {
+                model.addAttribute("message", "The category is not exist!");
+                return "redirect:/category/listCategory";
+            } else {  
+                model.addAttribute("listCategory", categoryService.showListCategoryForm());
+                model.addAttribute("category", cat.get());
+                model.addAttribute("id", id);
+                model.addAttribute("update", "Update Category");
+            }
+            return "category/form_category";
+
+        }
+
 //        
-//        @GetMapping("/new")
-//        private String form_User(Model model, User user) {
-//            List<Role> list = roleService.findAll();
-//            user.setEnable(true);
-//            model.addAttribute("user", user);  
-//            model.addAttribute("roles", list);
-//            
-//            return "user/form_create_user";
-//        }
 //
-//        @RequestMapping("/saveProcess")
-//        private String saveUser(User user, @RequestParam("image") MultipartFile mutipartFile, RedirectAttributes re,
-//                Model model) throws IOException {
-//
-//            // encode pass
-//            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//            String password = user.getPassword();
-//            String passEncoder = encoder.encode(password);
-//            user.setPassword(passEncoder);
-//            // upload photo
-//            if (!mutipartFile.isEmpty()) {
-//                String fileName = StringUtils.cleanPath(mutipartFile.getOriginalFilename());
-//                user.setPhoto(fileName);
-//                User savedUser = userService.save(user);
-//                String fileDir = "users-photo/" + savedUser.getId();
-//                // delete old photos if have
-//                FileUploadUtil.cleanDir(fileDir);
-//                FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
-//
-//            } else {
-//                user.setPhoto(null);
-//                userService.save(user);
-//                re.addAttribute("message", "Added new User successfully!");
-//            }
-//            return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + user.getEmail();
-//        }
-//        @RequestMapping("/updateProcess")
-//        private String saveUser(User user, @RequestParam("image")  MultipartFile mutipartFile,
-//                RedirectAttributes re,
-//                @RequestParam("id") Optional<Long> id ,
-//                Model model) throws IOException {
-//            
-//            Optional<User> oldUser = userService.findById(id.get());
-//            //encode pass
-//            if(!user.getPassword().isEmpty()) {
-//                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//                String passEncoder = encoder.encode(user.getPassword());
-//                user.setPassword(passEncoder);          
-//            }
-//            else {
-//                user.setPassword(oldUser.get().getPassword());
-//            }   
-//            //upload photo
-//            if(!mutipartFile.isEmpty()) {
-//                String fileName= StringUtils.cleanPath(mutipartFile.getOriginalFilename());
-//                user.setPhoto(fileName);
-//                User savedUser = userService.save(user);
-//                String fileDir = "users-photo/" + savedUser.getId();
-//                //delete old photos if have
-//                FileUploadUtil.cleanDir(fileDir);
-//                FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);        
-//                
-//            }
-//            else {
-//                //if when update no photo set old photo, update option
-//            
-//                    user.setPhoto(oldUser.get().getPhoto());    
-//                    
-//                    BeanUtils.copyProperties(user, oldUser.get());
-//                    userService.save(oldUser.get());
-//                    re.addAttribute("message", "Updated User successfully!");
-//            
-//        }
-//            return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord="+ user.getEmail();
-//        }
-//
-//        @GetMapping("update/{id}")
-//        private String updateUser(@PathVariable("id") Long id,
-//                        Model model) {
-//            Optional<User> user =  userService.findById(id);
-//            if (user.isEmpty()) {
-//                model.addAttribute("message", "The user is not exist!");
-//                return "redirect:/user/listUser";
-//            }
-//            else {
-//                List<Role> list = roleService.findAll();
-//                model.addAttribute("roles", list);
-//                model.addAttribute("user", user.get());
-//                return "user/update";
-//            }
-//                
-//        }
+//        
 //        
 //        
 //        @GetMapping("/delete/{id}")
