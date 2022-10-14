@@ -36,42 +36,25 @@
 		</div>
 
 		<!-- search-->
-		<div class="row ">
-			<div class="col-6 d-flex justify-content-start ">
-				<form
-					th:action="@{'/category/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
-					class="form-inline ">
-					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
-						type="hidden" name="sortDir" th:value="${sortDir}" /> <input
-						class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
-						type="search" placeholder="Search" aria-label="Search">
-					<button class="btn btn-outline-success m-3 ms-0" type="submit">
-						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
-					</button>
-					<a th:href="@{/category/listCategory} "
-						class="btn btn-outline-success m-3 "> <i
-						class="fa-solid fa-reply-all"></i>
-					</a>
-
-				</form>
-			</div>
-
-
+		<div th:replace= "fragments :: search ('category', 'listCategory')">
+		
 		</div>
+	
+	
 		<div class="full-details">
 			<table
 				class="table table-active table-striped table-inverse
 		table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:replace="fragments :: column_link('id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('category', 'id', 'ID')"></th>
 						<th>Category Image</th>
-						
 						<th
-							th:replace="fragments :: column_link('name', 'Category Name')"></th>
+							th:replace="fragments :: column_link('category', 'name', 'Category Name')"></th>
+						<th>Category Name Parent</th>
 							<th
-							th:replace="fragments :: column_link('name', 'Alias')"></th>
-						<th th:replace="fragments :: column_link('enable', 'Enable')"></th>
+							th:replace="fragments :: column_link('category', 'alias', 'Alias')"></th>
+						<th th:replace="fragments :: column_link('category', 'enable', 'Enable')"></th>
 					
 						<th></th>
 					</tr>
@@ -86,28 +69,34 @@
 								th:src="@{${category.getCategoryImagePath}}" alt="category image"
 								width="100" height="100" />
 						</span></td>
-			
 						<td th:text="${category.name}"></td>
+						<td th:if="${category.parent != null}" th:text="${category.getCategoryNameParent}"></td>
+						<td th:if="${category.parent == null}">No</td>
 						<td th:text="${category.alias}"></td>
-						<td><a th:href="@{'/category/updateEnabled/' + ${category.id}}"
-							title="Enable Status"> <i th:if="${category.enable} == true"
-								class="fa-solid fa-circle-check"></i> <i
-								th:if="${category.enable} == false"
-								class="fa-solid fa-circle fa-gray"></i>
-						</a></td>
+						<td>
+							<div  th:replace="fragments :: status_enable('category', ${category.id}, ${category.enable})">
+							</div>
+						</td>
+
+						<td>
+							<div class="float-start">
+								<a th:href="@{'/category/delete/' + ${category.id}}"
+									class="me-5 deleteCategory" th:id="${category.id}"
+									th:if="${category.getNumberchild == 0}" title="Delete"> <i
+									th:if="${category.getNumberchild == 0}"
+									class="fa-solid fa-trash fa-red"></i>
+								</a>
+							</div>
+							<div th:replace="fragments :: update('category', ${category.id})">
+							</div>
+						</td>
 						
-						<td><a th:href="@{'/category/delete/' + ${category.id}}"
-							class="me-5 link-delete del" 
-							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-						</a> <a th:href="@{'/category/update/' + ${category.id}}" id="update"
-							title="Update" class="me-2"> <i
-								class="fa-solid fa-pen-to-square fa-red "></i>
-						</a></td>
 					</tr>
 
 				</tbody>
 			</table>
 		</div>
+		
 		<div class="less-details">
 			<div th:each=" category: ${categories}" class="row">
 				<div class="col-4">
@@ -123,29 +112,29 @@
 				</div>
 				<div class="col-8">
 					<div class="m-2">
-						<div th:text="${category.name}"></div>
-
-						
+						<div th:text="${category.name}"></div>	
+										
 						<div class="mt-2">
-							<a th:href="@{'/category/updateEnabled/' + ${category.id}}"
-								title="Enable Status"> <i th:if="${category.enable} == true"
-								class="fa-solid fa-circle-check"></i> <i
-								th:if="${category.enable} == false"
-								class="fa-solid fa-circle fa-gray"></i>
-							</a> &nbsp; <a th:href="@{'/category/delete/' + ${category.id}}"
-								class=" link-delete del" title="Delete">
-								<i class="fa-solid fa-trash fa-red"></i>
-							</a> &nbsp; <a th:href="@{'/category/update/' + ${category.id}}" id="update"
-								title="Update" class=""> <i
-								class="fa-solid fa-pen-to-square fa-red "></i>
-							</a>
+							<div  th:replace="fragments :: status_enable('category', ${category.id}, ${category.enable})">
+							</div>
+							<div class="float-start">
+								<a th:href="@{'/category/delete/' + ${category.id}}"
+									class="me-3 deleteCategory" th:id="${category.id}"
+									th:if="${category.getNumberchild == 0}" title="Delete"> <i
+									th:if="${category.getNumberchild == 0}"
+									class="fa-solid fa-trash fa-red"></i>
+								</a>
+							</div>
+							<div th:replace="fragments :: update('category', ${category.id})">
+							</div>
 						</div>
+						
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Modal -->
-		<div class="modal" id="ModalDialog">
+		<div class="modal" id="modalDialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -164,10 +153,12 @@
 		</div>
 		<!-- Count Categoy per page -->
 		<div class="text-center " th:if="${totalElement > 1}">
-			<span th:if="${categoriesPerPage > 1 }"> <span
+			<span th:if="${categoriesPerPage > 1 }">
+			 <span
 				th:if="${categoriesCurrentPerPage == categoriesPerPage }"> Categories:
 					[[${currentPage * categoriesPerPage - categoriesPerPage + 1}]] to
-					[[${currentPage * categoriesPerPage}]] of [[${totalElement}]] </span> <span
+					[[${currentPage * categoriesPerPage}]] of [[${totalElement}]] </span>
+					 <span
 				th:if="${categoriesCurrentPerPage < categoriesPerPage }"> <span
 					th:if="${categoriesCurrentPerPage > 1 }"> Categories: [[${totalElement
 						- categoriesCurrentPerPage -1 }]] to [[${totalElement}]] of

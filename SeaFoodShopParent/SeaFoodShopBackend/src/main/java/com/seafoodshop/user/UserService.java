@@ -1,5 +1,6 @@
 package com.seafoodshop.user;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,8 @@ public interface UserService {
 
 	Page<User> findAll(Pageable pageable, String keyword);
 
-    boolean IsEmailUnique(Long id, String email);  
+    boolean IsEmailUnique(Long id, String email);
+
 
 
 

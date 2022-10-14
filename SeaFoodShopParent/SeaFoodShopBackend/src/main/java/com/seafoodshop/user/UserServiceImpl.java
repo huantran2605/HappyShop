@@ -1,10 +1,13 @@
 package com.seafoodshop.user;
 
+
+
 import java.util.List;
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -102,7 +105,7 @@ public class UserServiceImpl implements UserService {
             if(user != null)
                 return false;
             else 
-                return true;            
+                return true;     	     
         }
         else {
             User user = userRepo.findByEmail(email);
@@ -133,7 +136,6 @@ public class UserServiceImpl implements UserService {
 		userRepo.save(user);
 		return status;
 	}
-	
 	
 	
 }

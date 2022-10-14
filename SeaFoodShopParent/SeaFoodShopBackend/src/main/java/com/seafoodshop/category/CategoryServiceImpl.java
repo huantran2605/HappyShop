@@ -85,10 +85,10 @@ public class CategoryServiceImpl implements CategoryService {
         String status = "";
         if (category.isEnable() == true) {
             category.setEnable(false);
-            status = "Disable the category has id: " + category.getId() + " successfully!";
+            status = "Disable the category id: " + category.getId() + " successfully!";
         } else {
             category.setEnable(true);
-            status = "Enable the category has id: " + category.getId() + " successfully!";
+            status = "Enable the category id: " + category.getId() + " successfully!";
         }
         categoryRepo.save(category);
         return status;
@@ -104,9 +104,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-       public List<Category> showListCategoryForm() {
+       public List<Category> showListCategory() {
            List<Category> listInForm = new ArrayList<>();
-           List<Category> listRoot =  categoryRepo.findAll();
+           List<Category> listRoot =  categoryRepo.findAll(); 
            for (Category category : listRoot) {
                if(category.getParent() == null) {
                    listInForm.add(new Category(category.getId(),category.getName()
@@ -117,22 +117,6 @@ public class CategoryServiceImpl implements CategoryService {
            }
            return listInForm;
        }
-    @Override
-    public Page<Category> showListCategoryPage(Pageable pageable, String keyword) {
-        
-        List<Category> listInForm = new ArrayList<>();
-        List<Category> listRoot =  categoryRepo.findAll();
-        for (Category category : listRoot) {
-            if(category.getParent() == null) {
-                listInForm.add(new Category(category.getId(),category.getName()
-                        ,category.getAlias(),category.getImage(),
-                        category.isEnable(),category.getParent(),category.getChildren()));
-                printSubCategory(listInForm, category, 1);
-            }
-        }
-        Page<Category> page = new PageImpl<>(listInForm);
-        return page;
-    }
        @Override
        public void printSubCategory(List<Category> listInForm,Category parent, int level) {
            int nextLevel = level + 1;
@@ -149,4 +133,51 @@ public class CategoryServiceImpl implements CategoryService {
                printSubCategory(listInForm,subCategory, nextLevel);
            }
        }
+       
+       @Override
+    public int IsNameOrAliasUnique(Integer id, String name, String alias) {
+           Category category1 = categoryRepo.findByName(name);
+           Category category2 = categoryRepo.findByAlias(alias);
+           if(id == null) {//create
+               if(category1 != null && category2 != null) {
+                   return 1;//both name and alias are duplicated                  
+               }
+               else if(category1 != null && category2 == null) {
+                   return 2;//name is duplicated
+               }
+               else if(category1 == null && category2 != null) {
+                   return 3;//alias is duplicated
+               }
+               else
+                   return 0;// unique            
+           }
+           else {//update 
+               if(category1 == null && category2 == null) {
+                   return 0;
+               }
+               if(category1 == null || category2 == null) {
+                   if(category1 == null && category2.getId() == id) {
+                       return 0;
+                   }
+                   else if(category1.getId() == id && category2 == null) {
+                       return 0;
+                   }                 
+               }
+               if(category1 != null || category2 != null){
+                   if(category1.getId() != id && category2.getId() != id) {
+                       return 1;
+                   }
+                   else if(category1.getId() != id && category2.getId() == id || category1.getId() != id && category2 == null) {
+                       return 2;
+                   }
+                   else if(category1.getId() == id && category2.getId() != id || category1 == null && category2.getId() != id) {
+                       return 3;
+                   }
+                   else if(category1.getId() == id && category2.getId() == id) {
+                       return 0;
+                   } 
+               }     
+           return 1;
+       }
+}
 }

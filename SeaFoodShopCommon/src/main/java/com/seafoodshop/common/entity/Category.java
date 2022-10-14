@@ -71,7 +71,7 @@ public class Category {
         this.enable = enable;
     }
     public Category getParent() {
-        return parent;
+      return parent;               
     }
     public void setParent(Category parent) {
         this.parent = parent;
@@ -115,4 +115,20 @@ public class Category {
     public String getCategoryImagePath () {
         return "/category-images/"+ this.id+"/" + this.image; 
     }
+    
+    @Transient
+    public String getCategoryNameParent() {
+        if(this.parent != null) {
+            String name =  this.getParent().getName();        
+            return name;                 
+        }
+        return "No";
+    }
+    
+    @Transient
+    public int getNumberchild() {
+       int num = this.children.size();       
+       return num;       
+    }
+    
 }

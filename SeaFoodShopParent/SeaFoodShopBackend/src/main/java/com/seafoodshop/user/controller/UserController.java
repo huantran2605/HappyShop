@@ -76,9 +76,6 @@ public class UserController {
 	private String saveUser(User user, @RequestParam("image") MultipartFile mutipartFile,
 	        @RequestParam("id") Optional<Long> id ,RedirectAttributes re,
 			Model model) throws IOException {
-//	    if(!id.isEmpty()) {
-//	        Optional<User> oldUser = userService.findById(id.get());	        
-//	    }
 		// encode pass
 	    if(!user.getPassword().isEmpty()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -143,7 +140,11 @@ public class UserController {
 			return "redirect:/user/listUser";
 		}
 		else {
-			userService.deleteById(id);	
+			userService.deleteById(id);
+			//delete folder contains photos
+			String dir = "users-photo/" + id;
+			FileUtils.deleteDirectory(new File(dir));
+			
 			re.addAttribute("message","Delete User has id: "+ id + " successfully!");			
 			return "redirect:/user/listUser";
 		}

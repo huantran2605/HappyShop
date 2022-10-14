@@ -27,20 +27,36 @@ function showModal(title, message) {
 	$("#modal-body").text(message);
 	$("#modalDialog").modal("show");
 }
+
+$(document).ready(
+				function() {
+					$(".deleteUser").click(
+							function(e) {
+								e.preventDefault();
+								emailName = $(this).attr("email");
+								showModal("Confirmation",
+										"Are you sure to delete the user email: "
+												+ emailName + "?");
+								$("#deleteOption").attr("href",
+										$(this).attr("href"));
+							});
+
+				});
+
+
 $(document).ready(
 	function() {
-		$(".del").click(
+		$(".deleteCategory").click(
 			function(e) {
 				e.preventDefault();
-				emailName = $(this).attr("email");
-				showModal("Confirmation", "Are you sure to delete the user "
-					+ emailName + "?");
+				catId = $(this).attr("id");
+				showModal("Confirmation", "Are you sure to delete the category id: "
+					+ catId + "?");
 				$("#deleteOption").attr("href",
 					$(this).attr("href"));
 			});
 
 	});
-
 
 function checkPasswordMatch(confirmPassword) {
 	if (confirmPassword.value != $("#password").val()) {

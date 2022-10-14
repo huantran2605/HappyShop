@@ -43,9 +43,10 @@ public interface CategoryService {
 
     void printSubCategory(List<Category> listInForm, Category parent, int level);
 
-    List<Category> showListCategoryForm();
+    List<Category> showListCategory();
 
-    Page<Category> showListCategoryPage(Pageable pageable, String keyword);
+
+    int IsNameOrAliasUnique(Integer id, String name, String alias);
 
     
 

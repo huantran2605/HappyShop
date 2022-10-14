@@ -1,9 +1,13 @@
 package com.seafoodshop.category;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.seafoodshop.FileUploadUtil;
+import com.seafoodshop.category.export.CategoryCsvExporter;
+import com.seafoodshop.category.export.CategoryExcelExporter;
+import com.seafoodshop.category.export.CategoryPdfExporter;
 import com.seafoodshop.common.entity.Category;
 
 import antlr.StringUtils;
@@ -60,9 +67,9 @@ public class CategoryController {
             org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
                     categoryService.SIZE_PAGE_CATEGORY, sort);
             
-            Page<Category> pageCategory = categoryService.showListCategoryPage(pageable, keyWord.get()); 
+            Page<Category> pageCategory = categoryService.findAll(pageable,keyWord.get()); 
             List<Category> listCategory = pageCategory.getContent();
-            //list user 
+            //list cat 
             
             long startCount = (pageNum - 1) * categoryService.SIZE_PAGE_CATEGORY + 1;
             long endCount = startCount + categoryService.SIZE_PAGE_CATEGORY - 1 ;
@@ -99,7 +106,7 @@ public class CategoryController {
         private String form_Category(Category category,Model model) {
             category.setEnable(true);
             model.addAttribute("category", category);  
-            model.addAttribute("listCategory", categoryService.showListCategoryForm());
+            model.addAttribute("listCategory", categoryService.showListCategory());
             return "category/form_category";
         }
            
@@ -144,7 +151,7 @@ public class CategoryController {
                 model.addAttribute("message", "The category is not exist!");
                 return "redirect:/category/listCategory";
             } else {  
-                model.addAttribute("listCategory", categoryService.showListCategoryForm());
+                model.addAttribute("listCategory", categoryService.showListCategory());
                 model.addAttribute("category", cat.get());
                 model.addAttribute("id", id);
                 model.addAttribute("update", "Update Category");
@@ -152,65 +159,64 @@ public class CategoryController {
             return "category/form_category";
 
         }
+        
+        @GetMapping("updateEnabled/{id}")
+        private String updateEnableStatus(@PathVariable("id") Integer id,
+                RedirectAttributes re){
+            Optional<Category> category =  categoryService.findById(id);
+            String status = "";
+            if (category.isEmpty()) {
+                re.addAttribute("message", "The user is not exist!");
+                return "redirect:/user/listUser";
+            }
+            else {
+                status = categoryService.updateEnabledStatus(category.get());
+                re.addAttribute("message", status);     
+            }
+            return "redirect:/category/listCategory";
+        }      
+        
+        @GetMapping("/delete/{id}")
+        private String deleteCategory(@PathVariable("id") Integer id,
+                RedirectAttributes re,Model model) throws IOException {
+            Optional<Category> category =  categoryService.findById(id);
+            if (category.isEmpty()) {
+                re.addAttribute("message", "The category is not exist!");
+                return "redirect:/category/listCategory";
+            }
+            else {
+                categoryService.deleteById(id); 
+              //delete folder contains images
+                String dir = "category-images/" + id;
+                FileUtils.deleteDirectory(new File(dir));
+                
+                re.addAttribute("message","Delete category id: "+ id + " successfully!");           
+                return "redirect:/category/listCategory";
+            }
+        
+        }
+        
+        @GetMapping("/export/csv")
+        public void exportCsv(HttpServletResponse response) throws IOException {
+            List<Category> listCategory = categoryService.findAll();
+            CategoryCsvExporter categoryCsvExporter = new CategoryCsvExporter();
+            categoryCsvExporter.export(listCategory, response);
 
-//        
-//
-//        
-//        
-//        
-//        @GetMapping("/delete/{id}")
-//        private String deleteUser(@PathVariable("id") Long id,
-//                RedirectAttributes re,Model model) throws IOException {
-//            Optional<User> user =  userService.findById(id);
-//            if (user.isEmpty()) {
-//                re.addAttribute("message", "The user is not exist!");
-//                return "redirect:/user/listUser";
-//            }
-//            else {
-//                userService.deleteById(id); 
-//                re.addAttribute("message","Delete User has id: "+ id + " successfully!");           
-//                return "redirect:/user/listUser";
-//            }
-//        
-//        }
-//        
-//        @GetMapping("updateEnabled/{id}")
-//        private String updateEnableStatus(@PathVariable("id") Long id,
-//                RedirectAttributes re){
-//            Optional<User> user =  userService.findById(id);
-//            String status = "";
-//            if (user.isEmpty()) {
-//                re.addAttribute("message", "The user is not exist!");
-//                return "redirect:/user/listUser";
-//            }
-//            else {
-//                status = userService.updateEnabledStatus(user.get());
-//                re.addAttribute("message", status);     
-//            }
-//            return "redirect:/user/listUser";
-//        }
-//
-//        @GetMapping("/export/csv")
-//        public void exportCsv(HttpServletResponse response) throws IOException {
-//            List<User> listUser = userService.findAll();
-//            UserCsvExporter userCsvExporter = new UserCsvExporter();
-//            userCsvExporter.export(listUser, response);
-//
-//        }
-//        @GetMapping("/export/excel")
-//        public void exportExcel(HttpServletResponse response) throws IOException {
-//            List<User> listUser = userService.findAll();
-//            UserExcelExporter userExcelExporter = new UserExcelExporter();
-//            userExcelExporter.export(listUser, response);
-//            
-//        }
-//        @GetMapping("/export/pdf")
-//        public void exporPdf(HttpServletResponse response) throws IOException {
-//            List<User> listUser = userService.findAll();
-//            UserPdfExporter userPdfExporter = new UserPdfExporter();
-//            userPdfExporter.export(listUser, response);
-//            
-//        }
+        }
+        @GetMapping("/export/excel")
+        public void exportExcel(HttpServletResponse response) throws IOException {
+            List<Category> listCategory = categoryService.findAll();
+            CategoryExcelExporter categoryExcelExporter = new CategoryExcelExporter();
+            categoryExcelExporter.export(listCategory, response);
+            
+        }
+        @GetMapping("/export/pdf")
+        public void exporPdf(HttpServletResponse response) throws IOException {
+            List<Category> listCategory = categoryService.findAll();
+            CategoryPdfExporter categoryPdfExporter = new CategoryPdfExporter();
+            categoryPdfExporter.export(listCategory, response);
+           
+        }
 //        
 //    }
 //

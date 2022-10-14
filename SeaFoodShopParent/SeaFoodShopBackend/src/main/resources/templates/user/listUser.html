@@ -36,41 +36,23 @@
 		</div>
 
 		<!-- search-->
-		<div class="row ">
-			<div class="col-6 d-flex justify-content-start ">
-				<form
-					th:action="@{'/user/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
-					class="form-inline ">
-					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
-						type="hidden" name="sortDir" th:value="${sortDir}" /> <input
-						class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
-						type="search" placeholder="Search" aria-label="Search">
-					<button class="btn btn-outline-success m-3 ms-0" type="submit">
-						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
-					</button>
-					<a th:href="@{/user/listUser} "
-						class="btn btn-outline-success m-3 "> <i
-						class="fa-solid fa-reply-all"></i>
-					</a>
-
-				</form>
-			</div>
-
-
+		<div th:replace= "fragments :: search ('user', 'listUser')">
+		
 		</div>
+		
 		<div class="full-details">
 			<table
 				class="table table-active table-striped table-inverse
 		table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:replace="fragments :: column_link('id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('user', 'id', 'ID')"></th>
 						<th>Photo</th>
-						<th th:replace="fragments :: column_link('email', 'Email')"></th>
+						<th th:replace="fragments :: column_link('user', 'email', 'Email')"></th>
 						<th
-							th:replace="fragments :: column_link('firstName', 'First Name')"></th>
-						<th th:replace="fragments :: column_link('lastName', 'Last Name')"></th>
-						<th th:replace="fragments :: column_link('enable', 'Enable')"></th>
+							th:replace="fragments :: column_link('user', 'firstName', 'First Name')"></th>
+						<th th:replace="fragments :: column_link('user', 'lastName', 'Last Name')"></th>
+						<th th:replace="fragments :: column_link('user', 'enable', 'Enable')"></th>
 						<th>Roles</th>
 						<th></th>
 					</tr>
@@ -90,20 +72,22 @@
 						<td th:text="${user.email}"></td>
 						<td th:text="${user.firstName}"></td>
 						<td th:text="${user.lastName}"></td>
-						<td><a th:href="@{'/user/updateEnabled/' + ${user.id}}"
-							title="Enable Status"> <i th:if="${user.enable} == true"
-								class="fa-solid fa-circle-check"></i> <i
-								th:if="${user.enable} == false"
-								class="fa-solid fa-circle fa-gray"></i>
-						</a></td>
+						<td>
+							<div  th:replace="fragments :: status_enable('user', ${user.id}, ${user.enable})">
+							</div>
+						</td>
 						<td th:text="${user.roles}"></td>
-						<td><a th:href="@{'/user/delete/' + ${user.id}}"
-							class="me-5 link-delete del" th:email="${user.email}"
-							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-						</a> <a th:href="@{'/user/update/' + ${user.id}}" id="update"
-							title="Update" class="me-2"> <i
-								class="fa-solid fa-pen-to-square fa-red "></i>
-						</a></td>
+						
+						<td>
+							<div class="float-start">
+								<a th:href="@{'/user/delete/' + ${user.id}}"
+									class="me-5 deleteUser" th:email="${user.email}" title="Delete">
+									<i class="fa-solid fa-trash fa-red"></i>
+								</a>
+							</div>
+							<div th:replace="fragments :: update('user', ${user.id})"> </div>
+						</td>
+						
 					</tr>
 
 				</tbody>
@@ -127,20 +111,19 @@
 						<div th:text="${user.getFullName}"></div>
 
 						<div th:text="${user.roles}" class=""></div>
+						
 						<div class="mt-2">
-							<a th:href="@{'/user/updateEnabled/' + ${user.id}}"
-								title="Enable Status"> <i th:if="${user.enable} == true"
-								class="fa-solid fa-circle-check"></i> <i
-								th:if="${user.enable} == false"
-								class="fa-solid fa-circle fa-gray"></i>
-							</a> &nbsp; <a th:href="@{'/user/delete/' + ${user.id}}"
-								class=" link-delete del" th:email="${user.email}" title="Delete">
-								<i class="fa-solid fa-trash fa-red"></i>
-							</a> &nbsp; <a th:href="@{'/user/update/' + ${user.id}}" id="update"
-								title="Update" class=""> <i
-								class="fa-solid fa-pen-to-square fa-red "></i>
-							</a>
+							<div  th:replace="fragments :: status_enable('user', ${user.id}, ${user.enable})">
+							</div>
+							 <div class="float-start">
+								<a th:href="@{'/user/delete/' + ${user.id}}"
+									class="me-3 deleteUser" th:email="${user.email}" title="Delete">
+									<i class="fa-solid fa-trash fa-red"></i>
+								</a>
+							</div>
+							<div  th:replace="fragments :: update('user', ${user.id})"> </div>
 						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -298,6 +281,7 @@
 		</div>
 
 	</div>
+
 	<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
 		<script th:src="@{/js/common_form.js}"></script>
