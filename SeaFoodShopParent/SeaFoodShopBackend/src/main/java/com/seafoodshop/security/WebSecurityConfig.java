@@ -33,6 +33,7 @@ public class WebSecurityConfig {
 		http.authorizeRequests()
 			.antMatchers("/user/**").hasAuthority("Admin")
 			.antMatchers("/category/**").hasAnyAuthority("Admin","Editor")
+			.antMatchers("/brand/**").hasAnyAuthority("Admin","Editor")
 			.anyRequest().authenticated() 
 			.and()
 			.formLogin()
@@ -45,8 +46,7 @@ public class WebSecurityConfig {
 			.rememberMe()
 				.key("hfgeurhgebgb1236744jh2345er")
 				.tokenValiditySeconds( 5 * 24 * 60 * 60);
-		
-		
+
 		return http.build();
 	}
 

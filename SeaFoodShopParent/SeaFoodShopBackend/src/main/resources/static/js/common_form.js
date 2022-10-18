@@ -65,3 +65,26 @@ function checkPasswordMatch(confirmPassword) {
 		confirmPassword.setCustomValidity("");
 	}
 }
+
+
+$(document).ready(function() {
+	dropdownCategories = $("#selectedCategory");
+	divChosenCategories = $("#categoriesChosen");
+
+	dropdownCategories.change(function() {
+		divChosenCategories.empty();
+		showChosenCategories();
+	});
+
+	showChosenCategories();
+});
+
+function showChosenCategories() {
+	dropdownCategories.children("option:selected").each(function() {
+		selectedCategory = $(this);
+		catId = selectedCategory.val();
+		catName = selectedCategory.text().replace(/-/g, "");
+
+		divChosenCategories.append("<span class='badge badge-secondary m-1'>" + catName + "</span>");
+	});
+}
