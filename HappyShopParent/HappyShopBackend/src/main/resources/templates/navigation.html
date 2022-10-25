@@ -13,7 +13,7 @@
 			<input type="submit" />
 		</form>
 		<a class="navbar-brand" th:href="@{/}"> <img
-			th:src="@{/images/haisanhuyenyeu.png}" height="80" width="120" />
+			th:src="@{/images/happyshop.png}" height="80" width="120" />
 		</a>
 		<button class="navbar-toggler " type="button"
 			data-bs-toggle="collapse" data-bs-target="#collapsibleNavId"
@@ -28,7 +28,7 @@
 					<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a class="nav-link" th:href="@{/category/listCategory}">Categories</a>
 					</li>
 				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a class="nav-link" th:href="@{/brand/listBrand}">Brands</a></li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor','Salesperson','Shipper')"><a class="nav-link" href="#">Products</a>
+				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor','Salesperson','Shipper')"><a class="nav-link" th:href="@{/product/listProduct}">Products</a>
 				</li>
 				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a class="nav-link" href="#">Customers</a>
 				</li>

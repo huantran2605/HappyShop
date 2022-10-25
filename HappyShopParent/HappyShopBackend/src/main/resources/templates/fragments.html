@@ -80,9 +80,149 @@
 	
 	</div>
 		
+	<!-- pagination------------- -->
+	<!-- Pagination1 -->
+	<div th:fragment="pagination(model)">
+		<div class="">
+			<nav aria-label="Page navigation example"
+				th:if="${totalPage < 11 && totalElement > 1} ">
+				<ul class="pagination justify-content-center d-flex flex-wrap">
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/1?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+					<li
+						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+
+					<th:block th:each=" i: ${#numbers.sequence(1, totalPage)}">
+						<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+							class="page-link" th:text="${i}"
+							th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
+						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+					</th:block>
+
+					<li
+						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/' + ${totalPage} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- Pagination2 -->
+		<div class="">
+			<nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
+				<ul class="pagination justify-content-center d-flex flex-wrap">
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/1?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
+					<li
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+					<li
+						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+
+					<th:block
+						th:if="${currentPage < 6 || currentPage > totalPage - 5 }">
+						<span th:each=" i: ${#numbers.sequence(1, 5)}">
+							<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+								class="page-link" th:text="${i}"
+								th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+						</span>
+						<li
+							th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}"><a
+							class="page-link"
+							th:href="@{'/' + ${model} + '/page/6' + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+
+						<span th:each=" i: ${#numbers.sequence(totalPage-4, totalPage)}">
+							<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+								class="page-link" th:text="${i}"
+								th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+						</span>
+					</th:block>
+
+					<th:block th:if="${currentPage >5 && currentPage< totalPage - 4 }">
+						<li
+							th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}"><a
+							class="page-link"
+							th:href="@{'/' + ${model} + '/page/' +${currentPage - 5} + '?sortField=' + ${sortField}+
+						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+						<span
+							th:each=" i: ${#numbers.sequence(currentPage, currentPage + 5)}">
+							<li
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
+								class="page-link" th:text="${i}"
+								th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
+							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+
+						</span>
+						<li
+							th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}"><a
+							class="page-link"
+							th:href="@{${currentPage + 6 > totalPage ? '/' + ${model} + '/page/'+totalPage : '/' + ${model} + '/page/'+ (currentPage + 6)} + '?sortField=' + ${sortField}+
+						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+
+					</th:block>
+
+					<li
+						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
+						class="page-link"
+						th:href="@{'/' + ${model} + '/page/' + ${totalPage} + '?sortField=' + ${sortField}+
+					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+	<!-- Count element per page -->
+	<div th:fragment="countElement(model)">
+		<div class="text-center " th:if="${totalElement > 1}">
+			<span th:if="${elementsPerPage > 1 }"> <span
+				th:if="${elementsCurrentPerPage == elementsPerPage }"> [[${model}]]:
+					[[${currentPage * elementsPerPage - elementsPerPage + 1}]] to
+					[[${currentPage * elementsPerPage}]] of [[${totalElement}]] </span> <span
+				th:if="${elementsCurrentPerPage < elementsPerPage }"> <span
+					th:if="${elementsCurrentPerPage > 1 }"> [[${model}]]:
+						[[${totalElement - elementsCurrentPerPage -1 }]] to
+						[[${totalElement}]] of [[${totalElement}]] </span> <span
+					th:if="${elementsCurrentPerPage == 1 }"> [[${model}]]:
+						[[${totalElement}]] of [[${totalElement}]] </span>
+
+			</span>
+
+			</span> <span th:if="${elementsPerPage == 1}"> [[${model}]]: [[${currentPage
+				* elementsPerPage}]] of [[${totalElement}]] </span>
+		</div>
+	</div>
+
 
 	<!-- footer -->
-	<div th:fragment="footer" class="text-center m-3">Hải Sản Huyền
-		Yêu số 3 Giải Phóng, Lộc Vượng, Nam Định</div>
+	<div th:fragment="footer" class="text-center m-3">Happy Shop
+		</div>
 </body>
 </html>

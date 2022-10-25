@@ -146,8 +146,8 @@ public class BrandController {
         
         model.addAttribute("brands", listBrand);
         
-        model.addAttribute("brandsCurrentPerPage", pageBrand.getNumberOfElements());
-        model.addAttribute("brandsPerPage", BrandService.SIZE_PAGE_BRAND);
+        model.addAttribute("elementsCurrentPerPage", pageBrand.getNumberOfElements());
+        model.addAttribute("elementsPerPage", BrandService.SIZE_PAGE_BRAND);
         model.addAttribute("message", message.orElse(null));
         
         model.addAttribute("keyWord", keyWord.get());

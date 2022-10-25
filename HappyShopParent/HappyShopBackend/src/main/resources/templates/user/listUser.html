@@ -36,10 +36,8 @@
 		</div>
 
 		<!-- search-->
-		<div th:replace= "fragments :: search ('user', 'listUser')">
-		
-		</div>
-		
+		<div th:replace="fragments :: search ('user', 'listUser')"></div>
+
 		<div class="full-details">
 			<table
 				class="table table-active table-striped table-inverse
@@ -48,11 +46,14 @@
 					<tr>
 						<th th:replace="fragments :: column_link('user', 'id', 'ID')"></th>
 						<th>Photo</th>
-						<th th:replace="fragments :: column_link('user', 'email', 'Email')"></th>
+						<th
+							th:replace="fragments :: column_link('user', 'email', 'Email')"></th>
 						<th
 							th:replace="fragments :: column_link('user', 'firstName', 'First Name')"></th>
-						<th th:replace="fragments :: column_link('user', 'lastName', 'Last Name')"></th>
-						<th th:replace="fragments :: column_link('user', 'enable', 'Enable')"></th>
+						<th
+							th:replace="fragments :: column_link('user', 'lastName', 'Last Name')"></th>
+						<th
+							th:replace="fragments :: column_link('user', 'enable', 'Enable')"></th>
 						<th>Roles</th>
 						<th></th>
 					</tr>
@@ -60,24 +61,23 @@
 				<tbody>
 					<tr th:each=" user: ${users}">
 						<td scope="row" th:text="${user.id}"></td>
-						<td>
-						 <span th:if="${user.photo == null}"> <img
+						<td><span th:if="${user.photo == null}"> <img
 								th:src="@{/images/default_person.jpg}" alt="user photo"
 								width="100" height="100" />
 						</span> <span th:if="${user.photo != null}"> <img
 								th:src="@{${user.getUserPhotoPath}}" alt="user photo"
 								width="100" height="100" />
-						</span>
-						</td>
+						</span></td>
 						<td th:text="${user.email}"></td>
 						<td th:text="${user.firstName}"></td>
 						<td th:text="${user.lastName}"></td>
 						<td>
-							<div  th:replace="fragments :: status_enable('user', ${user.id}, ${user.enable})">
+							<div
+								th:replace="fragments :: status_enable('user', ${user.id}, ${user.enable})">
 							</div>
 						</td>
 						<td th:text="${user.roles}"></td>
-						
+
 						<td>
 							<div class="float-start">
 								<a th:href="@{'/user/delete/' + ${user.id}}"
@@ -85,9 +85,10 @@
 									<i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update('user', ${user.id})"> </div>
+							<div th:replace="fragments :: update('user', ${user.id})">
+							</div>
 						</td>
-						
+
 					</tr>
 
 				</tbody>
@@ -111,188 +112,45 @@
 						<div th:text="${user.getFullName}"></div>
 
 						<div th:text="${user.roles}" class=""></div>
-						
+
 						<div class="mt-2">
-							<div  th:replace="fragments :: status_enable('user', ${user.id}, ${user.enable})">
+							<div
+								th:replace="fragments :: status_enable('user', ${user.id}, ${user.enable})">
 							</div>
-							 <div class="float-start">
+							<div class="float-start">
 								<a th:href="@{'/user/delete/' + ${user.id}}"
 									class="me-3 deleteUser" th:email="${user.email}" title="Delete">
 									<i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div  th:replace="fragments :: update('user', ${user.id})"> </div>
+							<div th:replace="fragments :: update('user', ${user.id})">
+							</div>
 						</div>
-						
+
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- Modal -->
-		<div class="modal" id="modalDialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="modal-title">Warning</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body" id="modal-body"></div>
-					<div class="modal-footer">
-						<a class="btn btn-secondary" id="deleteOption" href="">Delete</a>
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Count User per page -->
-		<div class="text-center " th:if="${totalElement > 1}">
-			<span th:if="${usersPerPage > 1 }"> <span
-				th:if="${usersCurrentPerPage == usersPerPage }"> Users:
-					[[${currentPage * usersPerPage - usersPerPage + 1}]] to
-					[[${currentPage * usersPerPage}]] of [[${totalElement}]] </span> <span
-				th:if="${usersCurrentPerPage < usersPerPage }"> <span
-					th:if="${usersCurrentPerPage > 1 }"> Users: [[${totalElement
-						- usersCurrentPerPage -1 }]] to [[${totalElement}]] of
-						[[${totalElement}]] </span> <span th:if="${usersCurrentPerPage == 1 }">
-						Users: [[${totalElement}]] of [[${totalElement}]] </span>
-
-			</span>
-
-			</span> <span th:if="${usersPerPage == 1}"> Users: [[${currentPage *
-				usersPerPage}]] of [[${totalElement}]] </span>
-		</div>
-
-		<!-- Pagination -->
-		<div class="">
-			<nav aria-label="Page navigation example"
-				th:if="${totalPage < 11 && totalElement > 1} ">
-				<ul class="pagination justify-content-center d-flex flex-wrap">
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/1?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
-					<li
-						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
-
-					<th:block th:each=" i: ${#numbers.sequence(1, totalPage)}">
-						<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-							class="page-link" th:text="${i}"
-							th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
-						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-					</th:block>
-
-					<li
-						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/' + ${totalPage} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
-				</ul>
-			</nav>
-		</div>
-		<!-- Pagination2 -->
-		<div class="">
-			<nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
-				<ul class="pagination justify-content-center d-flex flex-wrap">
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/1?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
-					<li
-						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
-
-					<th:block
-						th:if="${currentPage < 6 || currentPage > totalPage - 5 }">
-						<span th:each=" i: ${#numbers.sequence(1, 5)}">
-							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-						</span>
-						<li
-							th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{'/user/page/6' + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-
-						<span th:each=" i: ${#numbers.sequence(totalPage-4, totalPage)}">
-							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-						</span>
-					</th:block>
-
-					<th:block th:if="${currentPage >5 && currentPage< totalPage - 4 }">
-						<li
-							th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{'/user/page/' +${currentPage - 5} + '?sortField=' + ${sortField}+
-						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-						<span
-							th:each=" i: ${#numbers.sequence(currentPage, currentPage + 5)}">
-							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/user/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-						</span>
-						<li
-							th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{${currentPage + 6 > totalPage ? '/user/page/'+totalPage : '/user/page/'+ (currentPage + 6)} + '?sortField=' + ${sortField}+
-						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-
-					</th:block>
-
-					<li
-						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/user/page/' + ${totalPage} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
-				</ul>
-			</nav>
-		</div>
-
-	</div>
-
-	<!-- footer -->
+		<!-- modal -->
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+		
+		<!-- count elements per page -->
+		<div th:replace="fragments :: countElement('Users')"></div>
+		
+		
+		<!-- pagination -->
+		<div th:replace="fragments :: pagination('user')"></div>
+		<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
 		<script th:src="@{/js/common_form.js}"></script>
-	<!-- Bootstrap JavaScript Libraries -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
-		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
-		crossorigin="anonymous"></script>
+		<!-- Bootstrap JavaScript Libraries -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+			integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+			integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+			crossorigin="anonymous"></script>
 </body>
 </html>

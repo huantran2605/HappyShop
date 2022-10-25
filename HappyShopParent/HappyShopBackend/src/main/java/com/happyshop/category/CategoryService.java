@@ -11,7 +11,7 @@ import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.User;
 
 public interface CategoryService {
-    int SIZE_PAGE_CATEGORY = 2;
+    int SIZE_PAGE_CATEGORY = 5;
 
     String updateEnabledStatus(Category category);
 

@@ -65,14 +65,14 @@ public class CategoryController {
             else  sort = Sort.by(sortField).descending();
             
             org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
-                    categoryService.SIZE_PAGE_CATEGORY, sort);
+                    CategoryService.SIZE_PAGE_CATEGORY, sort);
             
             Page<Category> pageCategory = categoryService.findAll(pageable,keyWord.get()); 
             List<Category> listCategory = pageCategory.getContent();
             //list cat 
             
-            long startCount = (pageNum - 1) * categoryService.SIZE_PAGE_CATEGORY + 1;
-            long endCount = startCount + categoryService.SIZE_PAGE_CATEGORY - 1 ;
+            long startCount = (pageNum - 1) * CategoryService.SIZE_PAGE_CATEGORY + 1;
+            long endCount = startCount + CategoryService.SIZE_PAGE_CATEGORY - 1 ;
             if(endCount > pageCategory.getTotalElements() )
                 endCount = pageCategory.getTotalElements();
             
@@ -93,8 +93,8 @@ public class CategoryController {
             
             model.addAttribute("categories", listCategory);
             
-            model.addAttribute("categoriesCurrentPerPage", pageCategory.getNumberOfElements());
-            model.addAttribute("categoriesPerPage", categoryService.SIZE_PAGE_CATEGORY);
+            model.addAttribute("elementsCurrentPerPage", pageCategory.getNumberOfElements());
+            model.addAttribute("elementsPerPage", CategoryService.SIZE_PAGE_CATEGORY);
             model.addAttribute("message", message.orElse(null));
             
             model.addAttribute("keyWord", keyWord.get());

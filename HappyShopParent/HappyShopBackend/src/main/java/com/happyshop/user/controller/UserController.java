@@ -181,14 +181,14 @@ public class UserController {
 		else  sort = Sort.by(sortField).descending();
 		
 		org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
-				userService.SIZE_PAGE_USER, sort);
+				UserService.SIZE_PAGE_USER, sort);
 	
 		Page<User> pageUser = userService.findAll(pageable, keyWord.get()); 
 		List<User> listUser = pageUser.getContent();
 		//list user 
 				
-		long startCount = (pageNum - 1) * userService.SIZE_PAGE_USER + 1;
-		long endCount = startCount + userService.SIZE_PAGE_USER - 1 ;
+		long startCount = (pageNum - 1) * UserService.SIZE_PAGE_USER + 1;
+		long endCount = startCount + UserService.SIZE_PAGE_USER - 1 ;
 		if(endCount > pageUser.getTotalElements() )
 			endCount = pageUser.getTotalElements();
 		
@@ -209,8 +209,8 @@ public class UserController {
 		
 		model.addAttribute("users", listUser );
 		
-		model.addAttribute("usersCurrentPerPage", pageUser.getNumberOfElements());
-		model.addAttribute("usersPerPage", userService.SIZE_PAGE_USER);
+		model.addAttribute("elementsCurrentPerPage", pageUser.getNumberOfElements());
+		model.addAttribute("elementsPerPage", UserService.SIZE_PAGE_USER);
 		model.addAttribute("message", message.orElse(null));
 		
 		model.addAttribute("keyWord", keyWord.get());

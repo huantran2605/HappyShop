@@ -17,17 +17,15 @@
 		</div>
 
 		<div class="m-2 ms-0">
-			<a th:href="@{/brand/new}" class="" title="Add new brand"> 				
-				<i class="fa-sharp fa-solid fa-circle-plus fa-2x fa-gray"></i>
+			<a th:href="@{/brand/new}" class="" title="Add new brand"> <i
+				class="fa-sharp fa-solid fa-circle-plus fa-2x fa-gray"></i>
 			</a>
 		</div>
-		
+
 		<!-- search-->
-		<div th:replace= "fragments :: search ('brand', 'listBrand')">
-		
-		</div>
-	
-	
+		<div th:replace="fragments :: search ('brand', 'listBrand')"></div>
+
+
 		<div class="full-details">
 			<table
 				class="table table-active table-striped table-inverse
@@ -52,30 +50,28 @@
 								th:src="@{${brand.getBrandLogoPath}}" alt="brand logo"
 								width="100" height="100" />
 						</span></td>
-						<td th:text="${brand.name}"></td>			
-						<td>
-							<th:block th:each=" category: ${brand.categories}">
-							<span class="badge rounded-pill text-bg-secondary ms-2" th:text="${category.name}"></span>							
-							</th:block>
-						</td>
+						<td th:text="${brand.name}"></td>
+						<td><th:block th:each=" category: ${brand.categories}">
+								<span class="badge rounded-pill text-bg-secondary ms-2"
+									th:text="${category.name}"></span>
+							</th:block></td>
 						<td>
 							<div class="float-start">
 								<a th:href="@{'/brand/delete/' + ${brand.id}}"
-									class="me-5 deleteBrand" th:name="${brand.name}"
-									title="Delete"> <i									
-									class="fa-solid fa-trash fa-red"></i>
+									class="me-5 deleteBrand" th:name="${brand.name}" title="Delete">
+									<i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
 							<div th:replace="fragments :: update('brand', ${brand.id})">
 							</div>
 						</td>
-						
+
 					</tr>
 
 				</tbody>
 			</table>
 		</div>
-		
+
 		<div class="less-details">
 			<div th:each=" brand: ${brands}" class="row">
 				<div class="col-4">
@@ -84,199 +80,50 @@
 							th:src="@{/images/default_person.jpg}" alt="brand logo"
 							width="100" height="100" />
 						</span> <span th:if="${brand.logo != null}"> <img
-							th:src="@{${brand.getBrandLogoPath}}" alt="brand logo" width="100"
-							height="100" />
+							th:src="@{${brand.getBrandLogoPath}}" alt="brand logo"
+							width="100" height="100" />
 						</span>
 					</div>
 				</div>
 				<div class="col-8">
 					<div class="m-2">
-						<div th:text="${brand.name}"></div>	
-										
+						<div th:text="${brand.name}"></div>
+
 						<div class="mt-2">
-							
+
 							<div class="float-start">
 								<a th:href="@{'/brand/delete/' + ${brand.id}}"
-									class="me-3 deleteBrand" th:name="${brand.name}"
-									 title="Delete"> <i
-									
-									class="fa-solid fa-trash fa-red"></i>
+									class="me-3 deleteBrand" th:name="${brand.name}" title="Delete">
+									<i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
 							<div th:replace="fragments :: update('brand', ${brand.id})">
 							</div>
 						</div>
-						
+
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- Modal -->
-		<div class="modal" id="modalDialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="modal-title">Warning</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body" id="modal-body"></div>
-					<div class="modal-footer">
-						<a class="btn btn-secondary" id="deleteOption" href="">Delete</a>
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
 		</div>
-		<!-- Count brand per page -->
-		<div class="text-center " th:if="${totalElement > 1}">
-			<span th:if="${brandsPerPage > 1 }">
-			 <span
-				th:if="${brandsCurrentPerPage == brandsPerPage }"> Brands:
-					[[${currentPage * brandsPerPage - brandsPerPage + 1}]] to
-					[[${currentPage * brandsPerPage}]] of [[${totalElement}]] </span>
-					 <span
-				th:if="${brandsCurrentPerPage < brandsPerPage }"> <span
-					th:if="${brandsCurrentPerPage > 1 }"> Brands: [[${totalElement
-						- brandsCurrentPerPage -1 }]] to [[${totalElement}]] of
-						[[${totalElement}]] </span> <span th:if="${brandsCurrentPerPage == 1 }">
-						Brands: [[${totalElement}]] of [[${totalElement}]] </span>
-
-			</span>
-
-			</span> <span th:if="${brandsPerPage == 1}"> Brands: [[${currentPage *
-				brandsPerPage}]] of [[${totalElement}]] </span>
-		</div>
-
-		<!-- Pagination -->
-		<div class="">
-			<nav aria-label="Page navigation example"
-				th:if="${totalPage < 11 && totalElement > 1} ">
-				<ul class="pagination justify-content-center d-flex flex-wrap">
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/1?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
-					<li
-						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
-
-					<th:block th:each=" i: ${#numbers.sequence(1, totalPage)}">
-						<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-							class="page-link" th:text="${i}"
-							th:href="@{'/brand/page/' + ${i} + '?sortField=' + ${sortField}+
-						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-					</th:block>
-
-					<li
-						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/' + ${totalPage} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
-				</ul>
-			</nav>
-		</div>
-		<!-- Pagination2 -->
-		<div class="">
-			<nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
-				<ul class="pagination justify-content-center d-flex flex-wrap">
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/1?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
-					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
-					<li
-						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
-
-					<th:block
-						th:if="${currentPage < 6 || currentPage > totalPage - 5 }">
-						<span th:each=" i: ${#numbers.sequence(1, 5)}">
-							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/brand/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-						</span>
-						<li
-							th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{'/brand/page/6' + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-
-						<span th:each=" i: ${#numbers.sequence(totalPage-4, totalPage)}">
-							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/brand/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-						</span>
-					</th:block>
-
-					<th:block th:if="${currentPage >5 && currentPage< totalPage - 4 }">
-						<li
-							th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{'/brand/page/' +${currentPage - 5} + '?sortField=' + ${sortField}+
-						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-						<span
-							th:each=" i: ${#numbers.sequence(currentPage, currentPage + 5)}">
-							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/brand/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
-						</span>
-						<li
-							th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{${currentPage + 6 > totalPage ? '/brand/page/'+totalPage : '/brand/page/'+ (currentPage + 6)} + '?sortField=' + ${sortField}+
-						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-
-					</th:block>
-
-					<li
-						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/brand/page/' + ${totalPage} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
-				</ul>
-			</nav>
-		</div>
-
-	</div>
-	<!-- footer -->
+		<!-- modal -->
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+		<!-- count elements per page -->
+		<div th:replace="fragments :: countElement('Brand')"></div>
+		<!-- pagination -->
+		<div th:replace="fragments :: pagination('brand')"></div>
+		<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
-		<script th:src="@{/js/common_form.js}"></script>
-	<!-- Bootstrap JavaScript Libraries -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
-		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
-		crossorigin="anonymous"></script>
+		<script th:src="@{/js/common_form.js}"> 
+		</script>
+		<!-- Bootstrap JavaScript Libraries -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+			integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+			integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+			crossorigin="anonymous"></script>
 </body>
 </html>

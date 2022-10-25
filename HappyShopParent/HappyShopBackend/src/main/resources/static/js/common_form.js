@@ -27,36 +27,39 @@ function showModal(title, message) {
 	$("#modal-body").text(message);
 	$("#modalDialog").modal("show");
 }
-
+function showConfirmationModal(message) {
+	$("#modal-body").text(message);
+	$("#confirmationModal").modal("show");
+}
 
 $(".deleteUser").click(
 	function(e) {
 		e.preventDefault();
-		showModalConfirmDeletion("user", this);
+		confirmToDelete("user", this);
 });
 
 $(".deleteBrand").click(
 	function(e) {
 		e.preventDefault();
-		showModalConfirmDeletion("brand", this);
+		confirmToDelete("brand", this);
 });
 
 $(".deleteCategory").click(
 	function(e) {
 		e.preventDefault();
-		showModalConfirmDeletion("category", this);
+		confirmToDelete("category", this);
 });
+ 
 
 
-
-function showModalConfirmDeletion(name, selector) {	
+function confirmToDelete(name, selector) {	
 	if (name == "user") {
-		showModal("Confirmation",
+		showConfirmationModal(
 			"Are you sure to delete the " + name + " email: "
 			+ $(selector).attr("email") + "?");
 	}
 	else{
-		showModal("Confirmation",
+		showConfirmationModal(
 			"Are you sure to delete the " + name + " name: "
 			+ $(selector).attr("name") + "?");
 	}

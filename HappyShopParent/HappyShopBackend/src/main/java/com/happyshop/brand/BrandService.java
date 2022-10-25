@@ -12,7 +12,7 @@ import com.happyshop.common.entity.Brand;
 
 public interface BrandService {
     
-    int SIZE_PAGE_BRAND = 2;
+    int SIZE_PAGE_BRAND = 7;
 
     <S extends Brand> List<S> findAll(Example<S> example, Sort sort);
 

@@ -34,6 +34,7 @@ public class WebSecurityConfig {
 			.antMatchers("/user/**").hasAuthority("Admin")
 			.antMatchers("/category/**").hasAnyAuthority("Admin","Editor")
 			.antMatchers("/brand/**").hasAnyAuthority("Admin","Editor")
+			.antMatchers("/product/**").hasAnyAuthority("Admin", "Editor","Salesperson","Shipper")
 			.anyRequest().authenticated() 
 			.and()
 			.formLogin()
