@@ -1,16 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
-<div th:if="${update == null}">
-	<head th:replace="fragments :: page_head('Create new brand')"></head>
-</div>
-<div th:if="${update != null}" >
-	<head th:replace="fragments :: page_head('Update brand')"></head>
-</div>
-
-
-
+<head th:replace="fragments :: page_head(${titlePage},'none')"></head>
 <body>
 	<div class="container-fluid">
 		<!-- navigation -->
@@ -65,18 +56,18 @@
 					<div class="m-1 row ">
 						<label for="" class="col-sm-2 col-form-label">Logo:</label>
 						<div class="col-sm-4 offset-sm-2">
-							<input type="file" name="logoFile" id="inputPhoto"
+							<input type="file" name="logoFile" id="fileImage"
 								accept="logo/png, logo/jpeg, logo/jpg" />
 						</div>						
 					</div>
 					<div class="m-1 row ">					
 						<div class="col-sm-4 offset-sm-4">
 							<span th:if="${brand.logo == null}"> <img th:src="@{/images/default-thumbnail.jpg}"
-								id="Photo" alt="Default Logo" width="200" height="200">
+								id="thumbnail" alt="Default Logo" width="200" height="200">
 							</span>	
 							<span  th:if="${brand.logo != null}"> 
 							<img th:src="@{*{getBrandLogoPath}}"
-								id="Photo" alt="Logo Brand" width="200" height="200">
+								id="thumbnail" alt="Logo Brand" width="200" height="200">
 							</span>								
 						</div>						
 					</div>
@@ -98,6 +89,9 @@
 	<div th:replace="modal_fragments :: modal"></div>
 
 	<script>
+	
+	MAX_FILE_SIZE = 1048576;
+	
 		function isNameUnique(form) {
 			url = "[[@{/brands/check_name}]]";
 			brandName = $("#name").val();

@@ -1,8 +1,10 @@
 package com.happyshop.common.entity.product;
 
-import java.sql.Date;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -47,12 +49,13 @@ public class Product {
     @Column(length = 5000, nullable = false, name = "full_description")
     private String fullDescription;
     
-    @Column(updatable = false, length = 255, nullable = false, name = "created_time")
+    @Column(name = "created_time")
     private Date createdTime;
     
     @Column(name="updated_time")
-    private String updatedTime;
-    
+    private Date updatedTime;
+
+    @Column(nullable = false)
     private boolean enable;
     
     @Column(name="in_stock")
@@ -64,13 +67,16 @@ public class Product {
     @Column(name="discount_percent")
     private float discountPercent;
     
-    
+    @Column
     private float length;
+    @Column
     private float width;
+    @Column
     private float height;
+    @Column
     private float weight;
     
-    @Column(name="main_image")
+    @Column(name="main_image", length = 128)
     private String mainImage;
     
     @ManyToOne
@@ -81,11 +87,11 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
     
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<ProductImage> images = new HashSet<>();
-//    
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProductDetail> details = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductImage> images = new HashSet<>();
+   
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductDetail> details = new ArrayList<>();
 //    
  
     
@@ -99,8 +105,33 @@ public class Product {
         return this.category.getName();
     }
     
+    public void addExtraImage(String name) {
+        this.images.add(new ProductImage(name, this));
+    }
     
+    public void addDetail(String name, String value) {
+        this.details.add(new ProductDetail(name, value, this));
+    }
+    
+    public void addDetail(Integer id,String name, String value) {
+        this.details.add(new ProductDetail(id, name, value, this));
+    }
+    
+    @Transient
+    public String getProductMainImagePath () {
+        return "/product-images/"+ this.id+"/" + this.mainImage; 
+    }
 
+    public boolean containsImageName(String fileName) {
+        Iterator<ProductImage> image = images.iterator();  
+        while(image.hasNext()) {
+            ProductImage p = image.next();
+            if(p.getName().equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     
     
     

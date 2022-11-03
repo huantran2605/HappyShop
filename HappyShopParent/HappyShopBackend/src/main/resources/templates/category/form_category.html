@@ -1,16 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
-<div th:if="${update == null}">
-	<head th:replace="fragments :: page_head('Create new category')"></head>
-</div>
-<div th:if="${update != null}" >
-	<head th:replace="fragments :: page_head('Update category')"></head>
-</div>
-
-
-
+<head th:replace="fragments :: page_head(${titlePage},'none')"></head>
 <body>
 	<div class="container-fluid">
 		<!-- navigation -->
@@ -90,18 +81,18 @@
 					<div class="m-1 row ">
 						<label for="" class="col-sm-2 col-form-label">Image:</label>
 						<div class="col-sm-4 offset-sm-2">
-							<input type="file" name="imageFile" id="inputPhoto"
+							<input type="file" name="imageFile" id="fileImage"
 								accept="image/png, image/jpeg, image/jpg" />
 						</div>						
 					</div>
 					<div class="m-1 row ">					
 						<div class="col-sm-4 offset-sm-4">
 							<span th:if="${category.image == null}"> <img th:src="@{/images/default-thumbnail.jpg}"
-								id="Photo" alt="Default Image" width="200" height="200">
+								id="thumbnail" alt="Default Image" width="200" height="200">
 							</span>	
 							<span  th:if="${category.image != null}"> 
 							<img th:src="@{*{getCategoryImagePath}}"
-								id="Photo" alt="Image Category" width="200" height="200">
+								id="thumbnail" alt="Image Category" width="200" height="200">
 							</span>								
 						</div>						
 					</div>
@@ -123,6 +114,9 @@
 	<div th:replace="modal_fragments :: modal"></div>
 
 	<script>
+	
+	MAX_FILE_SIZE = 1048576;
+	
 		function IsNameOrAliasUnique(form) {
 			url = "[[@{/categories/check_name_alias}]]";
 			categoryName = $("#name").val();

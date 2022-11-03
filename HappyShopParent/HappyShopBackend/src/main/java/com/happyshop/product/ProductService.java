@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 
+import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.product.Product;
 
 public interface ProductService {
@@ -41,5 +42,9 @@ public interface ProductService {
     List<Product> findAll();
 
     Page<Product> findAll(Pageable pageable, String keyword);
+
+    String isNameUnique(Integer id, String name);
+
+    String updateEnabledStatus(Product product);
 
 }

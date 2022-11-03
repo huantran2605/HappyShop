@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+	<div th:fragment="images" class="container" th:remove="tag">
+
+		<div class="mt-3 row" id="divProductImages">
+			<div class="col-4 border border-success">
+				<div class="m-3">
+					<label for="">Main Image:</label>
+					<div class="mt-3">
+						<input type="file" name="imageFile" id="fileImage"
+							accept="image/png, image/jpeg, image/jpg" />
+					</div>
+				</div>
+
+				<div class="m-3">
+					<div class="">
+						<span th:if="${product.mainImage == null}"> <img
+							th:src="@{/images/default-thumbnail.jpg}" id="thumbnail"
+							alt="Default Image" class="img-thumbnail" width="304"
+							height="236">
+						</span> <span th:if="${product.mainImage != null}"> <img
+							th:src="@{*{getProductMainImagePath}}" id="thumbnail"
+							alt="Main Image Product" class="img-thumbnail" width="304"
+							height="236">
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<th:block th:if="${product.images != null}">
+				<th:block th:each="image, status : ${product.images}">
+					<div class="col-4 border "
+						th:id="'divExtraImage' + ${status.index}">
+						<div class="m-3">
+							<div>
+								<label for="">Extra Image #[[${status.index + 1}]]:</label>
+								<i class="fa-sharp fa-solid fa-circle-xmark fa-2x float-right"
+									name ="linkRemoveExtraImage"
+									title="Remove this image"></i>
+							</div>
+							<div class="mt-3">
+								<input type="file" name="exsitingExtraImage"
+									accept="image/png, image/jpeg, image/jpg" />
+							</div>
+						</div>
+						<div class="m-3">
+							<div class="">
+								<img th:src="@{${image.getPathExtraImageProduct}}"
+									th:id="'extraThumbnail' + ${status.index}"
+									alt="Extra Image Product" class="img-thumbnail" width="304"
+									height="236">
+							</div>
+						</div>
+					<input type="hidden" name = "imageIDs" th:value = "${image.id}" th:id="'imageId' + ${status.index}"/>
+					<input type="hidden" name = "imageNames" th:value = "${image.name}"  th:id="'imageName' + ${status.index}"/>
+					</div>
+				</th:block>
+			</th:block>
+
+			<th:block th:if="${totalExtraImagesProduct != null}">
+				<div class="col-4 border "
+					th:id="'divExtraImage' + ${totalExtraImagesProduct}">
+					<div class="m-3">
+						<div th:id="'extraImageHeader' + ${totalExtraImagesProduct}">
+							<label for="">Extra Image #[[${totalExtraImagesProduct +
+								1}]]:</label>
+						</div>
+						<div class="mt-3">
+							<input type="file" name="extraImage"
+								accept="image/png, image/jpeg, image/jpg" />
+						</div>
+					</div>
+					<div class="m-3">
+						<div class="">
+							<img th:src="@{/images/default-thumbnail.jpg}"
+								th:id="'extraThumbnail' + ${totalExtraImagesProduct}"
+								alt="Extra Image Product" class="img-thumbnail" width="304"
+								height="236">
+
+						</div>
+					</div>
+				</div>
+			</th:block>
+			
+			
+			<th:block th:if="${totalExtraImagesProduct == null}">
+				<div class="col-4 border "
+					id="divExtraImage0">
+					<div class="m-3">
+						<div id="extraImageHeader0">
+							<label for="">Extra Image #1:</label>
+						</div>
+						<div class="mt-3">
+							<input type="file" name="extraImage"
+							onchange="showExtraImageThumbnail(this, 0)"
+								accept="image/png, image/jpeg, image/jpg" />
+						</div>
+					</div>
+					<div class="m-3">
+						<div class="">
+							<img th:src="@{/images/default-thumbnail.jpg}"
+								id="extraThumbnail0"
+								alt="Extra Image Product" class="img-thumbnail" width="304"
+								height="236">
+
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

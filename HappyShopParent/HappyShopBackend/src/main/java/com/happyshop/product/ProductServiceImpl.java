@@ -1,5 +1,6 @@
 package com.happyshop.product;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.stereotype.Service;
 
+import com.happyshop.common.entity.Brand;
 import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.product.Product;
 
@@ -23,6 +25,18 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public <S extends Product> S save(S entity) {
+        if(entity.getId() == null) {
+            entity.setCreatedTime(new Date());
+        }
+        if(entity.getAlias() == null || entity.getAlias().isEmpty()) {
+            entity.setAlias(entity.getName().replace(" ", "-"));
+        }
+        else {
+            entity.setAlias(entity.getAlias().replace(" ", "-"));
+        }
+        entity.setUpdatedTime(new Date());
+        
+        
         return productRepo.save(entity);
     }
 
@@ -89,5 +103,45 @@ public class ProductServiceImpl implements ProductService{
         return productRepo.getById(id);
     }
     
+    @Override
+    public String isNameUnique(Integer id, String name) {
+        if(id == null) { //create new 
+            Product product =  productRepo.findByName(name);           
+            if(product != null) {
+                return "duplicated";
+            } 
+            else {
+                return "ok";
+            }
+        }
+        else { // update
+            Product product =  productRepo.findByName(name); 
+            if(product != null) {
+                if(product.getId() ==  id) {
+                    return "ok";
+                } 
+                else {
+                    return "duplicated";
+                }
+            }
+            else {
+                return "ok";
+            }     
+        }
+    }
     
+    @Override
+    public String updateEnabledStatus(Product product) {
+        String status = "";
+        if (product.isEnable() == true) {
+            product.setEnable(false);
+            status = "Disable the product id: " + product.getId() + " successfully!";
+        } else {
+            product.setEnable(true);
+            status = "Enable the product id: " + product.getId() + " successfully!";
+        }
+        productRepo.save(product);
+        return status;
+    }
+
 }

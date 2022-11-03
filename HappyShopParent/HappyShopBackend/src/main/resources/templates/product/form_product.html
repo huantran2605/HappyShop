@@ -1,55 +1,117 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
-<div th:if="${update == null}">
-	<head th:replace="fragments :: page_head('Create new category')"></head>
-</div>
-<div th:if="${update != null}">
-	<head th:replace="fragments :: page_head('Update category')"></head>
-</div>
-
+<head>
+	<head th:replace="fragments :: page_head(${titlePage}, 'tag')"></head>
+	<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
+	<script type="text/javascript"
+		th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
 <body>
 	<div class="container-fluid">
 		<!-- navigation -->
 		<div th:replace="navigation :: nav"></div>
 		
-		<ul class="nav nav-tabs" id="myTab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-					data-bs-target="#home-tab-pane" type="button" role="tab"
-					aria-controls="home-tab-pane" aria-selected="true">Home</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-					data-bs-target="#profile-tab-pane" type="button" role="tab"
-					aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-					data-bs-target="#contact-tab-pane" type="button" role="tab"
-					aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="disabled-tab" data-bs-toggle="tab"
-					data-bs-target="#disabled-tab-pane" type="button" role="tab"
-					aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
-			</li>
-		</ul>
-		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade show active" id="home-tab-pane"
-				role="tabpanel" aria-labelledby="home-tab" tabindex="0">...</div>
-			<div class="tab-pane fade" id="profile-tab-pane" role="tabpanel"
-				aria-labelledby="profile-tab" tabindex="0">...</div>
-			<div class="tab-pane fade" id="contact-tab-pane" role="tabpanel"
-				aria-labelledby="contact-tab" tabindex="0">...</div>
-			<div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel"
-				aria-labelledby="disabled-tab" tabindex="0">...</div>
+		
+		<div class="text-center text-info">
+			<p class="fs-1">
+				Manage Products | <span class="fs-2" th:if="${update == null}">Create New Product</span>
+				<span class="fs-2" th:if="${update != null}" th:text="${update}"></span>
+			</p>
 		</div>
+		
+		<div>
+			<p th:if="${message != null}" class="text-center">[[${message}]]</p>
+		</div>
+		
+		<form th:action="@{/product/saveOrUpdate}" 
+			onsubmit="return IsNameUnique(this);"
+			enctype="multipart/form-data"
+			method="post" name="save_form" th:object="${product}">
+			<input type="hidden" th:field="*{id}" id="id"/>
+			<input type="hidden" th:if="${product.category != null}" th:value="${product.category.id}" id="categoryId"/>
+			<div>
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" data-bs-toggle="tab"
+							data-bs-target="#overview" type="button" 
+							aria-controls="overview" aria-selected="true">Overview</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#description" type="button"
+							aria-controls="description" aria-selected="false">Description</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#images" type="button"
+							aria-controls="images" aria-selected="false">Images</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#details" type="button"
+							aria-controls="details" aria-selected="false">Details</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#shipping" type="button"
+							aria-controls="shipping" aria-selected="false">Shipping</button>
+					</li>
+
+				</ul>
+
+				<div class="tab-content" id="myTabContent">
+					<div class="tab-pane fade show active" id="overview">
+						<div th:replace="product/product_overview :: overview"></div>
+					</div>
+					<div class="tab-pane fade" id="description">
+						<div th:replace="product/product_description :: description"></div>
+					</div>
+					<div class="tab-pane fade" id="images">
+						<div th:replace="product/product_images :: images"></div>
+					</div>
+					<div class="tab-pane fade" id="details">
+						<div th:replace="product/product_details :: details"></div>
+						<div class="p-3">
+							<button type="button" onclick="addNextDivDetail()" class="btn btn-secondary">
+							Add More Details</button>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="shipping">
+						<div th:replace="product/product_shipping :: shipping"></div>
+
+					</div>
+				</div>
+			</div>
+
+
+			<div class="text-center m-3">
+				<button type="submit" class="btn btn-primary me-3">Save</button>
+				<a th:href="@{/product/listProduct}"
+					class="btn btn-primary">Cancel</a>
+			</div>
+		</form>
+
 	</div>
+	
+	<!-- modal -->
+	<div th:replace="modal_fragments :: modal"></div>
+	
 	<!-- footer -->
+	<script>	
+		moduleURL = "[[@{/products}]]";
+		brandModuleURL = "[[@{/brands}]]";
+		MAX_FILE_SIZE = 3145728;//3MB
+		defaultImageThumbnailSrc  = "[[@{/images/default-thumbnail.jpg}]]";
+		
+	</script>
+	
+	
 	<div th:replace="fragments :: footer"></div>
 	<script th:src="@{/js/common_form.js}"></script>
+	<script th:src="@{/js/form_product_overview.js}"></script>
+	<script th:src="@{/js/form_product_images.js}"></script>
+	<script th:src="@{/js/form_product_details.js}"></script>
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
@@ -60,4 +122,5 @@
 		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
 		crossorigin="anonymous"></script>
 </body>
+
 </html>

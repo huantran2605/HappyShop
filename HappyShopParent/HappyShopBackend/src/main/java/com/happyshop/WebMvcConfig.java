@@ -17,6 +17,8 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	    addModuleResourceHandlers("users-photo", registry);
 	    addModuleResourceHandlers("category-images", registry);
 	    addModuleResourceHandlers("brand-logos", registry);
+	    addModuleResourceHandlers("product-images", registry);
+	    
 
 	}
 	

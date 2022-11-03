@@ -51,6 +51,7 @@ public class BrandController {
     private String form_Brand(Brand brand,Model model) {
         model.addAttribute("brand", brand);   
         model.addAttribute("listCategory", categoryService.showListCategory());
+        model.addAttribute("titlePage", "Create new brand");
         return "brand/form_brand";
     }
     
@@ -99,6 +100,7 @@ public class BrandController {
             model.addAttribute("brand", brand.get());
             model.addAttribute("id", id);
             model.addAttribute("update", "Update Brand");
+            model.addAttribute("titlePage", "Update brand");
         }
         return "brand/form_brand";
 

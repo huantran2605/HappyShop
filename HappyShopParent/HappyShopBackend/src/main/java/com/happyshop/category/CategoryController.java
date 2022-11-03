@@ -107,6 +107,7 @@ public class CategoryController {
             category.setEnable(true);
             model.addAttribute("category", category);  
             model.addAttribute("listCategory", categoryService.showListCategory());
+            model.addAttribute("titlePage", "Create new category");
             return "category/form_category";
         }
            
@@ -155,6 +156,7 @@ public class CategoryController {
                 model.addAttribute("category", cat.get());
                 model.addAttribute("id", id);
                 model.addAttribute("update", "Update Category");
+                model.addAttribute("titlePage", "Update category");
             }
             return "category/form_category";
 
@@ -166,7 +168,7 @@ public class CategoryController {
             Optional<Category> category =  categoryService.findById(id);
             String status = "";
             if (category.isEmpty()) {
-                re.addAttribute("message", "The user is not exist!");
+                re.addAttribute("message", "The category is not exist!");
                 return "redirect:/user/listUser";
             }
             else {

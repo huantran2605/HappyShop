@@ -68,7 +68,8 @@ public class UserController {
 		user.setEnable(true);
 		model.addAttribute("user", user);  
 		model.addAttribute("roles", list);
-		
+        model.addAttribute("titlePage", "Create new user");
+
 		return "user/form_user";
 	}
 
@@ -125,6 +126,7 @@ public class UserController {
 			model.addAttribute("roles", list);
 			model.addAttribute("user", user.get());
 			model.addAttribute("update", "Update User");
+			model.addAttribute("titlePage", "Update user");
 			return "user/form_user";
 		}
 			
@@ -214,6 +216,7 @@ public class UserController {
 		model.addAttribute("message", message.orElse(null));
 		
 		model.addAttribute("keyWord", keyWord.get());
+		
 
 		return"user/listUser";
 	}

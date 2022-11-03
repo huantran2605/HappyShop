@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+<div th:fragment="overview" class="container" th:remove="tag">
+		<div class="row mb-3 mt-5">
+			<div class="col-sm-2">
+				<label for="">Product Name: </label>
+			</div>			
+			<div class="col-sm-6">		
+				  <input type="text"
+					class="form-control" th:field="*{name}" id="name" required maxlength="255">
+			</div>		
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Alias: </label>
+			</div>			
+			<div class="col-sm-6">		
+				  <input type="text"
+					class="form-control" placeholder="Default is product name (spaces is replaced by dashes)" th:field="*{alias}" id="" maxlength="255">
+			</div>			
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Brand: </label>
+			</div>			
+			<div class="col-sm-6">		
+				 <select th:field="*{brand}" required >
+					<th:block th:each=" brand: ${brands}">
+						<option th:value="${brand.id}" th:text="${brand.name}"></option>
+					</th:block>
+				 </select>
+			</div>			
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-sm-2">
+				<label for="">Category: </label>
+			</div>			
+			<div class="col-sm-6">	
+			
+				<th:block th:if="product.category != null">
+					 <select th:field="*{category}" required>
+					 	<th:block  th:each="category : ${listCategories}">
+						 	<option th:value="${category.id}" th:text="${category.name}"></option>
+					 	</th:block>
+					 </select>
+				</th:block>	
+				
+				<th:block th:if="product.category == null">
+					 <select th:field="*{category}" required>
+					 </select>
+				</th:block>	
+				
+			</div>			
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Enabled: </label>
+			</div>			
+			<div class="col-sm-6">		
+				 <input type="checkbox" th:field="*{enable}"
+				  id="">
+			</div>			
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">In Stock: </label>
+			</div>			
+			<div class="col-sm-6">		
+				<input type="checkbox" th:field="*{inStock}" id="">
+			</div>			
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Cost: </label>
+			</div>			
+			<div class="col-sm-6">		
+				<input type="number" step="0.01" th:field="*{cost}" id="" required>
+			</div>			
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Price: </label>
+			</div>			
+			<div class="col-sm-6">		
+				<input type="number" step="0.01" th:field="*{price}" id="" required>
+			</div>			
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Discount: </label>
+			</div>			
+			<div class="col-sm-6">		
+				<input type="number" step="0.01" th:field="*{discountPercent}" id="">
+			</div>			
+		</div>
+
+</div>
+
+</body>
+</html>
