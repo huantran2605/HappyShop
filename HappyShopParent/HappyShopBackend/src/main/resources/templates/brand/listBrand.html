@@ -15,13 +15,20 @@
 			role="alert">
 			<strong>[[${message}]]</strong>
 		</div>
-
+		
 		<div class="m-2 ms-0">
 			<a th:href="@{/brand/new}" class="" title="Add new brand"> <i
 				class="fa-sharp fa-solid fa-circle-plus fa-2x fa-gray"></i>
 			</a>
 		</div>
-
+		
+		<div class="d-flex justify-content-start">
+			<!-- export Csv -->
+			<a th:href="@{/brand/export/csv}" title="Export to CSV"
+				class="m-3 ms-0"> <i
+				class="fa-sharp fa-solid fa-file-csv fa-2x fa-gray"></i>
+			</a>
+		</div>
 		<!-- search-->
 		<div th:replace="fragments :: search ('brand', 'listBrand')"></div>
 

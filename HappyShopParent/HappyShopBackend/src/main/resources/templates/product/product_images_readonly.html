@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="content">
+		<div class="container">
+			<div class="row">
+				<div class="col-4 m-3">
+					<label for="">Main Image:</label>
+					<div class="mt-3">
+						<img th:src="@{${product.getProductMainImagePath}}"
+							alt="main Image" class="img-thumbnail" width="304" height="236" />
+					</div>
+				</div>
+				<th:block th:if="${product.images != null}">
+					<th:block th:each="image, status : ${product.images}">
+						<div class="col-4">
+							<label for="">Extra Image #[[${status.index + 1}]]:</label> <img
+								th:src="@{${image.getPathExtraImageProduct}}"
+								alt="Extra Image Product" class="img-thumbnail" width="304"
+								height="236">
+						</div>
+					</th:block>
+				</th:block>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

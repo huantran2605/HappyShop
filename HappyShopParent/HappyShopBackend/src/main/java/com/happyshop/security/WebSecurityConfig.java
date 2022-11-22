@@ -34,7 +34,17 @@ public class WebSecurityConfig {
 			.antMatchers("/user/**").hasAuthority("Admin")
 			.antMatchers("/category/**").hasAnyAuthority("Admin","Editor")
 			.antMatchers("/brand/**").hasAnyAuthority("Admin","Editor")
-			.antMatchers("/product/**").hasAnyAuthority("Admin", "Editor","Salesperson","Shipper")
+			
+			.antMatchers("/product/new", "/product/delete/**").hasAnyAuthority("Admin", "Editor")
+            
+            .antMatchers("/product/update/**", "/product/saveOrUpdate", "/product/updateEnabled/**")
+                .hasAnyAuthority("Admin", "Editor", "Salesperson")
+                
+            .antMatchers("/product/listProduct", "/product/detail/**", "/product/page/**")
+                .hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
+                
+            .antMatchers("/product/**").hasAnyAuthority("Admin", "Editor")
+            .antMatchers("/product/detail/**", "/customers/detail/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
 			.anyRequest().authenticated() 
 			.and()
 			.formLogin()

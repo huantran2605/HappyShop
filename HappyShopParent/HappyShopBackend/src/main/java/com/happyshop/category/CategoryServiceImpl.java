@@ -22,6 +22,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public <S extends Category> S save(S entity) {
+        Category parent = entity.getParent();
+        if(parent != null) {
+            String allParentsIDs = parent.getAllParentIDs() == null ? "-" :  parent.getAllParentIDs();
+            allParentsIDs += String.valueOf(parent.getId()) + "-";
+            entity.setAllParentIDs(allParentsIDs);
+        }
+        
         return categoryRepo.save(entity);
     }
 

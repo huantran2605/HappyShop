@@ -10,6 +10,7 @@
 			</div>			
 			<div class="col-sm-6">		
 				  <input type="text"
+				  	th:readonly="${#authorization.expression('hasAuthority(''Salesperson'')')}"
 					class="form-control" th:field="*{name}" id="name" required maxlength="255">
 			</div>		
 		</div>
@@ -20,6 +21,7 @@
 			</div>			
 			<div class="col-sm-6">		
 				  <input type="text"
+				 	th:readonly="${#authorization.expression('hasAuthority(''Salesperson'')')}"
 					class="form-control" placeholder="Default is product name (spaces is replaced by dashes)" th:field="*{alias}" id="" maxlength="255">
 			</div>			
 		</div>
@@ -27,36 +29,46 @@
 		<div class="row mb-3 ">
 			<div class="col-sm-2">
 				<label for="">Brand: </label>
-			</div>			
-			<div class="col-sm-6">		
-				 <select th:field="*{brand}" required >
-					<th:block th:each=" brand: ${brands}">
-						<option th:value="${brand.id}" th:text="${brand.name}"></option>
-					</th:block>
-				 </select>
-			</div>			
+			</div>
+			<div class="col-sm-6">
+				<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+					<select th:field="*{brand}" required>
+						<th:block th:each=" brand: ${brands}">
+							<option th:value="${brand.id}" th:text="${brand.name}"></option>
+						</th:block>
+					</select>
+				</th:block>
+				<th:block sec:authorize="hasAuthority('Salesperson')">
+					<input type="text" class="form-control"
+						th:value="${product.brand.name}" readonly />
+				</th:block>
+			</div>
 		</div>
 
 		<div class="row mb-3">
 			<div class="col-sm-2">
 				<label for="">Category: </label>
-			</div>			
-			<div class="col-sm-6">	
-			
-				<th:block th:if="product.category != null">
-					 <select th:field="*{category}" required>
-					 	<th:block  th:each="category : ${listCategories}">
-						 	<option th:value="${category.id}" th:text="${category.name}"></option>
-					 	</th:block>
-					 </select>
-				</th:block>	
-				
-				<th:block th:if="product.category == null">
-					 <select th:field="*{category}" required>
-					 </select>
-				</th:block>	
-				
-			</div>			
+			</div>
+			<div class="col-sm-6">
+				<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+					<th:block th:if="product.category != null">
+						<select th:field="*{category}" required>
+							<th:block th:each="category : ${listCategories}">
+								<option th:value="${category.id}" th:text="${category.name}"></option>
+							</th:block>
+						</select>
+					</th:block>
+
+					<th:block th:if="product.category == null">
+						<select th:field="*{category}" required>
+						</select>
+					</th:block>
+				</th:block>
+				<th:block sec:authorize="hasAuthority('Salesperson')">
+					<input type="text" class="form-control"
+						th:value="${product.category.name}" readonly />
+				</th:block>
+			</div>
 		</div>
 
 		<div class="row mb-3 ">
@@ -65,6 +77,7 @@
 			</div>			
 			<div class="col-sm-6">		
 				 <input type="checkbox" th:field="*{enable}"
+				  th:disabled="${#authorization.expression('hasAuthority(''Salesperson'')')}"
 				  id="">
 			</div>			
 		</div>
@@ -74,7 +87,9 @@
 				<label for="">In Stock: </label>
 			</div>			
 			<div class="col-sm-6">		
-				<input type="checkbox" th:field="*{inStock}" id="">
+				<input type="checkbox"
+				 th:disabled="${#authorization.expression('hasAuthority(''Salesperson'')')}"
+				 th:field="*{inStock}" id="">
 			</div>			
 		</div>
 

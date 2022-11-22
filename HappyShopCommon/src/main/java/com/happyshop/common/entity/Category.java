@@ -32,12 +32,14 @@ public class Category {
     private String image;
     @Column(nullable = false)
     private boolean enable;
-    
+    @Column(nullable = true, length = 256,name = "all_parent_ids")
+    private String allParentIDs;
     @OneToOne
     @JoinColumn(name = "parent_id")
     private Category parent;
     @OneToMany(mappedBy = "parent")
     private Set<Category> children = new HashSet<>();
+    
     
     
     public Integer getId() {
@@ -83,6 +85,12 @@ public class Category {
         this.children = children;
     }
     
+    public String getAllParentIDs() {
+        return allParentIDs;
+    }
+    public void setAllParentIDs(String allParentIDs) {
+        this.allParentIDs = allParentIDs;
+    }
     public Category(String name) {
         this.name = name;
         this.alias = name;

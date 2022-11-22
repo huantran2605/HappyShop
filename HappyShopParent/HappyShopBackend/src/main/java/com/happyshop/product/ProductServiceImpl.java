@@ -41,9 +41,17 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Page<Product> findAll(Pageable pageable, String keyword) {
-        if (!keyword.isBlank()) {
+    public Page<Product> findAll( Pageable pageable, String keyword, Integer categoryId) {
+        if (!keyword.isBlank() && keyword != null) {
+            if(categoryId > 0 && categoryId != null) {
+                String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+                return productRepo.searchInCategory(categoryId, categoryIdMatch, keyword, pageable);
+            }
             return productRepo.searchProduct(keyword, pageable);
+        }
+        if(categoryId > 0 && categoryId != null) {
+            String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+            return productRepo.findAllInCategory(categoryId, categoryIdMatch, pageable);
         }
         return productRepo.findAll(pageable);
     }
@@ -143,5 +151,13 @@ public class ProductServiceImpl implements ProductService{
         productRepo.save(product);
         return status;
     }
-
+    
+    public void saveProductPrice(Product productInForm) {
+        Product productInDB = productRepo.findById(productInForm.getId()).get();
+        productInDB.setCost(productInForm.getCost());
+        productInDB.setPrice(productInForm.getPrice());
+        productInDB.setDiscountPercent(productInForm.getDiscountPercent());
+        
+        productRepo.save(productInDB);
+    }
 }

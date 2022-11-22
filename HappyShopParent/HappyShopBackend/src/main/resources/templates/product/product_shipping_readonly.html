@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="content">
+		<div class="row mb-3 mt-3 ">
+			<div class="col-sm-2">
+				<label for="">Length (inch):</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" th:value="${product.length}" readonly>
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Width (inch):</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" th:value="${product.width}" readonly>
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Height (inch):</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" th:value="${product.height}" readonly>
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Weight (pounds):</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" th:value="${product.weight}" readonly>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

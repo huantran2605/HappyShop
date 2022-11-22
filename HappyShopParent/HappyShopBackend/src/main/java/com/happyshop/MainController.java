@@ -3,6 +3,9 @@ package com.happyshop;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -19,6 +22,11 @@ public class MainController {
 	}
 	@GetMapping("/login")
 	private String viewLoginPage() {
-		return "login";
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if(auth == null || auth instanceof AnonymousAuthenticationToken) {
+	        return "login";
+	    }
+	    return "redirect:/";
 	}
+	
 }

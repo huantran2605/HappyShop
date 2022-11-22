@@ -28,7 +28,8 @@
 			style="text-decoration: none" class="text-reset"
 			th:href="@{'/' + ${model} + '/page/' + ${pageNum} +
 							'?sortField=' + ${sortField}+ '&sortDir=' +
-							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">
+							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}
+							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
 				[[${colTitle}]]</a> <i class="fa-sharp fa-solid fa-caret-up"
 			th:if="${sortDir == 'asc'}"></i> <i
 			class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
@@ -36,7 +37,8 @@
 			style="text-decoration: none" class="text-reset"
 			th:href="@{'/' + ${model} + '/page/' + ${pageNum} +
 							'?sortField=' + ${fieldName} + '&sortDir=' + ${reserveDir} +
-							 ${keyWord != null ? '&keyWord=' + keyWord : ''}}">
+							 ${keyWord != null ? '&keyWord=' + keyWord : ''}
+							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
 				[[${colTitle}]]</a>
 	</span></th>
 
@@ -50,13 +52,17 @@
 
 	<div th:fragment="update(model, id)">
 		<a th:href="@{'/' +${model} +'/update/' + ${id}}" id="update"
-			title="Update" > <i
-			class="fa-solid fa-pen-to-square fa-red "></i>
+			title="Update"> <i class="fa-solid fa-pen-to-square fa-red "></i>
 		</a>
 	</div>
-	
+
+	<a th:fragment="page_link(pageNum, label)" class="page-link"
+		th:href="@{'/' + ${model} + '/page/' +${pageNum} +'?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''} 
+					   +${categoryID != null ? '&categoryID=' + categoryID : ''}}">[[${label}]]</a>
+
 	<!-- search-->
-	<div  th:fragment="search(model,listModel)">
+	<div th:fragment="search(model,listModel)">
 		<div class="row">
 			<div class="col-6 d-flex justify-content-start ">
 				<form
@@ -71,15 +77,15 @@
 					</button>
 					<a th:href="@{'/' + ${model} + '/' + ${listModel}} "
 						class="btn btn-outline-success m-3 "> <i
-						class="fa-solid fa-reply-all"></i>
+						class="fa-sharp fa-solid fa-eraser"></i>
 					</a>
 
 				</form>
 			</div>
 		</div>
-	
+
 	</div>
-		
+
 	<!-- pagination------------- -->
 	<!-- Pagination1 -->
 	<div th:fragment="pagination(model)">
@@ -88,35 +94,31 @@
 				th:if="${totalPage < 11 && totalElement > 1} ">
 				<ul class="pagination justify-content-center d-flex flex-wrap">
 					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/1?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">
+						<a th:replace="fragments :: page_link(1, 'First')"></a>
+					</li>
 					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">
+						<a
+						th:replace="fragments :: page_link(${currentPage - 1}, 'Previous')"></a>
+					</li>
 					<li
-						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}">
+						<a th:replace="fragments :: page_link(${currentPage + 1}, 'Next')"></a>
+					</li>
 
 					<th:block th:each=" i: ${#numbers.sequence(1, totalPage)}">
 						<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-							class="page-link" th:text="${i}"
-							th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
-						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}">
+							<a th:replace="fragments :: page_link(${i}, ${i})"></a>
+						</li>
 
 					</th:block>
 
 					<li
-						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/' + ${totalPage} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}">
+						<a th:replace="fragments :: page_link(${totalPage}, 'Last')"></a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -125,75 +127,64 @@
 			<nav aria-label="Page navigation example" th:if="${totalPage > 11} ">
 				<ul class="pagination justify-content-center d-flex flex-wrap">
 					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/1?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">First</a></li>
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">
+						<a th:replace="fragments :: page_link(1, 'First')"></a>
+					</li>
 					<li
-						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/' + ${currentPage - 1} + '?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Previous</a></li>
+						th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">
+						<a
+						th:replace="fragments :: page_link(${currentPage - 1}, 'Previous')"></a>
+					</li>
 					<li
-						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Next</a></li>
+						th:class="${currentPage == totalPage ? 'page-item disabled' : 'page-item'}">
+						<a th:replace="fragments :: page_link(${currentPage + 1}, 'Next')"></a>
+					</li>
 
 					<th:block
 						th:if="${currentPage < 6 || currentPage > totalPage - 5 }">
 						<span th:each=" i: ${#numbers.sequence(1, 5)}">
 							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}">
+								<a th:replace="fragments :: page_link(${i}, ${i})"></a>
+						</li>
 						</span>
 						<li
-							th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{'/' + ${model} + '/page/6' + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+							th:class="${currentPage == 6 ? 'page-item active' : 'page-item'}">
+							<a th:replace="fragments :: page_link(6, '...')"></a>
+						</li>
 
 						<span th:each=" i: ${#numbers.sequence(totalPage-4, totalPage)}">
 							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}">
+								<a th:replace="fragments :: page_link(${i}, ${i})"></a>
+						</li>
 						</span>
 					</th:block>
 
 					<th:block th:if="${currentPage >5 && currentPage< totalPage - 4 }">
 						<li
-							th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
-							th:href="@{'/' + ${model} + '/page/' +${currentPage - 5} + '?sortField=' + ${sortField}+
-						  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
+							th:class="${currentPage == currentPage -5 ? 'page-item active' : 'page-item'}">
+							<a th:replace="fragments :: page_link(${currentPage - 5}, '...')"></a>
+						</li>
 						<span
 							th:each=" i: ${#numbers.sequence(currentPage, currentPage + 5)}">
 							<li
-							th:class="${currentPage == i ? 'page-item active' : 'page-item'}"><a
-								class="page-link" th:text="${i}"
-								th:href="@{'/' + ${model} + '/page/' + ${i} + '?sortField=' + ${sortField}+
-							'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}"></a></li>
-
+							th:class="${currentPage == i ? 'page-item active' : 'page-item'}">
+								<a th:replace="fragments :: page_link(${i}, ${i})"></a>
+						</li>
 						</span>
 						<li
-							th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}"><a
-							class="page-link"
+							th:class="${currentPage == currentPage + 6 ? 'page-item active' : 'page-item'}">
+							<a class="page-link"
 							th:href="@{${currentPage + 6 > totalPage ? '/' + ${model} + '/page/'+totalPage : '/' + ${model} + '/page/'+ (currentPage + 6)} + '?sortField=' + ${sortField}+
-						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a></li>
-
+						'&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">...</a>
+						</li>
 					</th:block>
 
 					<li
-						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}"><a
-						class="page-link"
-						th:href="@{'/' + ${model} + '/page/' + ${totalPage} + '?sortField=' + ${sortField}+
-					  '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">Last</a></li>
+						th:class="${currentPage== totalPage ? 'page-item disabled' : 'page-item'}">
+						<a th:replace="fragments :: page_link(${totalPage}, 'Last')"></a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -203,26 +194,27 @@
 	<div th:fragment="countElement(model)">
 		<div class="text-center " th:if="${totalElement > 1}">
 			<span th:if="${elementsPerPage > 1 }"> <span
-				th:if="${elementsCurrentPerPage == elementsPerPage }"> [[${model}]]:
-					[[${currentPage * elementsPerPage - elementsPerPage + 1}]] to
-					[[${currentPage * elementsPerPage}]] of [[${totalElement}]] </span> <span
-				th:if="${elementsCurrentPerPage < elementsPerPage }"> <span
-					th:if="${elementsCurrentPerPage > 1 }"> [[${model}]]:
-						[[${totalElement - elementsCurrentPerPage -1 }]] to
-						[[${totalElement}]] of [[${totalElement}]] </span> <span
-					th:if="${elementsCurrentPerPage == 1 }"> [[${model}]]:
+				th:if="${elementsCurrentPerPage == elementsPerPage }">
+					[[${model}]]: [[${currentPage * elementsPerPage - elementsPerPage +
+					1}]] to [[${currentPage * elementsPerPage}]] of [[${totalElement}]]
+			</span> <span th:if="${elementsCurrentPerPage < elementsPerPage }"> <span
+					th:if="${elementsCurrentPerPage > 1 }"> <span
+						th:if="${totalElement != elementsCurrentPerPage}">
+							[[${model}]]: [[${totalElement - elementsCurrentPerPage - 1 }]]
+							to [[${totalElement}]] of [[${totalElement}]] </span> <span
+						th:if="${totalElement == elementsCurrentPerPage}">
+							[[${model}]]: 1 to [[${totalElement}]] of [[${totalElement}]] </span>
+				</span> <span th:if="${elementsCurrentPerPage == 1 }"> [[${model}]]:
 						[[${totalElement}]] of [[${totalElement}]] </span>
-
 			</span>
 
-			</span> <span th:if="${elementsPerPage == 1}"> [[${model}]]: [[${currentPage
-				* elementsPerPage}]] of [[${totalElement}]] </span>
+			</span> <span th:if="${elementsPerPage == 1}"> [[${model}]]:
+				[[${currentPage * elementsPerPage}]] of [[${totalElement}]] </span>
 		</div>
 	</div>
 
 
 	<!-- footer -->
-	<div th:fragment="footer" class="text-center m-3">Happy Shop
-		</div>
+	<div th:fragment="footer" class="text-center m-3">Happy Shop</div>
 </body>
 </html>

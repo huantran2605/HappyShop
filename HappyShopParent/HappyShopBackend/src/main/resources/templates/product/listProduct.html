@@ -16,31 +16,57 @@
 			<strong>[[${message}]]</strong>
 		</div>
 
-		<div class="m-2 ms-0">
-			<a th:href="@{/product/new}" class="" title="Add new product"> 
-				<i class="fa-solid fa-plus fa-2x fa-gray"></i>
-				
-			</a>
-		</div>
-		<div class="d-flex justify-content-start">
-			<!-- export Csv -->
-			<a th:href="@{/product/export/csv}" title="Export to CSV"
-				class="m-3 ms-0"> <i
-				class="fa-sharp fa-solid fa-file-csv fa-2x fa-gray"></i>
-			</a> <a th:href="@{/product/export/excel}" title="Export to Excel"
-				class="m-3 ms-0"> <i
-				class="fa-sharp fa-solid fa-file-excel fa-2x fa-gray"></i>
-			</a> <a th:href="@{/product/export/pdf}" title="Export to Excel"
-				class="m-3 ms-0"> <i
-				class="fa-sharp fa-solid fa-file-pdf fa-2x fa-gray"></i>
-			</a>
-		</div>
-
+		<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+			<div class="m-2 ms-0">
+				<a th:href="@{/product/new}" class="" title="Add new product"> <i
+					class="fa-solid fa-plus fa-2x fa-gray"></i>
+				</a>
+			</div>
+			<div class="d-flex justify-content-start">
+				<!-- export Csv -->
+				<a th:href="@{/product/export/csv}" title="Export to CSV"
+					class="m-3 ms-0"> <i
+					class="fa-sharp fa-solid fa-file-csv fa-2x fa-gray"></i>
+				</a>
+			</div>
+		</th:block>
 		<!-- search-->
-		<div th:replace="fragments :: search ('product', 'listProduct')">
-
+		<div>
+			<form th:action="@{'/product/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+				class="form-inline m-2" id="searchForm">
+				<div class="row">
+					<div class="col-sm-3">		
+						<label for="">Category: </label> 
+						<select name="categoryID" id="dropdownCategory"
+							class="form-control">
+							<option value="0">All Categories</option>
+							<th:block th:each="category : ${listCategories}">
+								<option th:value="${category.id}" 
+								 th:selected="(${categoryID} == ${category.id})"
+								 th:text="${category.name}"></option>
+							</th:block>
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<label for="">Filter: </label> <input
+							class="form-control " th:value="${keyWord}"
+							name="keyWord" type="search" placeholder="Search"
+							aria-label="Search">
+					</div>
+					<div class="col-sm-3">
+						<button class="btn btn-outline-success " type="submit">
+							<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+						</button>
+						<a th:href="@{/product/listProduct}"
+							class="btn btn-outline-success m-3 "> <i
+							class="fa-sharp fa-solid fa-eraser"></i>
+						</a>
+					</div>
+				</div>
+					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+						type="hidden" name="sortDir" th:value="${sortDir}" />
+			</form>
 		</div>
-
 
 		<div class="full-details">
 			<table
@@ -57,9 +83,9 @@
 							th:replace="fragments :: column_link('product', 'brand', 'Brand')"></th>
 						<th
 							th:replace="fragments :: column_link('product', 'category', 'Category')"></th>
-						<th
-							th:replace="fragments :: column_link('product', 'enable', 'Enable')"></th>
-
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<th>Enabled</th>
+						</th:block>
 						<th></th>
 					</tr>
 				</thead>
@@ -73,29 +99,35 @@
 								th:src="@{${product.getProductMainImagePath}}"
 								alt="product mainImage" width="100" height="100" />
 						</span></td>
-						<td><a th:href="@{'/product/detail/' + ${product.id}}" 
-							class="link-detail"
-							style=" text-decoration: none">[[${product.name}]]</a></td>
+						<td><a th:href="@{'/product/detail/' + ${product.id}}"
+							class="link-detail" th:title="${product.name}"
+							style="text-decoration: none">[[${product.shortName}]]</a></td>
 						<td th:text="${product.getBrandName}"></td>
 						<td th:text="${product.getCategoryName}"></td>
-
-						<td>
-							<div
-								th:replace="fragments :: status_enable('product', ${product.id}, ${product.enable})">
-							</div>
-						</td>
-
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<td>
+								<div
+									th:replace="fragments :: status_enable('product', ${product.id}, ${product.enable})">
+								</div>
+							</td>
+						</th:block>
 						<td>
 							<div class="float-start">
-								<a href="#" title="Detail product" class="me-3"> <i
-									class="fa-sharp fa-solid fa-circle-info link-detail"></i>
-								</a> <a th:href="@{'/product/delete/' + ${product.id}}"
-									class="deleteProduct me-3" th:name="${product.name}"
-									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-								</a>
+								<a th:href="@{'/product/detail/' + ${product.id}}"
+									title="Detail product" class="me-3 link-detail"> <i
+									class="fa-sharp fa-solid fa-circle-info"></i>
+								</a> 
+								<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+									<a th:href="@{'/product/delete/' + ${product.id}}"
+										class="deleteProduct me-3" th:name="${product.name}"
+										title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+									</a>
+								</th:block>
 							</div>
-							<div th:replace="fragments :: update('product', ${product.id})">
-							</div>
+							<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
+								<div th:replace="fragments :: update('product', ${product.id})">
+								</div>
+							</th:block>
 						</td>
 
 					</tr>
@@ -103,8 +135,7 @@
 				</tbody>
 			</table>
 		</div>
-		</div>
-		
+
 
 		<div class="less-details">
 			<div th:each=" product: ${products}" class="row">
@@ -121,7 +152,11 @@
 				</div>
 				<div class="col-8">
 					<div class="m-2">
-						<div th:text="${product.name}"></div>
+						<div>
+							<a th:href="@{'/product/detail/' + ${product.id}}"
+								class="link-detail" th:title="${product.name}"
+								style="text-decoration: none">[[${product.shortName}]]</a>
+						</div>
 
 						<div class="mt-2">
 							<div
@@ -141,24 +176,48 @@
 				</div>
 			</div>
 		</div>
-		<!-- modal -->
-		<div th:replace="modal_fragments :: confirmationModal"></div>
-		<!-- count elements per page -->
-		<div th:replace="fragments :: countElement('Product')"></div>
+	</div>
+	<!-- modal -->
+	<div th:replace="modal_fragments :: confirmationModal"></div>
 
-		<!-- pagination -->
-		<div th:replace="fragments :: pagination('product')"></div>
-		<!-- footer -->
-		<div th:replace="fragments :: footer"></div>
-		<script th:src="@{/js/common_form.js}"></script>
-		<!-- Bootstrap JavaScript Libraries -->
-		<script
-			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-			integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
-			integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
-			crossorigin="anonymous"></script>
+	<div class="modal fade" id="detailModal">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content"></div>
+		</div>
+	</div>
+	<!-- count elements per page -->
+	<div th:replace="fragments :: countElement('Product')"></div>
+
+	<!-- pagination -->
+	<div th:replace="fragments :: pagination('product')"></div>
+	<!-- footer -->
+	<div th:replace="fragments :: footer"></div>
+
+	<script th:src="@{/js/common_form.js}"></script>
+	<script>
+		$(document).ready(
+				function() {
+					$(".link-detail").on(
+							"click",
+							function(e) {
+								e.preventDefault();
+								linkDetailUrl = $(this).attr("href");
+								$("#detailModal").modal("show").find(
+										".modal-content").load(linkDetailUrl);
+							});
+				$("#dropdownCategory").on("change", function() {
+						$("#searchForm").submit();
+				});
+				});
+	</script>
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
 </body>
 </html>

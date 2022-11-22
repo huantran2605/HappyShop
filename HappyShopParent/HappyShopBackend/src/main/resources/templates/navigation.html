@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -23,29 +24,81 @@
 		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavId">
 			<ul class="navbar-nav me-auto mt-2 mt-lg-0">
-				<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a class="nav-link"
-					th:href="@{/user/listUser}">User</a></li>
-					<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a class="nav-link" th:href="@{/category/listCategory}">Categories</a>
-					</li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a class="nav-link" th:href="@{/brand/listBrand}">Brands</a></li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor','Salesperson','Shipper')"><a class="nav-link" th:href="@{/product/listProduct}">Products</a>
+			
+				<th:block sec:authorize="hasAuthority('Admin')">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+					aria-expanded="true"> Users </a>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a class="dropdown-item" th:href="@{/user/new}">Create
+								New</a></li>
+						<li><a class="dropdown-item" th:href="@{/user/listUser}">
+								View All</a></li>
+					</ul>
 				</li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a class="nav-link" href="#">Customers</a>
+				</th:block>
+				
+				<th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+					aria-expanded="true"> Categories </a>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a class="dropdown-item" th:href="@{/category/new}">Create
+								New</a></li>
+						<li><a class="dropdown-item" th:href="@{/category/listCategory}">
+								View All</a></li>
+					</ul>
 				</li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a class="nav-link" href="#">Shipping</a>
+				
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+					aria-expanded="true"> Brands </a>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a class="dropdown-item" th:href="@{/brand/new}">Create
+								New</a></li>
+						<li><a class="dropdown-item" th:href="@{/brand/listBrand}">
+								View All</a></li>
+					</ul>
 				</li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a class="nav-link" href="#">Sale
-						Report</a></li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a class="nav-link" href="#">Orders</a></li>
-				<li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a class="nav-link" href="#">Articles</a>
+				</th:block>
+				
+				<th:block sec:authorize="hasAnyAuthority('Admin','Salesperson','Editor','Shipper')">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+					aria-expanded="true"> Products </a>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a class="dropdown-item" 
+							sec:authorize="hasAnyAuthority('Admin', 'Editor')"
+							th:href="@{/product/new}">Create
+								New</a></li>
+						<li><a class="dropdown-item" th:href="@{/product/listProduct}">
+								View All</a></li>
+					</ul>
 				</li>
-				<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a class="nav-link" href="#">Setting</a></li>
+				</th:block>
+				
+				<li class="nav-item"
+					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
+					class="nav-link" href="#">Customers</a></li>
+				<li class="nav-item"
+					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
+					class="nav-link" href="#">Shipping</a></li>
+				<li class="nav-item"
+					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
+					class="nav-link" href="#">Sale Report</a></li>
+				<li class="nav-item"
+					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
+					class="nav-link" href="#">Orders</a></li>
+				<li class="nav-item"
+					sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a
+					class="nav-link" href="#">Articles</a></li>
+				<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a
+					class="nav-link" href="#">Setting</a></li>
 
 				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle"  role="button"
-					data-bs-toggle="dropdown" aria-expanded="true"> <i
-						class="fa-solid fa-user fa-gray "></i> <span
-						sec:authentication="principal.fullname"> </span>
+					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+					aria-expanded="true"> <i class="fa-solid fa-user fa-gray "></i>
+						<span sec:authentication="principal.fullname"> </span>
 				</a>
 					<ul class="dropdown-menu dropdown-menu-dark">
 						<li><a class="dropdown-item"
@@ -55,9 +108,9 @@
 						<li><a class="dropdown-item"
 							th:href="@{/account/changePasswordForm}">Change Password</a></li>
 					</ul></li>
+
 			</ul>
 		</div>
 	</nav>
-
 </body>
 </html>

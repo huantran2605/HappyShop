@@ -133,6 +133,12 @@ public class Product {
         return false;
     }
     
-    
+    @Transient
+    public String shortName() {
+        if(this.name.length() > 70) {
+            this.name = this.name.substring(0, 70) + "...";
+        }
+        return this.name;
+    }
     
 }

@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.happyshop.common.entity.Category;
-import com.happyshop.common.entity.User;
+
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
@@ -20,6 +20,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     
     @Query("SELECT u FROM Category u WHERE u.alias = :alias")
     public Category findByAlias( @Param("alias") String alias); 
-
+    
+    
     
 }

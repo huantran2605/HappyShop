@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div class="modal-header">
+		<h5 class="modal-title">Product Details</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal"
+			aria-label="Close"></button>
+	</div>
+	<div class="modal-body" id="modal-body">
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" data-bs-toggle="tab"
+					data-bs-target="#overview" type="button" aria-controls="overview"
+					aria-selected="true">Overview</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" data-bs-toggle="tab"
+					data-bs-target="#description" type="button"
+					aria-controls="description" aria-selected="false">Description</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" data-bs-toggle="tab"
+					data-bs-target="#images" type="button" aria-controls="images"
+					aria-selected="false">Images</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" data-bs-toggle="tab"
+					data-bs-target="#details" type="button" aria-controls="details"
+					aria-selected="false">Details</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" data-bs-toggle="tab"
+					data-bs-target="#shipping" type="button" aria-controls="shipping"
+					aria-selected="false">Shipping</button>
+			</li>
+
+		</ul>
+
+		<div class="tab-content" id="myTabContent">
+			<div class="tab-pane fade show active" id="overview">
+				<div class="row mb-3 mt-5">
+					<div class="col-sm-2">
+						<label for="">Product Name: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" th:value="${product.name}"
+							readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Alias:</label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control"
+							th:value="${product.alias}" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Brand: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control"
+							th:value="${product.brand.name}" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<div class="col-sm-2">
+						<label for="">Category: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control"
+							th:value="${product.category.name}" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Enabled: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="checkbox" th:checked="${product.enable}"
+							onclick="return false;" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">In Stock: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="checkbox" th:checked="${product.inStock}"
+							onclick="return false;" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Cost: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" th:value="${product.cost}"
+							readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Price: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control"
+							th:value="${product.price}" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Discount: </label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control"
+							th:value="${product.discountPercent}" readonly />
+					</div>
+				</div>
+
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Updated Time: </label>
+					</div>
+					<div class="col-sm-6">
+						<div
+							th:text="${#dates.format(product.updatedTime, 'yyyy-MM-dd hh:mm:ss')}"></div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="tab-pane fade" id="description">
+				<div th:replace="product/product_description_readonly :: content"></div>
+			</div>
+
+			<div class="tab-pane fade" id="images">
+				<div th:replace="product/product_images_readonly :: content"></div>
+			</div>
+
+			<div class="tab-pane fade" id="details">
+				<div th:replace="product/product_details_readonly :: content"></div>
+			</div>
+
+			<div class="tab-pane fade container" id="shipping">
+				<div th:replace="product/product_shipping_readonly :: content"></div>
+			</div>
+
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary"
+			data-bs-dismiss="modal">Close</button>
+	</div>
+</body>
+</html>

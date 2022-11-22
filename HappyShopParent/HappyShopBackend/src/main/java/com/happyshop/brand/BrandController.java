@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
+import com.happyshop.category.CategoryCsvExporter;
 import com.happyshop.category.CategoryService;
 import com.happyshop.common.entity.Brand;
 import com.happyshop.common.entity.Category;
@@ -32,7 +35,7 @@ import com.happyshop.common.entity.Category;
 public class BrandController {
     @Autowired
     BrandService brandService;
-    @Autowired
+    @Autowired  
     CategoryService categoryService;
     
     @GetMapping("/listBrand")
@@ -66,7 +69,7 @@ public class BrandController {
             String fileName = org.springframework.util.StringUtils.cleanPath(mutipartFile.getOriginalFilename());
             brand.setLogo(fileName);
             Brand savedCate = brandService.save(brand);
-            String fileDir = "brand-logos/" + savedCate.getId();
+            String fileDir = "../brand-logos/" + savedCate.getId();
             // delete old photos if have  
             FileUploadUtil.cleanDir(fileDir);  
             FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
@@ -168,12 +171,19 @@ public class BrandController {
         else {
             brandService.deleteById(id); 
           //delete folder contains logos
-            String dir = "brand-logos/" + id;
+            String dir = "../brand-logos/" + id;
             FileUtils.deleteDirectory(new File(dir));
             
             re.addAttribute("message","Delete brand id: "+ id + " successfully!");           
             return "redirect:/brand/listBrand";
         }
     
+    }
+    
+    @GetMapping("/export/csv")
+    public void exportCsv(HttpServletResponse response) throws IOException {
+        List<Brand> listBrand = brandService.findAll();
+        BrandCsvExporter brandCsvExporter = new BrandCsvExporter();
+        brandCsvExporter.export(listBrand, response);
     }
 }

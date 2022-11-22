@@ -26,9 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
-import com.happyshop.category.export.CategoryCsvExporter;
-import com.happyshop.category.export.CategoryExcelExporter;
-import com.happyshop.category.export.CategoryPdfExporter;
 import com.happyshop.common.entity.Category;
 
 import antlr.StringUtils;
@@ -122,7 +119,7 @@ public class CategoryController {
                 String fileName = org.springframework.util.StringUtils.cleanPath(mutipartFile.getOriginalFilename());
                 category.setImage(fileName);
                 Category savedCate = categoryService.save(category);
-                String fileDir = "category-images/" + savedCate.getId();
+                String fileDir = "../category-images/" + savedCate.getId();
                 // delete old photos if have  
                 FileUploadUtil.cleanDir(fileDir);
                 FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
@@ -189,7 +186,7 @@ public class CategoryController {
             else {
                 categoryService.deleteById(id); 
               //delete folder contains images
-                String dir = "category-images/" + id;
+                String dir = "../category-images/" + id;
                 FileUtils.deleteDirectory(new File(dir));
                 
                 re.addAttribute("message","Delete category id: "+ id + " successfully!");           
@@ -205,22 +202,5 @@ public class CategoryController {
             categoryCsvExporter.export(listCategory, response);
 
         }
-        @GetMapping("/export/excel")
-        public void exportExcel(HttpServletResponse response) throws IOException {
-            List<Category> listCategory = categoryService.findAll();
-            CategoryExcelExporter categoryExcelExporter = new CategoryExcelExporter();
-            categoryExcelExporter.export(listCategory, response);
-            
-        }
-        @GetMapping("/export/pdf")
-        public void exporPdf(HttpServletResponse response) throws IOException {
-            List<Category> listCategory = categoryService.findAll();
-            CategoryPdfExporter categoryPdfExporter = new CategoryPdfExporter();
-            categoryPdfExporter.export(listCategory, response);
-           
-        }
-//        
-//    }
-//
-//    
+        
 }

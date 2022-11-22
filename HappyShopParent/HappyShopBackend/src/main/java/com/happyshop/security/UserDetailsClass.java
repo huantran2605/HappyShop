@@ -79,5 +79,7 @@ public class UserDetailsClass implements UserDetails {
 	public void setLastname (String lastName) {
 		user.setLastName(lastName);
 	}
-	
+	public boolean hasRole(String roleName) {
+        return user.hasRole(roleName);
+    }
 }

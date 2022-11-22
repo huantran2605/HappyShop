@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -31,9 +34,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
 import com.happyshop.brand.BrandService;
+import com.happyshop.category.CategoryCsvExporter;
+import com.happyshop.category.CategoryService;
 import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.entity.product.ProductImage;
+import com.happyshop.security.UserDetailsClass;
 
 @Controller
 @RequestMapping("/product")
@@ -42,6 +48,8 @@ public class ProductController {
     ProductService productService;
     @Autowired
     BrandService brandService; 
+    @Autowired
+    CategoryService categoryService;
     
     @GetMapping("/listProduct")
     private String viewFirstPageProduct(Model model,
@@ -51,26 +59,27 @@ public class ProductController {
         model.addAttribute("products", list);
         
         re.addAttribute("message", message.orElse(null));
-        return "redirect:/product/page/1?sortField=id&sortDir=asc&keyWord=";
+        return "redirect:/product/page/1?sortField=id&sortDir=asc&keyWord=&categoryID=0";
     }
         
     @GetMapping("/page/{pageNum}") 
     private String productPage (@PathVariable ("pageNum") Integer pageNum,
             @Param("sortField") String sortField,
             @Param("sortDir") String sortDir,
-            @Param("keyWord") Optional<String> keyWord, 
+            @Param("keyWord") String keyWord, 
+            @Param("categoryID") Integer categoryID, 
             
             Model model,@RequestParam("message")  Optional<String> message) {
         //sort
         Sort sort = Sort.by(sortField);
         if(sortDir.equalsIgnoreCase("asc"))
             sort = Sort.by(sortField).ascending();
-        else  sort = Sort.by(sortField).descending();
+        else  sort = Sort.by(sortField).descending();  
         
         org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
                 ProductService.SIZE_PAGE_PRODUCT, sort);
         
-        Page<Product> pageProduct = productService.findAll(pageable,keyWord.get()); 
+        Page<Product> pageProduct = productService.findAll(pageable,keyWord,categoryID); 
         List<Product> listProduct = pageProduct.getContent();
         //list cat 
         
@@ -87,6 +96,10 @@ public class ProductController {
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("startCount", startCount);
         model.addAttribute("endCount", endCount);
+        if(categoryID != null) {
+            model.addAttribute("categoryID", categoryID);  
+        }
+        model.addAttribute("listCategories", categoryService.showListCategory());
         
         if(endCount >  pageProduct.getTotalElements()) {
             endCount = pageProduct.getTotalElements();
@@ -100,7 +113,7 @@ public class ProductController {
         model.addAttribute("elementsPerPage", ProductService.SIZE_PAGE_PRODUCT);
         model.addAttribute("message", message.orElse(null));
         
-        model.addAttribute("keyWord", keyWord.get());
+        model.addAttribute("keyWord", keyWord);
         
         return"product/listProduct";
     }
@@ -118,134 +131,52 @@ public class ProductController {
     
     @PostMapping("/saveOrUpdate")
     private String saveProduct(Product product,
-            @RequestParam("detailIDs") String[] detailIDs,
-            @RequestParam("imageFile") MultipartFile mainImageMultipartFile,
-            @RequestParam("extraImage") MultipartFile[] extraImageMultipartFile,
+            @RequestParam(name = "detailIDs", required = false) String[] detailIDs,
+            @RequestParam(value = "imageFile", required = false) MultipartFile mainImageMultipartFile,
+            @RequestParam(value = "extraImage", required = false) MultipartFile[] extraImageMultipartFile,
             @RequestParam(name = "exsitingExtraImage", required = false) MultipartFile[] exsitingExtraImageMultipartFile,
-            @RequestParam("productNameDetails") String[] nameDetails,
-            @RequestParam("productValueDetails") String[] valueDetails,
+            @RequestParam(name = "productNameDetails", required = false) String[] nameDetails,
+            @RequestParam(name = "productValueDetails", required = false) String[] valueDetails,
             @RequestParam(name = "imageIDs", required = false) String[] imageIDs,
             @RequestParam(name = "imageNames", required = false) String[] imageNames,
             RedirectAttributes re,
+            @AuthenticationPrincipal UserDetailsClass loggedUser,
             Model model) throws IOException {
-        
+            
+            if(loggedUser.hasRole("Salesperson")) {
+                productService.saveProductPrice(product);
+                re.addAttribute("message", "Updated Product successfully!");
+                return "redirect:/product/listProduct";
+            }
             if(product.getId() != null) {    
                 re.addAttribute("message", "Updated Product successfully!");
             } else {
                 re.addAttribute("message", "Added new Product successfully!");
             }
-            setDetailsProduct(detailIDs, nameDetails, valueDetails, product);
+            ProductSaveHelper.setDetailsProduct(detailIDs, nameDetails, valueDetails, product);
             
             setMainImageName(mainImageMultipartFile, product);    
             if(imageIDs != null && imageNames != null) {
-                setExistingExtraImageName(imageIDs, imageNames, product);           
+                ProductSaveHelper.setExistingExtraImageName(imageIDs, imageNames, product);           
             }
-            setNewExtraImageName(extraImageMultipartFile, product);
+            ProductSaveHelper.setNewExtraImageName(extraImageMultipartFile, product);
             
             Product savedProduct = productService.save(product);
-            createImageFileDir(savedProduct);
+            ProductSaveHelper.createImageFileDir(savedProduct);
             
             if(exsitingExtraImageMultipartFile != null) {
-                saveUploadedNewExsitingExtraImages(exsitingExtraImageMultipartFile, savedProduct);            
+                ProductSaveHelper.saveUploadedNewExsitingExtraImages(exsitingExtraImageMultipartFile, savedProduct);            
             }
-            saveUploadedImages(mainImageMultipartFile,extraImageMultipartFile,
+            ProductSaveHelper.saveUploadedImages(mainImageMultipartFile,extraImageMultipartFile,
                      savedProduct);
             
-            deleteExtraImagesWeredRemovedOnForm(product);
+            ProductSaveHelper.deleteExtraImagesWeredRemovedOnForm(product);
             
             productService.save(product);
       
             return "redirect:/product/listProduct";
     }
     
-    private void saveUploadedNewExsitingExtraImages(MultipartFile[] exsitingExtraImageMultipartFile,
-            Product savedProduct) throws IOException {
-        if (exsitingExtraImageMultipartFile.length > 0) {
-            String fileDir = "product-images/" + savedProduct.getId() + "/extras";
-            for (MultipartFile multipartFile : exsitingExtraImageMultipartFile) {
-                if (!multipartFile.isEmpty()) {
-                    String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-                    FileUploadUtil.saveFile(multipartFile, fileName, fileDir);
-                }
-            }
-        }
-
-    }
-
-    private void createImageFileDir(Product savedProduct) throws IOException {
-        String mainImageFileDirr = "product-images/" + savedProduct.getId();
-        Path mainImageUploadPath = Paths.get(mainImageFileDirr);
-        if (!Files.exists(mainImageUploadPath)) {
-            Files.createDirectory(mainImageUploadPath);
-        }
-        
-        String extraImageFileDirr = "product-images/" + savedProduct.getId() + "/extras";
-        Path ExtraImageUploadPath = Paths.get(extraImageFileDirr);
-        if (!Files.exists(ExtraImageUploadPath)) {
-            Files.createDirectory(ExtraImageUploadPath);
-        }
-    }
-
-    private void deleteExtraImagesWeredRemovedOnForm(Product product) throws IOException {
-        String extraImageDir = "product-images/" + product.getId() + "/extras";
-        Path dirPath = Paths.get(extraImageDir);
-        
-        Files.list(dirPath).forEach(file -> {
-            String fileName = file.toFile().getName();
-            if(!product.containsImageName(fileName)) {
-                try {
-                    Files.delete(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void setExistingExtraImageName(String[] imageIDs,
-            String[] imageNames, Product product) {
-        
-        Set<ProductImage> set = new HashSet<>();
-        if(imageIDs.length > 0 && imageNames.length > 0) {
-            for (int j = 0; j < imageNames.length; j++) {
-                int idImage = Integer.parseInt(imageIDs[j]);      
-                String nameImage = imageNames[j];
-                set.add(new ProductImage(idImage, nameImage, product));
-            }
-        }
-        product.setImages(set);     
-    }
-
-    private void setDetailsProduct(String[] detailIDs, String[] nameDetails, String[] valueDetails, Product product) {
-        if(nameDetails.length > 0 && valueDetails.length > 0) {
-            for (int i = 0; i < nameDetails.length; i++) {
-                if(!nameDetails[i].isEmpty() && !valueDetails[i].isEmpty()) {
-                    if(detailIDs.length > 0) {
-                        int idDetail = Integer.parseInt(detailIDs[i]);
-                        product.addDetail(idDetail, nameDetails[i] , valueDetails[i]);   
-                    }
-                    else {
-                        product.addDetail(nameDetails[i], valueDetails[i]);            
-                    }            
-                }
-            }
-        }
-    }
-
-    private void setNewExtraImageName(MultipartFile[] extraImageMultipartFile, Product product) {
-        if (extraImageMultipartFile.length > 0) {
-            for (MultipartFile multipartFile : extraImageMultipartFile) {
-                if (!multipartFile.isEmpty()) {
-                    String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                    if(!product.containsImageName(fileName)) {
-                        product.addExtraImage(fileName);          
-                    }
-                }
-            }
-        }  
-    }
-
     private void setMainImageName(MultipartFile mainImageMultipartFile, Product product) {
         if (!mainImageMultipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(mainImageMultipartFile.getOriginalFilename());
@@ -260,33 +191,7 @@ public class ProductController {
             }
         }
         
-    }       
-    
-    private void saveUploadedImages (MultipartFile mainImageMultipartFile,
-            MultipartFile[] extraImageMultipartFile,
-            Product savedProduct) throws IOException {
- 
-        if (!mainImageMultipartFile.isEmpty()) {
-            String fileName = StringUtils.cleanPath(mainImageMultipartFile.getOriginalFilename());
-            String fileDir = "product-images/" + savedProduct.getId();
-            // delete old photos if have
-            FileUploadUtil.cleanDir(fileDir);
-            FileUploadUtil.saveFile(mainImageMultipartFile, fileName, fileDir);               
-        }
-
-        if(extraImageMultipartFile.length > 0) {
-            String fileDir = "product-images/" + savedProduct.getId() + "/extras";
-            for (MultipartFile multipartFile : extraImageMultipartFile) {
-                if(!multipartFile.isEmpty()) {
-                    String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                    
-                    FileUploadUtil.saveFile(multipartFile, fileName, fileDir);
-                }
-            }
-        }
-        
-        
-    }
+    } 
     
     @GetMapping("updateEnabled/{id}")
     private String updateEnableStatus(@PathVariable("id") Integer id,
@@ -316,7 +221,7 @@ public class ProductController {
         else {    
             productService.deleteById(id); 
           //delete folder contains images
-            String dir = "product-images/" + id;
+            String dir = "../product-images/" + id;
             FileUtils.deleteDirectory(new File(dir));
             
             re.addAttribute("message","Delete product id: "+ id + " successfully!");           
@@ -348,4 +253,25 @@ public class ProductController {
 
     }
     
+    @GetMapping("detail/{id}")
+    private String detailProduct(@PathVariable("id") Integer  id,            
+            Model model) {
+        Optional<Product> product = productService.findById(id);
+        if (product.isEmpty()) {
+            model.addAttribute("message", "The product is not exist!");
+            return "redirect:/product/listProduct";
+        } else {
+            model.addAttribute("product", product.get());
+            
+        }
+        return "product/product_detail_modal";
+    }
+    
+    @GetMapping("/export/csv")
+    public void exportCsv(HttpServletResponse response) throws IOException {
+        List<Product> listProduct = productService.findAll();
+        ProductCsvExporter productCsvExporter = new ProductCsvExporter();
+        productCsvExporter.export(listProduct, response);
+
+    }
 }

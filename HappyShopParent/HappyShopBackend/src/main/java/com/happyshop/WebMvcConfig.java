@@ -15,9 +15,9 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		
 	    addModuleResourceHandlers("users-photo", registry);
-	    addModuleResourceHandlers("category-images", registry);
-	    addModuleResourceHandlers("brand-logos", registry);
-	    addModuleResourceHandlers("product-images", registry);
+	    addModuleResourceHandlers("../category-images", registry);
+	    addModuleResourceHandlers("../brand-logos", registry);
+	    addModuleResourceHandlers("../product-images", registry);
 	    
 
 	}
@@ -25,8 +25,9 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	public void addModuleResourceHandlers (String pattern, ResourceHandlerRegistry registry ) {
 	    Path fileDir = Paths.get(pattern);
         String filePath = fileDir.toFile().getAbsolutePath();
-            
-        registry.addResourceHandler("/" + pattern + "/**")
+        
+        String logicalPath = pattern.replace("../", "");
+        registry.addResourceHandler("/"+ logicalPath + "/**")
             .addResourceLocations("file:/" + filePath+"/");
 	}
 	

@@ -15,7 +15,7 @@ import com.happyshop.common.entity.product.Product;
 
 public interface ProductService {
     
-    int SIZE_PAGE_PRODUCT = 2;
+    int SIZE_PAGE_PRODUCT = 5;
 
     Product getById(Integer id);
 
@@ -41,10 +41,12 @@ public interface ProductService {
 
     List<Product> findAll();
 
-    Page<Product> findAll(Pageable pageable, String keyword);
+    Page<Product> findAll(Pageable pageable, String keyword, Integer categoryID);
 
     String isNameUnique(Integer id, String name);
 
     String updateEnabledStatus(Product product);
+    
+    void saveProductPrice(Product productInForm);
 
 }
