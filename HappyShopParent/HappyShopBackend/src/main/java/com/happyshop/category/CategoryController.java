@@ -137,8 +137,8 @@ public class CategoryController {
                     re.addAttribute("message", "Added new Category successfully!");
                 }
             }
-            
-            return "redirect:/category/listCategory";
+            String nameSerach = category.getName()+" " + category.getAlias();
+            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=" + nameSerach;
         }
 
         @GetMapping("update/{id}")
@@ -172,7 +172,8 @@ public class CategoryController {
                 status = categoryService.updateEnabledStatus(category.get());
                 re.addAttribute("message", status);     
             }
-            return "redirect:/category/listCategory";
+            String nameSerach = category.get().getName() + " " + category.get().getAlias();
+            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=" + nameSerach;
         }      
         
         @GetMapping("/delete/{id}")

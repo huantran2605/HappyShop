@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('HappyShop','none')"></head>
+<body>
+	<div th:fragment="content">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+				<th:block th:each="parent : ${listParentCategory}">
+					<li class="breadcrumb-item">
+						<a th:href="@{'/c/'+${parent.alias}}">[[${parent.name}]]</a>
+					</li>		
+				</th:block>
+				
+				<th:block th:if="${product != null}">
+					<li class="breadcrumb-item active">
+						[[${product.shortName}]]
+					</li>		
+				</th:block>
+			</ol>
+		</nav>
+	</div>
+</body>
+</html>

@@ -13,78 +13,21 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
 	integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
 	crossorigin="anonymous">
-<!--Fontawesome -->
-<script src="https://kit.fontawesome.com/d6c67536ea.js"
-	crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
+
 <body>
-	<th th:fragment="column_link(model, fieldName, colTitle)"><span
-		th:if="${sortField == fieldName}"> <a
-			style="text-decoration: none" class="text-reset"
-			th:href="@{'/' + ${model} + '/page/' + ${pageNum} +
-							'?sortField=' + ${sortField}+ '&sortDir=' +
-							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}
-							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
-				[[${colTitle}]]</a> <i class="fa-sharp fa-solid fa-caret-up"
-			th:if="${sortDir == 'asc'}"></i> <i
-			class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
-	</span> <span th:if="${sortField != fieldName}"> <a
-			style="text-decoration: none" class="text-reset"
-			th:href="@{'/' + ${model} + '/page/' + ${pageNum} +
-							'?sortField=' + ${fieldName} + '&sortDir=' + ${reserveDir} +
-							 ${keyWord != null ? '&keyWord=' + keyWord : ''}
-							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
-				[[${colTitle}]]</a>
-	</span></th>
-
-	<div th:fragment="status_enable(model, id, isEnable)">
-		<a th:href="@{'/' + ${model} +'/updateEnabled/' + ${id}}"
-			title="Enable Status"> <i th:if="${isEnable == true}"
-			class="fa-solid fa-circle-check"></i> <i th:if="${isEnable == false}"
-			class="fa-solid fa-circle fa-gray"></i>
-		</a>
+	<div th:fragment="footer">
+		<p class="text-center">Happy Shop - Copyright &copy; Happy Ltd.</p>
 	</div>
-
-	<div th:fragment="update(model, id)">
-		<a th:href="@{'/' +${model} +'/update/' + ${id}}" id="update"
-			title="Update"> <i class="fa-solid fa-pen-to-square fa-red"></i>
-		</a>
-	</div>
-
+	
+	
 	<a th:fragment="page_link(pageNum, label)" class="page-link"
-		th:href="@{'/' + ${model} + '/page/' +${pageNum} +'?sortField=' + ${sortField}+
-					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''} 
-					   +${categoryID != null ? '&categoryID=' + categoryID : ''}}">[[${label}]]</a>
-
-	<!-- search-->
-	<div th:fragment="search(model,listModel)">
-		<div class="row">
-			<div class="col-6 d-flex justify-content-start ">
-				<form
-					th:action="@{'/' + ${model} +'/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
-					class="form-inline ">
-					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
-						type="hidden" name="sortDir" th:value="${sortDir}" /> <input
-						class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
-						type="search" placeholder="Search" aria-label="Search">
-					<button class="btn btn-outline-success m-3 ms-0" type="submit">
-						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
-					</button>
-					<a th:href="@{'/' + ${model} + '/' + ${listModel}} "
-						class="btn btn-outline-success m-3 "> <i
-						class="fa-sharp fa-solid fa-eraser"></i>
-					</a>
-
-				</form>
-			</div>
-		</div>
-
-	</div>
-
+		th:href="@{'/' + ${model} + '/page/' +${pageNum}+${keyword != null ? '?keyword=' + keyword : ''}}">[[${label}]]</a>
+	
+	
 	<!-- pagination------------- -->
 	<!-- Pagination1 -->
 	<div th:fragment="pagination(model)">
@@ -192,34 +135,53 @@
 			</nav>
 		</div>
 	</div>
-
+	
 	<!-- Count element per page -->
-	<div th:fragment="countElement(model)">
-		<div class="text-center " th:if="${totalElement > 1}">
-			<span th:if="${elementsPerPage > 1 }"> <span
+	<div class="text-center " th:fragment="countElement(model)">
+		<div th:if="${totalElement == 0}">
+			No [[${model}]] found
+		</div>
+		<div th:if="${totalElement > 1}">
+			<span th:if="${elementsPerPage > 1 }">
+				<span
 				th:if="${elementsCurrentPerPage == elementsPerPage }">
 					[[${model}]]: [[${currentPage * elementsPerPage - elementsPerPage +
 					1}]] to [[${currentPage * elementsPerPage}]] of [[${totalElement}]]
-			</span> <span th:if="${elementsCurrentPerPage < elementsPerPage }"> <span
-					th:if="${elementsCurrentPerPage > 1 }"> <span
+				</span>
+			<span th:if="${elementsCurrentPerPage < elementsPerPage }">
+				<span
+					th:if="${elementsCurrentPerPage > 1 }">
+					<span
 						th:if="${totalElement != elementsCurrentPerPage}">
 							[[${model}]]: [[${totalElement - elementsCurrentPerPage + 1 }]]
-							to [[${totalElement}]] of [[${totalElement}]] </span> <span
+							to [[${totalElement}]] of [[${totalElement}]] 
+					</span>
+					<span
 						th:if="${totalElement == elementsCurrentPerPage}">
-							[[${model}]]: 1 to [[${totalElement}]] of [[${totalElement}]] </span>
-				</span> <span th:if="${elementsCurrentPerPage == 1 }"> [[${model}]]:
-						[[${totalElement}]] of [[${totalElement}]] </span>
+							[[${model}]]: 1 to [[${totalElement}]] of [[${totalElement}]]
+					</span>
+				</span>
+				<span th:if="${elementsCurrentPerPage == 1 }"> [[${model}]]:
+						[[${totalElement}]] of [[${totalElement}]]
+				</span>
 			</span>
 
 			</span> <span th:if="${elementsPerPage == 1}"> [[${model}]]:
 				[[${currentPage * elementsPerPage}]] of [[${totalElement}]] </span>
 		</div>
 	</div>
-
-
-	<!-- footer -->
-	<div th:fragment="footer">
-		<p class="text-center">Happy Shop - Copyright &copy; Happy Ltd.</p>
+	
+	<div th:fragment="search">
+		<nav class="navbar navbar-expand-sm ">
+			<form class=" d-flex d-flex-row" th:action="@{'/search'}"
+				method="get">
+				<div class="m-2">Search:</div>
+				<input type="search" class="form-control m-2" name="keyword"
+					th:value="${keyword}"
+					required /><input type="submit" value="Search" class="btn btn-primary m-2" />
+			</form>
+		</nav>
 	</div>
+	
 </body>
 </html>

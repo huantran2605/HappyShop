@@ -140,5 +140,10 @@ public class Product {
         }
         return this.name;
     }
-    
+    @Transient
+    public float getDiscountPrice() {
+        float discountprice = price - (price * discountPercent) / 100;
+        discountprice = (float) Math.round(discountprice * 100) / 100;
+        return discountprice;
+    }
 }

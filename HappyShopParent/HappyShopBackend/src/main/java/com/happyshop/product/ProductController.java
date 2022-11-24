@@ -174,7 +174,8 @@ public class ProductController {
             
             productService.save(product);
       
-            return "redirect:/product/listProduct";
+            String nameSerach = product.getAlias();
+            return "redirect:/product/page/1?sortField=id&sortDir=asc&categoryID=0&keyWord=" + nameSerach;
     }
     
     private void setMainImageName(MultipartFile mainImageMultipartFile, Product product) {
@@ -206,7 +207,8 @@ public class ProductController {
             status = productService.updateEnabledStatus(product.get());
             re.addAttribute("message", status);     
         }
-        return "redirect:/product/listProduct";
+        String nameSerach = product.get().getAlias();
+        return "redirect:/product/page/1?categoryID=0&sortField=id&sortDir=asc&keyWord=" + nameSerach;
     }    
     
     @GetMapping("/delete/{id}")

@@ -1,28 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-<head th:replace="fragments :: page_head('HappyShop','none')"></head>
+<head th:replace="fragments :: page_head('Error', 'none')"></head>
+
 <body>
-
 	<div class="container-fluid">
+		<!-- navigation -->
 		<div th:replace="navigation :: header_menu"></div>
-		<div th:replace="fragments :: search"></div>
-		<h1>Shopping by Categories</h1>
-		<div class="row">
-			<div class="col" th:each="category : ${listCategory}">
-				<a th:href="@{'/c/' + ${category.alias}}"> <img
-					th:src="@{${category.getCategoryImagePath}}"
-					th:alt="${category.alias}" width="150" /> <br /> <span>[[${category.name}]]</span>
-				</a>
-			</div>
-		</div>
-
-
+		<h2 class="text-center">Sorry, unexpected error has occurred!</h2>
+		<!-- footer -->
 		<div th:replace="navigation :: footer_menu"></div>
 		<div th:replace="fragments :: footer"></div>
 	</div>
-
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

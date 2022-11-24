@@ -88,7 +88,8 @@ public class BrandController {
             }
         }
         
-        return "redirect:/brand/listBrand";
+        String nameSerach = brand.getId()+" " + brand.getName();
+        return "redirect:/brand/page/1?sortField=id&sortDir=asc&keyWord=" + nameSerach;
     }
     
     @GetMapping("update/{id}")

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('HappyShop','none')"></head>
+<body>
+
+	<div th:fragment="content">
+		<a th:href="@{'/p/' + ${product.alias}}" th:title="${product.name}">
+			<img th:src="@{${product.getProductMainImagePath}}" width="150" /> <br />
+			<b>[[${product.shortName}]]</b>
+		</a> <br />
+		<th:block th:if="${product.discountPercent <= 0}">
+			<p>$ [[${product.price}]]</p>
+		</th:block>
+		<th:block th:if="${product.discountPercent > 0}">
+			<span style="color: darkred; font-size: larger"> $
+				[[${product.getDiscountPrice}]] </span>
+			<del>$ [[${product.price}]]</del>
+		</th:block>
+	</div>
+
+
+</body>
+</html>

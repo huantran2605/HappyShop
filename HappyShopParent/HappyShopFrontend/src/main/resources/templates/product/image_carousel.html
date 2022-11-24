@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+	<div th:fragment="content" class="modal fade text-center"
+		id="imageCarouselModal">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content bg-dark">
+
+				<!-- Carousel -->
+				<div id="demo" class="carousel slide" data-bs-ride="carousel">
+
+					<!-- Indicators/dots -->
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#demo" data-bs-slide-to="0"
+							class="active bg-danger"></button>
+						<th:block th:each="extraImage,status : ${product.images}">
+							<button type="button" class="bg-danger" data-bs-target="#demo"
+							 th:data-bs-slide-to="${status.count}"></button>
+						</th:block>
+					</div>
+
+					<!-- The slideshow/carousel -->
+					<div class="carousel-inner">
+						<div class="carousel-item active">				
+							<img th:src="@{${product.getProductMainImagePath}}"
+							  class="img-fluid" />
+						</div>
+						<th:block th:each="extraImage : ${product.images}">
+							<div class="carousel-item">
+								<img class="image-fluid"
+								 th:src="@{${extraImage.getPathExtraImageProduct}}"/>
+							</div>
+						</th:block>
+					</div>
+
+					<!-- Left and right controls/icons -->
+					<button class="carousel-control-prev" type="button"
+						data-bs-target="#demo" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon"></span>
+					</button>
+					<button class="carousel-control-next" type="button"
+						data-bs-target="#demo" data-bs-slide="next">
+						<span class="carousel-control-next-icon"></span>
+					</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

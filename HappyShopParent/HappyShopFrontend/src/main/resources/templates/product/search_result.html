@@ -1,24 +1,28 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: page_head('HappyShop','none')"></head>
+<head th:replace="fragments :: page_head(${titlePage},'none')"></head>
 <body>
 
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
 		<div th:replace="fragments :: search"></div>
-		<h1>Shopping by Categories</h1>
-		<div class="row">
-			<div class="col" th:each="category : ${listCategory}">
-				<a th:href="@{'/c/' + ${category.alias}}"> <img
-					th:src="@{${category.getCategoryImagePath}}"
-					th:alt="${category.alias}" width="150" /> <br /> <span>[[${category.name}]]</span>
-				</a>
+		<div th:if="${totalElement > 0}">
+			<h1>Search Results For '[[${keyword}]]'</h1>
+		</div>
+		<div th:unless="${totalElement > 0}">
+			<h1>No Match Found For '[[${keyword}]]'</h1>
+		</div>
+		
+		<div class="row mt-3 d-flex justify-content-start flex-wrap">
+			<div class="col-sm-2" th:each="product : ${listProduct}">
+				<div th:replace="product/product_fragment :: content"></div>
 			</div>
 		</div>
-
-
+		
+		<div th:replace="fragments :: countElement('Product')"></div>
+		<div th:replace="fragments :: pagination('search')"></div>
+		
 		<div th:replace="navigation :: footer_menu"></div>
 		<div th:replace="fragments :: footer"></div>
 	</div>

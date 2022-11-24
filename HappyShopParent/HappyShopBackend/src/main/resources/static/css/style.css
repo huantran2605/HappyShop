@@ -1,5 +1,14 @@
 @charset "UTF-8";
 
+.fa-red:hover{
+	color: red;
+}
+
+.fa-gray{
+	color: gray;
+}
+
+
 @media screen and (max-width: 576px){
 	/* small screen */
 	.full-details{display: none;}

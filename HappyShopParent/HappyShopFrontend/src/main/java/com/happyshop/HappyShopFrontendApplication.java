@@ -1,13 +1,13 @@
-package com.seafoodshop;
+package com.happyshop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SeaFoodShopFrontendApplication {
+public class HappyShopFrontendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SeaFoodShopFrontendApplication.class, args);
+		SpringApplication.run(HappyShopFrontendApplication.class, args);
 	}
 
 }

@@ -110,7 +110,8 @@ public class UserController {
 		        re.addAttribute("message", "Added new User successfully!");
 		    }
 		}
-		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + user.getEmail();
+		String nameMail = user.getEmail().split("@")[0];
+		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + nameMail;
 	}
 
 	@GetMapping("update/{id}")
@@ -166,7 +167,8 @@ public class UserController {
 			status = userService.updateEnabledStatus(user.get());
 			re.addAttribute("message", status);		
 		}
-		return "redirect:/user/listUser";
+		String nameMail = user.get().getEmail().split("@")[0];
+        return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + nameMail;
 	}
 
 	@GetMapping("/page/{pageNum}")
