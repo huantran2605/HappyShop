@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+<body>
+	<div th:fragment="content">
+		<div class="mt-3">
+			<p>Use this page to manage countries which will be displayed in the customer registration form.</p>
+			<p>Click <b>Load Countries </b>button first.</p>
+		</div>
+		<div >
+			<input type="button" class="btn btn-primary" value="Load Countries" id="buttonLoad"/>
+		</div>
+		<div class="mt-3">
+			<select class="form-control" id="dropDownCountry" style="height: 300px" size="3"></select>
+		</div>
+		<div class="toast align-items-center text-bg-primary mt-3"
+			id="toastCountryList" role="alert" aria-live="assertive"
+			aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body" id="toastMessage"></div>
+				<button type="button" class="btn-close me-2 m-auto"
+					data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+		<div class="row mt-3">
+				<label id="labelCountryName" class="col-form-label col-sm-2">Country Name: </label>
+				<div class="col-sm-4">
+					<input id="fieldCountryName" type="text" class="form-control"  />
+				</div>
+			</div>
+		<div class="row mt-3">
+			<label for="" class="col-form-label col-sm-2 ">Code: </label>
+			<div class="col-sm-4">
+				<input type="text" id="fieldCountryCode" class="form-control "  />
+			</div>
+		</div>
+
+		<div class="col text-center mt-3">
+				<input type="button" class="btn btn-secondary m-2" id="addCountryButton" value="Add" />
+				<input type="button" class="btn btn-secondary m-2"
+					disabled="disabled"
+					id="updateCountryButton" value="Update"  />
+				<input type="button" class="btn btn-secondary m-2"
+					disabled="disabled"
+					id="deleteCountryButton" value="Delete"  />
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

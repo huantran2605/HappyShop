@@ -3,7 +3,7 @@ $(document).ready(function() {
 		if(!checkSizeFile (this)){
 			return;
 		}
-		ReviewPhoto(this);	
+		showThumbnail(this);	
 	});
 });
 
@@ -21,7 +21,7 @@ function checkSizeFile(fileInput){
 		}
 }
 
-function ReviewPhoto(fileInput) {
+function showThumbnail(fileInput) {
 	var file = fileInput.files[0];
 	var reader = new FileReader();
 	reader.onload = function(e) {

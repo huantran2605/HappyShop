@@ -36,24 +36,35 @@
 				<div>
 					<h2 class="fw-bold"> [[${product.name}]] </h2>
 				</div>
+				
 				<div>
 					<h4>Brand: [[${product.brand.name}]] </h4> 
 				</div>
-				<div th:if="${product.discountPercent <= 0}">
-					<h4> Price: $ [[${product.price}]]</h4>
+				
+				<div th:if="${product.discountPercent <= 0}"  class="d-flex flex-row">
+					<h4> Price: 
+						<span th:replace="product/product_fragment :: productPrice(${product.price})" > </span>
+					</h4>
 				</div>
 				<div th:if="${product.discountPercent > 0}" class="d-flex flex-row">
 					<h4>Price:&nbsp;</h4>
 					<h4 style="color:darkred;">					
-						$ [[${product.getDiscountPrice}]]				
+						<span th:replace="product/product_fragment :: productPrice(${product.getDiscountPrice})"
+						th:remove="tag"> </span>			
 					</h4>
-					<h4><del>&nbsp;$ [[${product.price}]]</del></h4>
+					&nbsp;
+					<h4><del>
+						<span th:replace="product/product_fragment :: productPrice(${product.price})"
+						th:remove="tag"> </span>
+					</del></h4>
 					<h4>&nbsp;([[${product.discountPercent}]]% off)</h4>
 				</div>
+				
 				<br />	
 				<div>
 					<p th:utext="${product.shortDescription}"></p>
 				</div>
+				
 			</div>
 			
 			<div class="col-sm-2">

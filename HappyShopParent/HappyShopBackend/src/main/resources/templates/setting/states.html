@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+<body>
+	<div th:fragment="content">
+		<div class="mt-3">
+			<p>Use this page to manage states/provinces which will be chosen by visitors in the customer registration form.</p>
+			<p>Click <b>Load Countries </b>button first.</p>
+		</div>
+		<div >
+			<input type="button" class="btn btn-primary" value="Load Countries" id="buttonLoadForState"/>
+		</div>
+		
+		<div class="row mt-3">
+			<label class="col-form-label col-sm-2">Select Country: </label>
+			<div class="col-sm-4">
+				<select class="form-control" name="" id="dropDownCountryForState"></select>
+			</div>
+		</div>
+		
+		<div class="row mt-3">
+			<label class="col-form-label col-sm-2">Select State/Province: </label>
+			<div class="col-sm-10">
+				<select class="form-control" id="dropDownState" style="height: 300px" size="3"></select>	
+			</div>
+		</div>
+		
+		<div class="toast align-items-center text-bg-primary mt-3"
+			id="toastForState" role="alert" aria-live="assertive"
+			aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body" id="toastMessageForState"></div>
+				<button type="button" class="btn-close me-2 m-auto"
+					data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+		
+		<div class="row mt-3">
+				<label id="labelStateName" class="col-form-label col-sm-2">State/Province Name: </label>
+				<div class="col-sm-4">
+					<input id="fieldStateName" type="text" class="form-control" />
+				</div>
+		</div>
+		
+		<div class="col text-center mt-3">
+				<input type="button" class="btn btn-secondary m-2" id="addStateButton" value="Add" />
+				<input type="button" class="btn btn-secondary m-2"
+					disabled="disabled"
+					id="updateStateButton" value="Update"  />
+				<input type="button" class="btn btn-secondary m-2"
+					disabled="disabled"
+					id="deleteStateButton" value="Delete"  />
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

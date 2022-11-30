@@ -9,7 +9,7 @@
 	<div th:fragment="header_menu">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<a class="navbar-brand" th:href="@{/}"> <img
-				th:src="@{/images/happyshop.png}" height="80" width="120" />
+				th:src="@{'/site-logo/' + ${SITE_LOGO}}" height="80" width="120" />
 			</a>
 			<button class="navbar-toggler " type="button"
 				data-bs-toggle="collapse" data-bs-target="#collapsibleNavId"

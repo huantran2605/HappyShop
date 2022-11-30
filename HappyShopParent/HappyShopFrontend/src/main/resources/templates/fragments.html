@@ -3,7 +3,7 @@
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head th:fragment="page_head(title, remove)" th:remove="${remove}">
-<title>[[${title}]]</title>
+<title>[[${title}]] - [[${SITE_NAME}]]</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport"
@@ -20,7 +20,7 @@
 
 <body>
 	<div th:fragment="footer">
-		<p class="text-center">Happy Shop - Copyright &copy; Happy Ltd.</p>
+		<p class="text-center">[[${COPYRIGHT}]]</p>
 	</div>
 	
 	

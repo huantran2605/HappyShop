@@ -31,7 +31,7 @@ public class WebSecurityConfig {
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/user/**").hasAuthority("Admin")
+			.antMatchers("/user/**", "/setting/**","/settings/**").hasAuthority("Admin")
 			.antMatchers("/category/**").hasAnyAuthority("Admin","Editor")
 			.antMatchers("/brand/**").hasAnyAuthority("Admin","Editor")
 			

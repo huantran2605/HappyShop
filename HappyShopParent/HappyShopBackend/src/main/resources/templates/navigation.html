@@ -27,8 +27,7 @@
 			
 				<th:block sec:authorize="hasAuthority('Admin')">
 				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-					aria-expanded="true"> Users </a>
+					class="nav-link dropdown-toggle" th:href="@{/user/listUser}" > Users </a>
 					<ul class="dropdown-menu dropdown-menu-dark">
 						<li><a class="dropdown-item" th:href="@{/user/new}">Create
 								New</a></li>
@@ -40,8 +39,7 @@
 				
 				<th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
 				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-					aria-expanded="true"> Categories </a>
+					class="nav-link dropdown-toggle" th:href="@{/category/listCategory}"> Categories </a>
 					<ul class="dropdown-menu dropdown-menu-dark">
 						<li><a class="dropdown-item" th:href="@{/category/new}">Create
 								New</a></li>
@@ -51,8 +49,7 @@
 				</li>
 				
 				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-					aria-expanded="true"> Brands </a>
+					class="nav-link dropdown-toggle" th:href="@{/brand/listBrand}" > Brands </a>
 					<ul class="dropdown-menu dropdown-menu-dark">
 						<li><a class="dropdown-item" th:href="@{/brand/new}">Create
 								New</a></li>
@@ -64,8 +61,7 @@
 				
 				<th:block sec:authorize="hasAnyAuthority('Admin','Salesperson','Editor','Shipper')">
 				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-					aria-expanded="true"> Products </a>
+					class="nav-link dropdown-toggle" th:href="@{/product/listProduct}"> Products </a>
 					<ul class="dropdown-menu dropdown-menu-dark">
 						<li><a class="dropdown-item" 
 							sec:authorize="hasAnyAuthority('Admin', 'Editor')"
@@ -92,8 +88,22 @@
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a
 					class="nav-link" href="#">Articles</a></li>
-				<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a
-					class="nav-link" href="#">Setting</a></li>
+				<li class="nav-item dropdown" 
+					sec:authorize="hasAuthority('Admin')">
+					<a
+					class="nav-link dropdown-toggle" th:href="@{/setting}">Setting</a>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a class="dropdown-item" 
+							th:href="@{/setting#general}">General
+								</a></li>
+						<li><a class="dropdown-item" 
+							th:href="@{/setting#countries}">Countries
+								</a></li>
+						<li><a class="dropdown-item" 
+							th:href="@{/setting#states}">States
+								</a></li>
+					</ul>
+				</li>
 
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" data-bs-toggle="dropdown"

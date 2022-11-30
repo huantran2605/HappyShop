@@ -9,16 +9,35 @@
 			<img th:src="@{${product.getProductMainImagePath}}" width="150" /> <br />
 			<b>[[${product.shortName}]]</b>
 		</a> <br />
+		
 		<th:block th:if="${product.discountPercent <= 0}">
-			<p>$ [[${product.price}]]</p>
+			<span th:replace="product/product_fragment :: productPrice(${product.price})"> </span>
 		</th:block>
+		
 		<th:block th:if="${product.discountPercent > 0}">
-			<span style="color: darkred; font-size: larger"> $
-				[[${product.getDiscountPrice}]] </span>
-			<del>$ [[${product.price}]]</del>
+			<span style="color: darkred; font-size: larger"> 
+				<span th:replace="product/product_fragment :: productPrice(${product.getDiscountPrice})"
+					th:remove="tag"> </span>
+			</span>
+			<del>
+				<span th:replace="product/product_fragment :: productPrice(${product.price})"
+					th:remove="tag"> </span>
+			</del>
 		</th:block>
+		
 	</div>
 
+	<div th:fragment="productPrice(price)">
+		<span th:if="${CURRENCY_SYMBOL_POSITION} == 'Before price'" th:remove="tag">
+				[[${CURRENCY_SYMBOL}]]
+		</span>
+		<span>[[${#numbers.formatDecimal(price,1,THOUSANDS_POINT_TYPE,
+		 DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+		</span>
+		<span th:if="${CURRENCY_SYMBOL_POSITION} == 'After price'" th:remove="tag">
+				[[${CURRENCY_SYMBOL}]]
+		</span>
+	</div>
 
 </body>
 </html>
