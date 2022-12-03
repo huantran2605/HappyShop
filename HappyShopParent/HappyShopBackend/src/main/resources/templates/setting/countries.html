@@ -23,19 +23,20 @@
 					data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
-		<div class="row mt-3">
-				<label id="labelCountryName" class="col-form-label col-sm-2">Country Name: </label>
+		<form id="countryForm">
+			<div class="row mt-3">
+					<label id="labelCountryName" class="col-form-label col-sm-2">Country Name: </label>
+					<div class="col-sm-4">
+						<input id="fieldCountryName" type="text" class="form-control" required minlength="3" maxlength="45" />
+					</div>
+				</div>
+			<div class="row mt-3">
+				<label for="" class="col-form-label col-sm-2 ">Code: </label>
 				<div class="col-sm-4">
-					<input id="fieldCountryName" type="text" class="form-control"  />
+					<input type="text" id="fieldCountryCode" class="form-control "  required minlength="3" maxlength="45"/>
 				</div>
 			</div>
-		<div class="row mt-3">
-			<label for="" class="col-form-label col-sm-2 ">Code: </label>
-			<div class="col-sm-4">
-				<input type="text" id="fieldCountryCode" class="form-control "  />
-			</div>
-		</div>
-
+		</form>
 		<div class="col text-center mt-3">
 				<input type="button" class="btn btn-secondary m-2" id="addCountryButton" value="Add" />
 				<input type="button" class="btn btn-secondary m-2"

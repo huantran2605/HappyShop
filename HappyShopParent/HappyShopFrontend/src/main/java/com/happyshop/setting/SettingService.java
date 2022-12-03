@@ -7,4 +7,6 @@ import com.happyshop.common.entity.SettingCategory;
 
 public interface SettingService {
     List<Setting> getGeneralSettings();
+    
+    EmailSettingBag getEmailSetting();
 }

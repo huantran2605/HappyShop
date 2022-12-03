@@ -1,4 +1,4 @@
-package com.happyshop.setting.state;
+package com.happyshop.common.entity;
 
 public class StateDTO {
     private Integer id;

@@ -75,7 +75,7 @@
 				
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
-					class="nav-link" href="#">Customers</a></li>
+					class="nav-link" th:href="@{/customer/listCustomer}">Customers</a></li>
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
 					class="nav-link" href="#">Shipping</a></li>
@@ -101,6 +101,12 @@
 								</a></li>
 						<li><a class="dropdown-item" 
 							th:href="@{/setting#states}">States
+								</a></li>
+						<li><a class="dropdown-item" 
+							th:href="@{/setting#mail_server}">Mail Server
+								</a></li>	
+						<li><a class="dropdown-item" 
+							th:href="@{/setting#mail_templates}">Mail Templates
 								</a></li>
 					</ul>
 				</li>

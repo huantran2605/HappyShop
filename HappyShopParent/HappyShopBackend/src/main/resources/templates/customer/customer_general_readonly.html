@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="content">
+		<div class="row mb-3 mt-5">
+			<div class="col-sm-2">
+				<label for="">Customer ID: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.id}"
+					readonly />
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Full Name:</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.getFullName}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Email:</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.email}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Phone Number:</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.phoneNumber}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+				<div class="col-sm-2">
+					<label for="">Enabled: </label>
+				</div>
+				<div class="col-sm-6">
+					<input type="checkbox" th:checked="${customer.enabled}"
+						onclick="return false;" readonly />
+				</div>
+		</div>
+		
+		<div class="row mb-3 ">
+				<div class="col-sm-2">
+					<label for="">Created Time: </label>
+				</div>
+				<div class="col-sm-6">
+					<div
+						th:text="${#dates.format(customer.createdTime, 'yyyy-MM-dd hh:mm:ss')}"></div>
+				</div>
+		</div>
+		
+	</div>
+
+</body>
+</html>

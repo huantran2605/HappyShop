@@ -40,14 +40,9 @@ public class BrandController {
     
     @GetMapping("/listBrand")
     private String viewFirstPageBrand(
-            Model model,  
-            RedirectAttributes re,
-            @RequestParam("message")  Optional<String> message) {
-        
-        List<Brand> list = brandService.findAll();
-        model.addAttribute("brands", list);       
-        re.addAttribute("message", message.orElse(null));
-        return "redirect:/brand/page/1?sortField=id&sortDir=asc&keyWord=";      
+            Model model) {
+
+        return brandPage(1, "id", "asc", "", model);      
     }
     
     @GetMapping("/new")
@@ -79,12 +74,12 @@ public class BrandController {
                 brand.setLogo(oldBrand.get().getLogo()); 
                 BeanUtils.copyProperties(brand, oldBrand.get());
                 brandService.save(oldBrand.get());
-                re.addAttribute("message", "Updated Brand successfully!");
+                re.addFlashAttribute("message", "Updated Brand successfully!");
             }
             else {
                 brand.setLogo(null);
                 brandService.save(brand);                  
-                re.addAttribute("message", "Added new Brand successfully!");
+                re.addFlashAttribute("message", "Added new Brand successfully!");
             }
         }
         
@@ -107,16 +102,15 @@ public class BrandController {
             model.addAttribute("titlePage", "Update brand");
         }
         return "brand/form_brand";
-
     }
     
     @GetMapping("/page/{pageNum}") 
     private String brandPage (@PathVariable ("pageNum") Integer pageNum,
             @Param("sortField") String sortField,
             @Param("sortDir") String sortDir,
-            @Param("keyWord") Optional<String> keyWord, 
+            @Param("keyWord") String keyWord, 
             
-            Model model,@RequestParam("message")  Optional<String> message) {
+            Model model) {
         //sort
         Sort sort = Sort.by(sortField);
         if(sortDir.equalsIgnoreCase("asc"))
@@ -126,7 +120,7 @@ public class BrandController {
         org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
                 BrandService.SIZE_PAGE_BRAND, sort);
         
-        Page<Brand> pageBrand = brandService.findAll(pageable,keyWord.get()); 
+        Page<Brand> pageBrand = brandService.findAll(pageable,keyWord); 
         List<Brand> listBrand = pageBrand.getContent();
         //list brand 
         
@@ -139,6 +133,7 @@ public class BrandController {
         model.addAttribute("reserveDir", reserveDir);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
+        model.addAttribute("pageNum", pageNum);
         model.addAttribute("totalPage", pageBrand.getTotalPages()); 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("startCount", startCount);
@@ -154,9 +149,9 @@ public class BrandController {
         
         model.addAttribute("elementsCurrentPerPage", pageBrand.getNumberOfElements());
         model.addAttribute("elementsPerPage", BrandService.SIZE_PAGE_BRAND);
-        model.addAttribute("message", message.orElse(null));
         
-        model.addAttribute("keyWord", keyWord.get());
+        model.addAttribute("keyWord", keyWord);
+        model.addAttribute("moduleURL", "/brand");
         
         return"brand/listBrand";
     }
@@ -166,7 +161,7 @@ public class BrandController {
             RedirectAttributes re,Model model) throws IOException {
         Optional<Brand> brand =  brandService.findById(id);
         if (brand.isEmpty()) {
-            re.addAttribute("message", "The brand is not exist!");
+            re.addFlashAttribute("message", "The brand is not exist!");
             return "redirect:/brand/listBrand";
         }
         else {
@@ -175,7 +170,7 @@ public class BrandController {
             String dir = "../brand-logos/" + id;
             FileUtils.deleteDirectory(new File(dir));
             
-            re.addAttribute("message","Delete brand id: "+ id + " successfully!");           
+            re.addFlashAttribute("message","Delete brand id: "+ id + " successfully!");           
             return "redirect:/brand/listBrand";
         }
     

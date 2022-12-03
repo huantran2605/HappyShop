@@ -86,6 +86,7 @@ public class ProductController {
         model.addAttribute("listParentCategory", listParentCategory);
         model.addAttribute("listProduct", listProduct);
         model.addAttribute("totalChildsInCategory", cat.getChildren().size());
+        model.addAttribute("moduleURL", "/c/" + alias);
         return "product/products_by_category";
     }
     
@@ -134,6 +135,7 @@ public class ProductController {
         
         model.addAttribute("titlePage", "Search Result '" + keyword+"'");
         model.addAttribute("listProduct", listProduct);
+        model.addAttribute("moduleURL", "/search");
         
         return "product/search_result";
     }

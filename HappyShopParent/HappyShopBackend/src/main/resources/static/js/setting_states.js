@@ -29,13 +29,8 @@ $(document).ready(function(){
 		changeFormStateToSlectedState();
 	})
 	addStateButton.on("click", function(){
-		if(addStateButton.val() == "Add"){
-			if(fieldStateName.val().length > 0){	
-				addState();
-			}
-			else{
-				alert("State/Province Name needs to fill!");
-			}
+		if(addStateButton.val() == "Add"){			
+				addState();					
 		}
 		else{
 			changeFormToNew();			
@@ -106,6 +101,12 @@ function changeFormToNew() {
 }
 
 function addState(){
+	stateForm = document.getElementById("stateForm");
+	if(!stateForm.checkValidity()){
+		stateForm.reportValidity();
+		return;
+	}
+	
 	url = contextPath + "states/save";
 	stateName = fieldStateName.val();
 	selectedCountryName = $("#dropDownCountryForState option:selected").text();

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: page_head('Registration Form','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		<h1 class="text-center">Registration Form</h1>
+		<div class="" style="max-width: 700px; margin: 0 auto;">
+			<form th:action="@{/customer/create_account}" method="post" 
+				onsubmit="return checkEmailUnique(this)"
+				th:object="${customer}" id="customer_registration_form"
+				class="border boder-secondary">
+
+
+				<div class="row mt-3 ps-3">
+				  <label for="" class="col-md-2 form-label">First Name: </label>
+				  <div class="col-md-8">
+					  <input type="text"
+						class="form-control" th:field="*{firstName}" maxlength="45" minlength="2" required>
+				  </div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Last Name: </label>
+					<div class="col-md-8">
+						<input type="text"
+						  class="form-control" th:field="*{lastName}"maxlength="45" minlength="2" required>
+					</div>
+				  </div>
+
+				  <div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Email: </label>
+					<div class="col-md-8">
+						<input type="email"
+						  class="form-control" th:field="*{email}" id="email" maxlength="45" minlength="2" required>
+					</div>
+				  </div>
+
+				  <div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Password: </label>
+					<div class="col-md-8">
+						<input type="password" id="customerPassword"
+							oninput="checkPasswordMatch(document.getElementById('confirmCustomerPassword'))"
+						  class="form-control" th:field="*{password}" maxlength="45" minlength="6" required>
+					</div>
+				  </div>							
+
+				  <div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Confirm Password: </label>
+					<div class="col-md-8">
+						<input type="password" id="confirmCustomerPassword"
+							oninput="checkPasswordMatch(this)"
+						  class="form-control" required>
+					</div>
+				  </div>
+
+				  <div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Phone Number: </label>
+					<div class="col-md-8">
+						<input type="text"
+						  class="form-control" th:field="*{phoneNumber}"maxlength="15" minlength="3" required>
+					</div>
+				  </div>
+
+				  <div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Address Line 1: </label>
+					<div class="col-md-8">
+						<input type="text"
+						  class="form-control" th:field="*{addressLine1}"maxlength="64" minlength="5" required>
+					</div>
+				  </div>
+
+				  <div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Address Line 2: </label>
+					<div class="col-md-8">
+						<input type="text"
+						  class="form-control" th:field="*{addressLine2}"maxlength="64" minlength="5" >
+					</div>
+				  </div>
+				  
+				  
+				  <div class="row mt-3 ps-3">
+					  <label for="" class="col-md-2 form-label">City: </label>
+					  <div class="col-md-8">
+						  <input type="text"
+						  class="form-control" th:field="*{city}"maxlength="45" minlength="3" required>
+					</div>
+				  </div>
+				  
+				  <div class="row mt-3 ps-3">
+					  <label for="" class="col-md-2 form-label">Country: </label>
+					  <div class="col-md-8">
+						<select th:field="*{country}" id = "country">
+							<th:block th:each="country : ${listCountry}">
+								<option th:value="${country.id}">
+									[[${country.name}]]
+								</option>
+							</th:block>
+						</select>
+					</div>
+				</div>
+				
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">State/Province: </label>
+					<div class="col-md-8">
+						<input type="text" th:field="*{state}" class="form-control"
+							list="stateList" id="stateField"
+						 maxlength="45" minlength="2" />
+						<datalist  id="stateList"></datalist>
+					</div>
+				</div>
+				
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Postal Code: </label>
+					<div class="col-md-8">
+						<input type="text"
+						  class="form-control" th:field="*{postalCode}" maxlength="10" required >
+					</div>
+				  </div>
+
+				<div class="text-center m-3">
+				  <input type="submit" value="Create Account" class="btn btn-primary">
+				</div>
+
+			</form>
+		</div>
+		<div th:replace="fragments :: modal"></div>
+		<br>    
+		<div th:replace="navigation :: footer_menu" ></div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+	<script>	
+		var contextPath = "[[@{/}]]"
+		function checkPasswordMatch(confirmPassword) {
+			
+			if (confirmPassword.value != $("#customerPassword").val()) {
+				confirmPassword.setCustomValidity("Passwords do not match!");
+			} else {
+				confirmPassword.setCustomValidity("");
+			}
+		}
+		
+		var dropDownCountry;
+		var stateList;
+		var stateField;
+		$(document).ready(function(){
+			dropDownCountry = $("#country");
+			stateList = $("#stateList");
+			stateField = $("#stateField");
+			dropDownCountry.on("change", function(){
+				stateField.val("").focus();			
+				getStateListByCountry();
+		})
+		})
+		function  getStateListByCountry(){
+			selectedCountryId = $("#country option:selected").val();
+			url = contextPath + "states/list_by_country/" + selectedCountryId;
+			$.get(url, function(data){	
+				stateList.empty();
+				$.each(data, function(index, state){
+					$("<option>").val(state.name).text(state.name).appendTo(stateList);
+				});
+			})
+		}
+		
+		function checkEmailUnique(form) {
+			url = contextPath + "customers/check_unique_email";
+			customerEmail = $("#email").val();
+			let csrfValue = document.forms["customer_registration_form"]["_csrf"].value;
+	
+			params = {email: customerEmail, _csrf: csrfValue };
+			$.post(url, params, function(response) {
+				if (response == "Ok") {
+					form.submit();
+				} else if (response == "Duplicated") {
+					showModal("Warning!", "There is another customer having the email " + customerEmail);
+				}
+				else {
+					showModal("Error", "Unknown response from server");
+				}
+			}).fail(function() {
+				showModal("Error", "Could not connect to the server");
+			});
+			return false;
+		};
+		
+		function showModal(title, message) {
+			$("#modal-title").text(title);
+			$("#modal-body").text(message);
+			$("#modalDialog").modal("show");
+		}
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

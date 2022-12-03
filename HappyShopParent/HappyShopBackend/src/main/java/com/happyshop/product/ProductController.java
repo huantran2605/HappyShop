@@ -53,13 +53,8 @@ public class ProductController {
     
     @GetMapping("/listProduct")
     private String viewFirstPageProduct(Model model,
-            RedirectAttributes re,
-            @RequestParam("message")  Optional<String> message) {
-        List<Product> list = productService.findAll();
-        model.addAttribute("products", list);
-        
-        re.addAttribute("message", message.orElse(null));
-        return "redirect:/product/page/1?sortField=id&sortDir=asc&keyWord=&categoryID=0";
+            RedirectAttributes re) {
+        return productPage(1, "id", "asc", "", 0, model);
     }
         
     @GetMapping("/page/{pageNum}") 
@@ -69,7 +64,7 @@ public class ProductController {
             @Param("keyWord") String keyWord, 
             @Param("categoryID") Integer categoryID, 
             
-            Model model,@RequestParam("message")  Optional<String> message) {
+            Model model) {
         //sort
         Sort sort = Sort.by(sortField);
         if(sortDir.equalsIgnoreCase("asc"))
@@ -92,6 +87,7 @@ public class ProductController {
         model.addAttribute("reserveDir", reserveDir);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
+        model.addAttribute("pageNum", pageNum);
         model.addAttribute("totalPage", pageProduct.getTotalPages()); 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("startCount", startCount);
@@ -111,9 +107,9 @@ public class ProductController {
         
         model.addAttribute("elementsCurrentPerPage", pageProduct.getNumberOfElements());
         model.addAttribute("elementsPerPage", ProductService.SIZE_PAGE_PRODUCT);
-        model.addAttribute("message", message.orElse(null));
         
         model.addAttribute("keyWord", keyWord);
+        model.addAttribute("moduleURL", "/product");
         
         return"product/listProduct";
     }
@@ -145,13 +141,13 @@ public class ProductController {
             
             if(loggedUser.hasRole("Salesperson")) {
                 productService.saveProductPrice(product);
-                re.addAttribute("message", "Updated Product successfully!");
+                re.addFlashAttribute("message", "Updated Product successfully!");
                 return "redirect:/product/listProduct";
             }
             if(product.getId() != null) {    
-                re.addAttribute("message", "Updated Product successfully!");
+                re.addFlashAttribute("message", "Updated Product successfully!");
             } else {
-                re.addAttribute("message", "Added new Product successfully!");
+                re.addFlashAttribute("message", "Added new Product successfully!");
             }
             ProductSaveHelper.setDetailsProduct(detailIDs, nameDetails, valueDetails, product);
             
@@ -200,12 +196,12 @@ public class ProductController {
         Optional<Product> product =  productService.findById(id);
         String status = "";
         if (product.isEmpty()) {
-            re.addAttribute("message", "The product is not existed!");
+            re.addFlashAttribute("message", "The product is not existed!");
             return "redirect:/user/listUser";
         }
         else {
             status = productService.updateEnabledStatus(product.get());
-            re.addAttribute("message", status);     
+            re.addFlashAttribute("message", status);     
         }
         String nameSerach = product.get().getAlias();
         return "redirect:/product/page/1?categoryID=0&sortField=id&sortDir=asc&keyWord=" + nameSerach;
@@ -217,7 +213,7 @@ public class ProductController {
         Optional<Product> product =  productService.findById(id);
         
         if (product.isEmpty()) {
-            re.addAttribute("message", "The product is not exist!");
+            re.addFlashAttribute("message", "The product is not exist!");
             return "redirect:/product/listProduct";
         }
         else {    
@@ -226,7 +222,7 @@ public class ProductController {
             String dir = "../product-images/" + id;
             FileUtils.deleteDirectory(new File(dir));
             
-            re.addAttribute("message","Delete product id: "+ id + " successfully!");           
+            re.addFlashAttribute("message","Delete product id: "+ id + " successfully!");           
             return "redirect:/product/listProduct";
         }
     

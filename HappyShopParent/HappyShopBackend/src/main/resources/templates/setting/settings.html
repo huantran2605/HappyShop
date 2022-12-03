@@ -2,7 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-<head th:replace="fragments :: page_head('Setting', 'none')"></head>
+<head>
+	<head th:replace="fragments :: page_head('Setting', 'tag')"></head>
+	<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
+	<script type="text/javascript"
+		th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
 </head>
 <body>
 	<div class="container-fluid">
@@ -32,12 +37,12 @@
 				</li>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link" data-bs-toggle="tab"
-						data-bs-target="#mailServer" type="button" aria-controls="mailServer"
+						data-bs-target="#mail_server" type="button" aria-controls="mailServer"
 						aria-selected="false">Mail Server</button>
 				</li>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link" data-bs-toggle="tab"
-						data-bs-target="#mailTemplates" type="button" aria-controls="mailTemplates"
+						data-bs-target="#mail_templates" type="button" aria-controls="mailTemplates"
 						aria-selected="false">Mail Templates</button>
 				</li>
 
@@ -57,12 +62,12 @@
 					<div th:replace="setting/states :: content"></div>
 				</div>
 
-				<div class="tab-pane fade" id="mailServer">
-					<p>mails</p>
+				<div class="tab-pane fade" id="mail_server">
+					<div th:replace="setting/mail_server :: content"></div>
 				</div>
 
-				<div class="tab-pane fade" id="mailTemplates">
-					<p>mailt</p>
+				<div class="tab-pane fade" id="mail_templates">
+					<div th:replace="setting/mail_templates/mail_templates :: content"></div>
 				</div>
 
 			</div>
@@ -75,7 +80,12 @@
 	MAX_FILE_SIZE = 1048576;
 	contextPath = "[[@{/}]]";
 	csrfHeaderName = "[[${_csrf.headerName}]]";
-	csrfValue = "[[${_csrf.token}]]"
+	csrfValue = "[[${_csrf.token}]]";
+	
+	$(document).ready(function(){
+		$("#emailContent").richText();
+	});
+	
 </script>
 <script th:src="@{/js/common_form.js}"></script>
 <script th:src="@{/js/common.js}"></script>

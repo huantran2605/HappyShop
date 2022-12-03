@@ -24,7 +24,7 @@ public class SettingServiceImpl implements SettingService{
         List<Setting> generalSettings = settingRepository.findByCategory(SettingCategory.GENERAL);
         List<Setting> currencySettings = settingRepository.findByCategory(SettingCategory.CURRENCY);
         
-        settings.addAll(generalSettings);
+        settings.addAll(generalSettings);   
         settings.addAll(currencySettings);
         
         return new GeneralSettingBag(settings);
@@ -34,6 +34,11 @@ public class SettingServiceImpl implements SettingService{
         return settingRepository.saveAll(entities);
     }
     
+    public List<Setting> getMailServerSetting() {      
+        return settingRepository.findByCategory(SettingCategory.MAIL_SERVER);
+    }
     
-    
+    public List<Setting> getMailTemplatesSetting() {      
+        return settingRepository.findByCategory(SettingCategory.MAIL_TEMPLATES);
+    }
 }

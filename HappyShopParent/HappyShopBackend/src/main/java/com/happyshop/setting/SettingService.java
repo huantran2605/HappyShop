@@ -11,4 +11,8 @@ public interface SettingService {
     <S extends Setting> List<S> saveAll(Iterable<S> entities);
         
     GeneralSettingBag getGeneralSettings();
+    
+    List<Setting> getMailServerSetting();
+    
+    List<Setting> getMailTemplatesSetting();
 }

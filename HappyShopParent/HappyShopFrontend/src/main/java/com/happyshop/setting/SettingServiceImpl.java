@@ -12,13 +12,21 @@ import com.happyshop.common.entity.SettingCategory;
 @Service
 public class SettingServiceImpl implements SettingService{
     @Autowired
-    SettingRepository settingRepository;
+    SettingRepository settingRepository;   
 
+        
     public List<Setting> getGeneralSettings() {
         return settingRepository.findBySomeCategory(SettingCategory.GENERAL, SettingCategory.CURRENCY);
     }
 
-   
+    public EmailSettingBag getEmailSetting(){
+        List<Setting> list = new ArrayList<>();
+        list = settingRepository.findByCategory(SettingCategory.MAIL_SERVER);
+        for (Setting setting : settingRepository.findByCategory(SettingCategory.MAIL_TEMPLATES)) {
+            list.add(setting);
+        }
+        return new EmailSettingBag(list);
+    }
   
     
     

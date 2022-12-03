@@ -13,7 +13,7 @@ import com.happyshop.common.entity.User;
 
 public interface UserService {
 
-	int SIZE_PAGE_USER = 5;
+	int SIZE_PAGE_USER = 1;
 
 	User getById(Long id);
 

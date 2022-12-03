@@ -29,7 +29,7 @@ public class AccountController {
 	@Autowired
 	UserService userService;
 
-	@GetMapping("/information")
+	@GetMapping("/information")     
 	public String profile(@AuthenticationPrincipal UserDetailsClass loggedAcc,
 			@RequestParam("message") Optional<String> message,Model model) {
 		User user = userService.findByEmail(loggedAcc.getUsername());

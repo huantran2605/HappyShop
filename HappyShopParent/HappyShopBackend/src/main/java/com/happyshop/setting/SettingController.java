@@ -54,7 +54,7 @@ public class SettingController {
         updateSettingValuesFromForm(request, settingBag.list());
         
         
-        ra.addFlashAttribute("message", "Uploaded General Setting successfully!");
+        ra.addFlashAttribute("message", "Updated General Setting successfully!");
         return "redirect:/setting";
     }
     
@@ -90,5 +90,28 @@ public class SettingController {
         
         settingService.saveAll(listSettings);
     }
-
+    
+    @PostMapping("/setting/save_mail_server")
+    private String saveMailServerSetting(
+            HttpServletRequest request, RedirectAttributes ra
+            ) throws IOException{
+        List<Setting> list = settingService.getMailServerSetting();
+        
+        updateSettingValuesFromForm(request, list);
+           
+        ra.addFlashAttribute("message", "Updated Mail Server Setting successfully!");
+        return "redirect:/setting";
+    }
+    
+    @PostMapping("/setting/save_mail_templates")
+    private String saveMailTemplatesSetting(
+            HttpServletRequest request, RedirectAttributes ra
+            ) throws IOException{
+        List<Setting> list = settingService.getMailTemplatesSetting();
+        
+        updateSettingValuesFromForm(request, list);
+           
+        ra.addFlashAttribute("message", "Updated Mail Templates Setting successfully!");
+        return "redirect:/setting";
+    }
 }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="content">
+		<div class="row mb-3 mt-5">
+			<div class="col-sm-2">
+				<label for="">Address Line 1: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.addressLine1}"
+					readonly />
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Address Line 2:</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control"
+					th:value="${customer.addressLine2}" readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-sm-2">
+				<label for="">City: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.city}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-sm-2">
+				<label for="">State/Province: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.state}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Country: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.country.name}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Postal Code: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${customer.postalCode}"
+					readonly />
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -38,23 +38,17 @@ public class CategoryController {
         CategoryService categoryService;
         
         @GetMapping("/listCategory")
-        private String viewFirstPageCategory(Model model,
-                RedirectAttributes re,
-                @RequestParam("message")  Optional<String> message) {
-            List<Category> list = categoryService.findAll();
-            model.addAttribute("categories", list);
-            
-            re.addAttribute("message", message.orElse(null));
-            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=";
+        private String viewFirstPageCategory(Model model) {
+            return categoryPage(1, "id", "asc", "", model);
         }
         
         @GetMapping("/page/{pageNum}") 
         private String categoryPage (@PathVariable ("pageNum") Integer pageNum,
                 @Param("sortField") String sortField,
                 @Param("sortDir") String sortDir,
-                @Param("keyWord") Optional<String> keyWord, 
+                @Param("keyWord") String keyWord, 
                 
-                Model model,@RequestParam("message")  Optional<String> message) {
+                Model model) {
             //sort
             Sort sort = Sort.by(sortField);
             if(sortDir.equalsIgnoreCase("asc"))
@@ -64,7 +58,7 @@ public class CategoryController {
             org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
                     CategoryService.SIZE_PAGE_CATEGORY, sort);
             
-            Page<Category> pageCategory = categoryService.findAll(pageable,keyWord.get()); 
+            Page<Category> pageCategory = categoryService.findAll(pageable,keyWord); 
             List<Category> listCategory = pageCategory.getContent();
             //list cat 
             
@@ -77,6 +71,7 @@ public class CategoryController {
             model.addAttribute("reserveDir", reserveDir);
             model.addAttribute("sortField", sortField);
             model.addAttribute("sortDir", sortDir);
+            model.addAttribute("pageNum", pageNum);
             model.addAttribute("totalPage", pageCategory.getTotalPages()); 
             model.addAttribute("currentPage", pageNum);
             model.addAttribute("startCount", startCount);
@@ -92,9 +87,9 @@ public class CategoryController {
             
             model.addAttribute("elementsCurrentPerPage", pageCategory.getNumberOfElements());
             model.addAttribute("elementsPerPage", CategoryService.SIZE_PAGE_CATEGORY);
-            model.addAttribute("message", message.orElse(null));
             
-            model.addAttribute("keyWord", keyWord.get());
+            model.addAttribute("keyWord", keyWord);
+            model.addAttribute("moduleURL", "/category");
             
             return"category/listCategory";
         }
@@ -129,16 +124,16 @@ public class CategoryController {
                     category.setImage(oldCategory.get().getImage()); 
                     BeanUtils.copyProperties(category, oldCategory.get());
                     categoryService.save(oldCategory.get());
-                    re.addAttribute("message", "Updated Category successfully!");
+                    re.addFlashAttribute("message", "Updated Category successfully!");
                 }
                 else {
                     category.setImage(null);
                     categoryService.save(category);                  
-                    re.addAttribute("message", "Added new Category successfully!");
+                    re.addFlashAttribute("message", "Added new Category successfully!");
                 }
             }
-            String nameSerach = category.getName()+" " + category.getAlias();
-            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=" + nameSerach;
+            String nameSearch = category.getName().replace(" ", "_");
+            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=" + nameSearch;
         }
 
         @GetMapping("update/{id}")
@@ -161,19 +156,19 @@ public class CategoryController {
         
         @GetMapping("updateEnabled/{id}")
         private String updateEnableStatus(@PathVariable("id") Integer id,
-                RedirectAttributes re){
+                RedirectAttributes re,Model model){
             Optional<Category> category =  categoryService.findById(id);
             String status = "";
             if (category.isEmpty()) {
-                re.addAttribute("message", "The category is not exist!");
+                re.addFlashAttribute("message", "The category is not exist!");
                 return "redirect:/user/listUser";
             }
             else {
                 status = categoryService.updateEnabledStatus(category.get());
-                re.addAttribute("message", status);     
+                re.addFlashAttribute("message", status);    
             }
-            String nameSerach = category.get().getName() + " " + category.get().getAlias();
-            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=" + nameSerach;
+            String nameSearch = category.get().getName().replace(" ", "_");
+            return "redirect:/category/page/1?sortField=id&sortDir=asc&keyWord=" + nameSearch;
         }      
         
         @GetMapping("/delete/{id}")
@@ -181,7 +176,7 @@ public class CategoryController {
                 RedirectAttributes re,Model model) throws IOException {
             Optional<Category> category =  categoryService.findById(id);
             if (category.isEmpty()) {
-                re.addAttribute("message", "The category is not exist!");
+                re.addFlashAttribute("message", "The category is not exist!");
                 return "redirect:/category/listCategory";
             }
             else {
@@ -190,7 +185,7 @@ public class CategoryController {
                 String dir = "../category-images/" + id;
                 FileUtils.deleteDirectory(new File(dir));
                 
-                re.addAttribute("message","Delete category id: "+ id + " successfully!");           
+                re.addFlashAttribute("message","Delete category id: "+ id + " successfully!");           
                 return "redirect:/category/listCategory";
             }
         

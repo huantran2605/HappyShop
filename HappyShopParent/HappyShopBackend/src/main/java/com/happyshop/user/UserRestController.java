@@ -1,4 +1,4 @@
-package com.happyshop.user.controller;
+package com.happyshop.user;
 
 import java.util.Optional;
 
@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 import org.springframework.web.bind.annotation.RestController;
-
-import com.happyshop.user.UserService;
 
 @RestController
 

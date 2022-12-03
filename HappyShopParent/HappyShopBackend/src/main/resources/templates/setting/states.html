@@ -35,14 +35,14 @@
 					data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
-		
-		<div class="row mt-3">
-				<label id="labelStateName" class="col-form-label col-sm-2">State/Province Name: </label>
-				<div class="col-sm-4">
-					<input id="fieldStateName" type="text" class="form-control" />
-				</div>
-		</div>
-		
+		<form id="stateForm">
+			<div class="row mt-3">
+					<label id="labelStateName" class="col-form-label col-sm-2">State/Province Name: </label>
+					<div class="col-sm-4">
+						<input id="fieldStateName" type="text" class="form-control" required minlength="3" maxlength="45" />
+					</div>
+			</div>
+		</form>
 		<div class="col text-center mt-3">
 				<input type="button" class="btn btn-secondary m-2" id="addStateButton" value="Add" />
 				<input type="button" class="btn btn-secondary m-2"

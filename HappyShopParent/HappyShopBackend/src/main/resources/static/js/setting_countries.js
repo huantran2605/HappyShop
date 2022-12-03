@@ -24,17 +24,12 @@ $(document).ready(function(){
 	dropDownCountry.on("change", function(){
 		changeFormStateToSlectedCountry();		
 	})
-	addCountryButton.on("click", function(e){
-		if(addCountryButton.val() == "Add"){
-			if(fieldCountryName.val().length >0 && fieldCountryCode.val().length >0){
-				addCountry();
-			}
-			else{
-				alert("Country Name and Country Code need to fill!");
-			}	
+	addCountryButton.on("click", function(e) {
+		if (addCountryButton.val() == "Add") {
+			addCountry();
 		}
-		else{
-			changeFormStateToNew();			
+		else {
+			changeFormStateToNew();
 		}
 	})
 	updateCountryButton.on("click", function(){
@@ -117,6 +112,11 @@ function changeFormStateToSlectedCountry(){
 }
 
 function addCountry() {
+	countryForm = document.getElementById("countryForm");
+	if(!countryForm.checkValidity()){
+		countryForm.reportValidity();
+		return;
+	}
 	url = contextPath + "countries/save";
 	countryName = fieldCountryName.val();
 	countryCode = fieldCountryCode.val();

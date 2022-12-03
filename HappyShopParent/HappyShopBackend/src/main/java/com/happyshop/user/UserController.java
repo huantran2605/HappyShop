@@ -1,4 +1,4 @@
-package com.happyshop.user.controller;
+package com.happyshop.user;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +13,9 @@ import javax.websocket.server.PathParam;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,11 +34,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.happyshop.FileUploadUtil;
 import com.happyshop.common.entity.Role;
 import com.happyshop.common.entity.User;
+import com.happyshop.paging.PagingAndSortingHelper;
+import com.happyshop.paging.PagingAndSortingParam;
 import com.happyshop.role.RoleService;
-import com.happyshop.user.UserService;
-import com.happyshop.user.export.UserCsvExporter;
-import com.happyshop.user.export.UserExcelExporter;
-import com.happyshop.user.export.UserPdfExporter;
 
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
@@ -52,14 +50,8 @@ public class UserController {
 	RoleService roleService;
 	
 	@GetMapping("/listUser")
-	private String viewFirstPageUser(Model model,
-			RedirectAttributes re,
-			@RequestParam("message")  Optional<String> message) {
-		List<User> list = userService.findAll();
-		model.addAttribute("users", list);
-		
-		re.addAttribute("message", message.orElse(null));
-		return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=";
+	private String viewFirstPageUser() {		
+	    return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=";
 	}
 	
 	@GetMapping("/new")
@@ -102,12 +94,12 @@ public class UserController {
 		        user.setPhoto(oldUser.get().getPhoto());  
 		        BeanUtils.copyProperties(user, oldUser.get());
 		        userService.save(oldUser.get());
-		        re.addAttribute("message", "Updated User successfully!");
+		        re.addFlashAttribute("message", "Updated User successfully!");
 		    }
 		    else {
 		        user.setPhoto(null);
 		        userService.save(user);		        
-		        re.addAttribute("message", "Added new User successfully!");
+		        re.addFlashAttribute("message", "Added new User successfully!");
 		    }
 		}
 		String nameMail = user.getEmail().split("@")[0];
@@ -139,7 +131,7 @@ public class UserController {
 			RedirectAttributes re,Model model) throws IOException {
 		Optional<User> user =  userService.findById(id);
 		if (user.isEmpty()) {
-			re.addAttribute("message", "The user is not exist!");
+			re.addFlashAttribute("message", "The user is not exist!");
 			return "redirect:/user/listUser";
 		}
 		else {
@@ -148,7 +140,7 @@ public class UserController {
 			String dir = "users-photo/" + id;
 			FileUtils.deleteDirectory(new File(dir));
 			
-			re.addAttribute("message","Delete User has id: "+ id + " successfully!");			
+			re.addFlashAttribute("message","Delete User has id: "+ id + " successfully!");			
 			return "redirect:/user/listUser";
 		}
 	
@@ -160,34 +152,35 @@ public class UserController {
 		Optional<User> user =  userService.findById(id);
 		String status = "";
 		if (user.isEmpty()) {
-			re.addAttribute("message", "The user is not exist!");
+			re.addFlashAttribute("message", "The user is not exist!");
 			return "redirect:/user/listUser";
 		}
 		else {
 			status = userService.updateEnabledStatus(user.get());
-			re.addAttribute("message", status);		
+			re.addFlashAttribute("message", status);		
 		}
 		String nameMail = user.get().getEmail().split("@")[0];
         return "redirect:/user/page/1?sortField=id&sortDir=asc&keyWord=" + nameMail;
 	}
 
 	@GetMapping("/page/{pageNum}")
-	private String userPage (@PathVariable ("pageNum") Integer pageNum,
+	private String userPage (
+	        @PagingAndSortingParam PagingAndSortingHelper helper,
+	        @PathVariable ("pageNum") Integer pageNum,
 			@Param("sortField") String sortField,
 			@Param("sortDir") String sortDir,
-			@Param("keyWord") Optional<String> keyWord,	
-			
-			Model model,@RequestParam("message")  Optional<String> message) {
+			@Param("keyWord") String keyWord,	
+			Model model) {
 		//sort
 		Sort sort = Sort.by(sortField);
 		if(sortDir.equalsIgnoreCase("asc"))
 			sort = Sort.by(sortField).ascending();
 		else  sort = Sort.by(sortField).descending();
 		
-		org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
+		Pageable pageable = PageRequest.of(pageNum - 1,
 				UserService.SIZE_PAGE_USER, sort);
 	
-		Page<User> pageUser = userService.findAll(pageable, keyWord.get()); 
+		Page<User> pageUser = userService.findAll(pageable, keyWord); 
 		List<User> listUser = pageUser.getContent();
 		//list user 
 				
@@ -197,14 +190,17 @@ public class UserController {
 			endCount = pageUser.getTotalElements();
 		
 		String reserveDir = sortDir.equalsIgnoreCase("asc") ? "des"  : "asc";
- 		model.addAttribute("reserveDir", reserveDir);
-		model.addAttribute("sortField", sortField);
-		model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reserveDir", reserveDir);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("keyWord", keyWord);
+		
+		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("totalPage", pageUser.getTotalPages()); 
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
-		
+				
 		if(endCount >  pageUser.getTotalElements()) {
 			endCount = pageUser.getTotalElements();
 		}
@@ -215,9 +211,8 @@ public class UserController {
 		
 		model.addAttribute("elementsCurrentPerPage", pageUser.getNumberOfElements());
 		model.addAttribute("elementsPerPage", UserService.SIZE_PAGE_USER);
-		model.addAttribute("message", message.orElse(null));
 		
-		model.addAttribute("keyWord", keyWord.get());
+		model.addAttribute("moduleURL", "/user");
 		
 
 		return"user/listUser";

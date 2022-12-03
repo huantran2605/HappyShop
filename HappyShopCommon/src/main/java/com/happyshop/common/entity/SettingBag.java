@@ -3,10 +3,6 @@ package com.happyshop.common.entity;
 import java.util.List;
 
 
-
-
-
-
 public class SettingBag {
     private List<Setting> listSettings;
 
@@ -18,8 +14,7 @@ public class SettingBag {
         int index = listSettings.indexOf(new Setting(key));
         if (index >= 0) {
             return listSettings.get(index);
-        }
-        
+        }      
         return null;
     }
     
