@@ -30,7 +30,7 @@
 		</div>
 
 		<!-- search-->
-		<div th:replace="fragments :: search ('category', 'listCategory')">
+		<div th:replace="fragments :: search ('Category')">
 
 		</div>
 
@@ -41,15 +41,15 @@
 		table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:replace="fragments :: column_link('category', 'id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
 						<th>Category Image</th>
 						<th
-							th:replace="fragments :: column_link('category', 'name', 'Category Name')"></th>
+							th:replace="fragments :: column_link('name', 'Category Name')"></th>
 						<th>Category Name Parent</th>
 						<th
-							th:replace="fragments :: column_link('category', 'alias', 'Alias')"></th>
+							th:replace="fragments :: column_link('alias', 'Alias')"></th>
 						<th
-							th:replace="fragments :: column_link('category', 'enable', 'Enable')"></th>
+							th:replace="fragments :: column_link('enable', 'Enable')"></th>
 
 						<th></th>
 					</tr>
@@ -71,7 +71,7 @@
 						<td th:text="${category.alias}"></td>
 						<td>
 							<div
-								th:replace="fragments :: status_enable('category', ${category.id}, ${category.enable})">
+								th:replace="fragments :: status_enable(${category.id}, ${category.enable})">
 							</div>
 						</td>
 
@@ -84,7 +84,7 @@
 									class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update('category', ${category.id})">
+							<div th:replace="fragments :: update(${category.id})">
 							</div>
 						</td>
 
@@ -113,7 +113,7 @@
 
 						<div class="mt-2">
 							<div
-								th:replace="fragments :: status_enable('category', ${category.id}, ${category.enable})">
+								th:replace="fragments :: status_enable(${category.id}, ${category.enable})">
 							</div>
 							<div class="float-start">
 								<a th:href="@{'/category/delete/' + ${category.id}}"
@@ -123,7 +123,7 @@
 									class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update('category', ${category.id})">
+							<div th:replace="fragments :: update(${category.id})">
 							</div>
 						</div>
 
@@ -131,13 +131,14 @@
 				</div>
 			</div>
 		</div>
+		</div>
 		<!-- modal -->
 		<div th:replace="modal_fragments :: confirmationModal"></div>
 		<!-- count elements per page -->
 		<div th:replace="fragments :: countElement('Category')"></div>
 
 		<!-- pagination -->
-		<div th:replace="fragments :: pagination('category')"></div>
+		<div th:replace="fragments :: pagination()"></div>
 		<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
 

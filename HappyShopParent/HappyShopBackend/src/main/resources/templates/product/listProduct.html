@@ -74,15 +74,15 @@
 		table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:replace="fragments :: column_link('product', 'id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
 						<th>Main Image</th>
 						<th
-							th:replace="fragments :: column_link('product', 'name', 'Product Name')"></th>
+							th:replace="fragments :: column_link('name', 'Product Name')"></th>
 
 						<th
-							th:replace="fragments :: column_link('product', 'brand', 'Brand')"></th>
+							th:replace="fragments :: column_link('brand', 'Brand')"></th>
 						<th
-							th:replace="fragments :: column_link('product', 'category', 'Category')"></th>
+							th:replace="fragments :: column_link('category', 'Category')"></th>
 						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 							<th>Enabled</th>
 						</th:block>
@@ -107,7 +107,7 @@
 						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 							<td>
 								<div
-									th:replace="fragments :: status_enable('product', ${product.id}, ${product.enable})">
+									th:replace="fragments :: status_enable(${product.id}, ${product.enable})">
 								</div>
 							</td>
 						</th:block>
@@ -125,7 +125,7 @@
 								</th:block>
 							</div>
 							<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
-								<div th:replace="fragments :: update('product', ${product.id})">
+								<div th:replace="fragments :: update(${product.id})">
 								</div>
 							</th:block>
 						</td>
@@ -160,7 +160,7 @@
 
 						<div class="mt-2">
 							<div
-								th:replace="fragments :: status_enable('product', ${product.id}, ${product.enable})">
+								th:replace="fragments :: status_enable(${product.id}, ${product.enable})">
 							</div>
 							<div class="float-start">
 								<a th:href="@{'/product/delete/' + ${product.id}}"
@@ -168,7 +168,7 @@
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update('product', ${product.id})">
+							<div th:replace="fragments :: update(${product.id})">
 							</div>
 						</div>
 
@@ -181,7 +181,7 @@
 	<div th:replace="modal_fragments :: confirmationModal"></div>
 
 	<div class="modal fade" id="detailModal">
-		<div class="modal-dialog modal-xl">
+		<div class="modal-dialog modal-xl">   
 			<div class="modal-content"></div>
 		</div>
 	</div>
@@ -189,7 +189,7 @@
 	<div th:replace="fragments :: countElement('Product')"></div>
 
 	<!-- pagination -->
-	<div th:replace="fragments :: pagination('product')"></div>
+	<div th:replace="fragments :: pagination()"></div>
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
 

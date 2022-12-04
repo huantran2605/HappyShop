@@ -30,7 +30,7 @@
 			</a>
 		</div>
 		<!-- search-->
-		<div th:replace="fragments :: search ('brand', 'listBrand')"></div>
+		<div th:replace="fragments :: search ('Brand')"></div>
 
 
 		<div class="full-details">
@@ -39,10 +39,10 @@
 		table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:replace="fragments :: column_link('brand', 'id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
 						<th>Brand Logo</th>
 						<th
-							th:replace="fragments :: column_link('brand', 'name', 'Brand Name')"></th>
+							th:replace="fragments :: column_link('name', 'Brand Name')"></th>
 						<th>Categories</th>
 						<th></th>
 					</tr>
@@ -69,7 +69,7 @@
 									<i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update('brand', ${brand.id})">
+							<div th:replace="fragments :: update(${brand.id})">
 							</div>
 						</td>
 
@@ -104,7 +104,7 @@
 									<i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update('brand', ${brand.id})">
+							<div th:replace="fragments :: update(${brand.id})">
 							</div>
 						</div>
 
@@ -118,7 +118,7 @@
 		<!-- count elements per page -->
 		<div th:replace="fragments :: countElement('Brand')"></div>
 		<!-- pagination -->
-		<div th:replace="fragments :: pagination('brand')"></div>
+		<div th:replace="fragments :: pagination()"></div>
 		<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
 		<script th:src="@{/js/common_form.js}"> 

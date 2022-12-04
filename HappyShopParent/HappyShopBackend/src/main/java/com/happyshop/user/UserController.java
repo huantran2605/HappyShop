@@ -165,7 +165,6 @@ public class UserController {
 
 	@GetMapping("/page/{pageNum}")
 	private String userPage (
-	        @PagingAndSortingParam PagingAndSortingHelper helper,
 	        @PathVariable ("pageNum") Integer pageNum,
 			@Param("sortField") String sortField,
 			@Param("sortDir") String sortDir,

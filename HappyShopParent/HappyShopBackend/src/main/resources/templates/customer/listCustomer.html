@@ -4,7 +4,7 @@
 <head th:replace="fragments :: page_head('List Customer','none')">
 </head>
 <body>
-	<div class="container-fluid">
+	<div class="container-fluid">  
 		<!-- navigation -->
 		<div th:replace="navigation :: nav"></div>
 
@@ -18,7 +18,7 @@
 		</div>
 
 		<!-- search-->
-		<div th:replace="fragments :: search ('customer', 'listCustomer')"></div>
+		<div th:replace="fragments :: search ('Customer')"></div>
 
 		<div class="full-details">
 			<table
@@ -26,17 +26,13 @@
 				table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:replace="fragments :: column_link('customer', 'id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
 						<th
-							th:replace="fragments :: column_link('customer', 'firstName', 'First Name')"></th>
-						<th
-							th:replace="fragments :: column_link('customer', 'lastName', 'Last Name')"></th>
-						<th
-							th:replace="fragments :: column_link('customer', 'email', 'Email')"></th>
-						<th
-							th:replace="fragments :: column_link('customer', 'city', 'City')"></th>
-						<th
-							th:replace="fragments :: column_link('customer', 'state', 'State')"></th>
+							th:replace="fragments :: column_link('firstName', 'First Name')"></th>
+						<th th:replace="fragments :: column_link('lastName', 'Last Name')"></th>
+						<th th:replace="fragments :: column_link('email', 'Email')"></th>
+						<th th:replace="fragments :: column_link('city', 'City')"></th>
+						<th th:replace="fragments :: column_link('state', 'State')"></th>
 						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 							<th>Enabled</th>
 						</th:block>
@@ -54,7 +50,7 @@
 						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 							<td>
 								<div
-									th:replace="fragments :: status_enable('customer', ${customer.id}, ${customer.enabled})">
+									th:replace="fragments :: status_enable(${customer.id}, ${customer.enabled})">
 								</div>
 							</td>
 						</th:block>
@@ -73,7 +69,7 @@
 							</div> <th:block
 								sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
 								<div
-									th:replace="fragments :: update('customer', ${customer.id})">
+									th:replace="fragments :: update(${customer.id})">
 								</div>
 							</th:block>
 						</td>
@@ -84,29 +80,29 @@
 
 		<div class="less-details">
 			<div th:each=" customer: ${customers}" class="row">
-				<div class="col-4">				
+				<div class="">
 					<p>Id: [[${customer.id}]]</p>
-					<p>Full Name:
-					[[${customer.getFullName}]] </p>
+					<p>Full Name: [[${customer.getFullName}]]</p>
+					<p>Email: [[${customer.email}]]</p>
+					<p>Country: [[${customer.country.name}]]</p>
 				</div>
-				<div class="col-8">
-					<p>Email: [[${customer.email}]] </p>
-					<p>Country: [[${customer.country.name}]] </p>
-					<div class="float-start ">
-						<a th:href="@{'/customer/detail/' + ${customer.id}}"
-							title="Detail customer" class="me-3 link-detail"> <i
-							class="fa-sharp fa-solid fa-circle-info"></i>
-						</a>
-						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
-							<a th:href="@{'/customer/delete/' + ${customer.id}}"
-								class="deleteCustomer me-3" th:name="${customer.getFullName}"
-								title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-							</a>
-						</th:block>
+				<div class="d-flex justify-content-start">
+					<div
+						th:replace="fragments :: status_enable(${customer.id}, ${customer.enabled})">
 					</div>
+					<a th:href="@{'/customer/detail/' + ${customer.id}}"
+						title="Detail customer" class="ms-3 me-3 link-detail"> <i
+						class="fa-sharp fa-solid fa-circle-info"></i>
+					</a>
+					<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+						<a th:href="@{'/customer/delete/' + ${customer.id}}"
+							class="deleteCustomer me-3" th:name="${customer.getFullName}"
+							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+						</a>
+					</th:block>
 					<th:block
 						sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
-						<div th:replace="fragments :: update('customer', ${customer.id})">
+						<div th:replace="fragments :: update(${customer.id})">
 						</div>
 					</th:block>
 				</div>
@@ -127,7 +123,7 @@
 	<!-- count elements per page -->
 	<div th:replace="fragments :: countElement('Customer')"></div>
 	<!-- pagination -->
-	<div th:replace="fragments :: pagination('customer')"></div>
+	<div th:replace="fragments :: pagination()"></div>
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
 
