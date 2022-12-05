@@ -24,10 +24,28 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new CustomerDetailsServiceClass();
+    }
+    
     
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().permitAll();
+		http.authorizeRequests()
+		    .antMatchers("/customer/**").authenticated()
+		    .anyRequest().permitAll()
+		    .and()
+            .formLogin()
+                .loginPage("/login")
+                .usernameParameter("email")
+                .permitAll()
+            .and()
+            .logout().permitAll()
+            .and()
+            .rememberMe()
+                .key("hfgeurhgefsdfsfsbgb1236744jh2345er")
+                .tokenValiditySeconds( 14 * 24 * 60 * 60);
 
 		return http.build();
 	}

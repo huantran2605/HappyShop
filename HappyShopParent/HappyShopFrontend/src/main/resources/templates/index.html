@@ -7,7 +7,7 @@
 
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
-		<div th:replace="fragments :: search"></div>
+		<div th:replace="navigation :: search_nav"></div>
 		<h1>Shopping by Categories</h1>
 		<div class="row">
 			<div class="col" th:each="category : ${listCategory}">

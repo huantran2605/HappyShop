@@ -20,7 +20,7 @@ public class PagingAndSortingArgumentResolver implements HandlerMethodArgumentRe
 //        String sortDir = request.getParameter("sortDir");
 //        String sortField =  request.getParameter("sortField");
 //        String keyWord = request.getParameter("keyWord");
-        System.out.println("dang xu li-----------");
+         System.out.println("dang xu li-----------");
 //        String reserveDir = sortDir.equalsIgnoreCase("asc") ? "des"  : "asc";
 //        model.addAttribute("reserveDir", reserveDir);
 //        model.addAttribute("sortField", sortField);

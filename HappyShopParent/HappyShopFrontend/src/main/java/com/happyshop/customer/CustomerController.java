@@ -81,4 +81,9 @@ public class CustomerController {
         boolean verified = customerService.verifyAccount(code);
         return "customer/"+(verified ? "verify_success" : "verify_fail");
     }
+    
+    @GetMapping("loginCustomer")
+    public String loginC() {
+        return "customer/loginForm";
+    }
 }
