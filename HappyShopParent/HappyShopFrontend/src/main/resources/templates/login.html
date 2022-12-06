@@ -8,15 +8,16 @@
 </head>
 
 <body>
+	<div th:replace="navigation :: header_menu"></div>
 	<div class="login-form">
 		<form th:action="@{/login}" method="post">
 			<h2 class="text-center">Sign in</h2>
 			<div class="text-center social-btn">
 				<a href="#" class="btn btn-primary btn-block"><i
 					class="fa fa-facebook"></i> Sign in with <b>Facebook</b></a> 
-					 <a href="#"
+					 <a th:href="@{/oauth2/authorization/google}"
 					class="btn btn-danger btn-block"><i class="fa fa-google"></i>
-					Sign in with <b>Google</b></a>
+					Continue with <b>Google</b></a>
 			</div>
 			<div class="or-seperator">
 				<i>or</i>
@@ -59,11 +60,11 @@
 
 		</form>
 		<div class="hint-text">
-			Don't have an account? <a href="#" class="text-success">Register
+			Don't have an account? <a th:href="@{/customer/register}" class="text-success">Register
 				Now!</a>
 		</div>
 	</div>
-
+	<div th:replace="fragments :: footer"></div>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

@@ -63,11 +63,16 @@ $(".deleteProduct").click(
 		e.preventDefault();
 		confirmToDelete("product", this);
 });
+$(".deleteCustomer").click(
+	function(e) {
+		e.preventDefault();
+		confirmToDelete("customer", this);
+});
  
 
 
 function confirmToDelete(name, selector) {	
-	if (name == "user") {
+	if (name == "user" || name == "customer") {
 		showConfirmationModal(
 			"Are you sure to delete the " + name + " email: "
 			+ $(selector).attr("email") + "?");

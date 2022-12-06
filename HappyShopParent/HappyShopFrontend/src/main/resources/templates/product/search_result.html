@@ -6,7 +6,7 @@
 
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
-		<div th:replace="fragments :: search"></div>
+		<div th:replace="navigation :: search_nav"></div>
 		<div th:if="${totalElement > 0}">
 			<h1>Search Results For '[[${keyword}]]'</h1>
 		</div>

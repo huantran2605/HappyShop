@@ -9,7 +9,7 @@
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
 		<div th:replace="breadcrumb :: content"> </div>
-		<div th:replace="fragments :: search"></div>
+		<div th:replace="navigation :: search_nav"></div>
 		
 <!-- 		<div class="mt-3" th:if="${category.children == null}">
 			<h5>Other categories in [[${category.name}]]</h5>

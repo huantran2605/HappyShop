@@ -214,11 +214,15 @@
 			</span> <span th:if="${elementsPerPage == 1}"> [[${nameModule}]]:
 				[[${currentPage * elementsPerPage}]] of [[${totalElement}]] </span>
 		</div>
+		<div class="text-center" th:if="${totalElement == 0}">
+			No [[${nameModule}]] found!
+		</div>
 	</div>
 
 
 	<!-- footer -->
 	<div th:fragment="footer">
+		<hr />
 		<p class="text-center">Happy Shop - Copyright &copy; Happy Ltd.</p>
 	</div>
 </body>

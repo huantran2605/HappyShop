@@ -14,15 +14,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.happyshop.security.oauth2.CustomerOauth2UserService;
+import com.happyshop.security.oauth2.DatabaseLoginSuccessHandler;
+import com.happyshop.security.oauth2.OAuth2LoginSuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 
 public class WebSecurityConfig {
-	
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    
+    @Autowired private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+	@Autowired private  CustomerOauth2UserService oauth2UserService;
+	@Autowired private DatabaseLoginSuccessHandler dbLoginSuccessHandler;
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
     
     @Bean
     public UserDetailsService userDetailsService() {
@@ -33,13 +40,21 @@ public class WebSecurityConfig {
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		    .antMatchers("/customer/**").authenticated()
+		    .antMatchers("/customer").authenticated()
 		    .anyRequest().permitAll()
 		    .and()
             .formLogin()
                 .loginPage("/login")
+                .successHandler(dbLoginSuccessHandler)
                 .usernameParameter("email")
-                .permitAll()
+                .permitAll()                
+            .and()
+            .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(oauth2UserService)
+                .and()
+                .successHandler(oAuth2LoginSuccessHandler)
             .and()
             .logout().permitAll()
             .and()

@@ -1,0 +1,36 @@
+server:
+  port: 80
+  servlet:
+    context-path: /HappyShop
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: huan
+    url: jdbc:mysql://localhost:3306/happyshopdb
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 10240KB
+      max-request-size: 10240KB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 669639299249-rear9gfie7k4bjj0v02srucb9vlqnmv3.apps.googleusercontent.com
+            clientSecret: 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
+            scope:
+            - email
+            - profile
+  
+
+    

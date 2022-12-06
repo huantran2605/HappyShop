@@ -16,4 +16,5 @@ public interface CountryService {
     
     Optional<Country> findById(Integer id);
     
+    Country findByCode(String code);
 }

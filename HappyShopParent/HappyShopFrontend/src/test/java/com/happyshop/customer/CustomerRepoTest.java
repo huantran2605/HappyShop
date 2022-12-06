@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
+import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
@@ -77,11 +78,16 @@ public class CustomerRepoTest {
 //        assertThat(savedCustomer.getId()).isGreaterThan(0);
 //    }
 //    
+//    @Test
+//    public void testListCustomers() {
+//        Iterable<Customer> customers = repo.findAll();
+//        customers.forEach(System.out::println);
+//        
+//        assertThat(customers).hasSizeGreaterThan(1);
+//    }
+    
     @Test
-    public void testListCustomers() {
-        Iterable<Customer> customers = repo.findAll();
-        customers.forEach(System.out::println);
-        
-        assertThat(customers).hasSizeGreaterThan(1);
+    public void updateAuthenType() {
+       repo.updateAuthenticationType(1, AuthenticationType.FACEBOOK);
     }
 }

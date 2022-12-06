@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Customer;
 
 @Repository
@@ -16,5 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer>{
     
     public Customer findByVerificationCode(String verificationCode);
     
+    @Query("UPDATE Customer c SET c.authenticationType = ?2 where c.id = ?1")
+    @Modifying
+    public void updateAuthenticationType(Integer id, AuthenticationType type);
     
 }

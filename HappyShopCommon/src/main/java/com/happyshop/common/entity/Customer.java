@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -71,10 +73,16 @@ public class Customer {
     @JoinColumn(name = "country_id")
     private Country country;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "authentication_type", length = 10)
+    private AuthenticationType authenticationType;
+    
     @Transient
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
     }
+
+
     
     
 }

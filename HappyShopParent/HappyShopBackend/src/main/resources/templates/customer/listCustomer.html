@@ -20,7 +20,7 @@
 		<!-- search-->
 		<div th:replace="fragments :: search ('Customer')"></div>
 
-		<div class="full-details">
+		<div class="full-details" th:if="${totalElement > 0}">
 			<table
 				class="table table-active table-striped table-inverse
 				table-hover table-responsive mt-4 ">
@@ -62,7 +62,7 @@
 								</a>
 								<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 									<a th:href="@{'/customer/delete/' + ${customer.id}}"
-										class="deleteCustomer me-3" th:name="${customer.getFullName}"
+										class="deleteCustomer me-3" th:email="${customer.email}"
 										title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 									</a>
 								</th:block>

@@ -30,6 +30,10 @@ public class CountryServiceImpl implements CountryService {
         return countryRepository.findById(id);
     }
 
+    public Country findByCode(String code) {
+        return countryRepository.findByCode(code);
+    }
+
     
     
     
