@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: page_head('Registration Form','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		<h1 class="text-center">Your Account Details</h1>
+		<div class="" style="max-width: 700px; margin: 0 auto;">
+			<div class="alert alert-primary text-center"
+				th:if="${message != null}" role="alert">
+				<strong>[[${message}]]</strong>
+			</div>
+			<form th:action="@{/customer/update}" method="post" th:object="${customer}"
+				class="border boder-secondary">
+				<input type="hidden" th:field="*{id}" />
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Authentication Type: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{authenticationType}"
+							 readonly="readonly">
+					</div>
+				</div>
+				
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Email: </label>
+					<div class="col-md-8">
+						<input type="email" class="form-control" th:field="*{email}"
+							id="email" readonly="readonly">
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">First Name: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{firstName}"
+							maxlength="45" minlength="2" required>
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Last Name: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{lastName}"
+							maxlength="45" minlength="2" required>
+					</div>
+				</div>
+
+				<th:block th:if="${customer.authenticationType.name() == 'DATABASE'}">
+					<div class="row mt-3 ps-3">
+						<label for="" class="col-md-2 form-label">Password: </label>
+						<div class="col-md-8">
+							<input type="password" id="customerPassword"
+								oninput="checkPasswordMatch(document.getElementById('confirmCustomerPassword'))"
+								class="form-control" th:field="*{password}" maxlength="45"
+								minlength="6">
+						</div>
+					</div>
+
+					<div class="row mt-3 ps-3">
+						<label for="" class="col-md-2 form-label">Confirm
+							Password: </label>
+						<div class="col-md-8">
+							<input type="password" id="confirmCustomerPassword"
+								oninput="checkPasswordMatch(this)" class="form-control" >
+						</div>
+					</div>
+				</th:block>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Phone Number: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{phoneNumber}"
+							maxlength="15" minlength="3" required>
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Address Line 1: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{addressLine1}"
+							maxlength="64" minlength="5" required>
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Address Line 2: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{addressLine2}"
+							maxlength="64" minlength="5">
+					</div>
+				</div>
+
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">City: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{city}"
+							maxlength="45" minlength="3" required>
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Country: </label>
+					<div class="col-md-8">
+						<select th:field="*{country}" id="country">
+							<th:block th:each="country : ${listCountry}">
+								<option th:value="${country.id}">[[${country.name}]]</option>
+							</th:block>
+						</select>
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">State/Province: </label>
+					<div class="col-md-8">
+						<input type="text" th:field="*{state}" class="form-control"
+							list="stateList" id="stateField" maxlength="45" minlength="2" />
+						<datalist id="stateList"></datalist>
+					</div>
+				</div>
+
+				<div class="row mt-3 ps-3">
+					<label for="" class="col-md-2 form-label">Postal Code: </label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" th:field="*{postalCode}"
+							maxlength="10" required>
+					</div>
+				</div>
+
+				<div class="text-center m-3">
+					<input type="submit" value="Update" class="btn btn-primary">
+				</div>
+
+			</form>
+		</div>
+
+		<br>
+		<div th:replace="navigation :: footer_menu"></div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+	<script th:src="@{/js/common_form_customer.js}"></script>
+	<script>	
+		var contextPath = "[[@{/}]]";	
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

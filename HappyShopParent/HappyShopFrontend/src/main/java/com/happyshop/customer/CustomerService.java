@@ -31,7 +31,9 @@ public interface CustomerService {
     
     void updateAuthenticationType(Customer customer, AuthenticationType type);
 
-    void addNewCustomerOAuth2(String name, String email, String countryCode);
+    void addNewCustomerOAuth2(String name, String email, String countryCode,AuthenticationType authenticationType);
     
     void setName(String name, Customer customer);
+    
+    void updateCustomer(Customer customer);
 }

@@ -17,6 +17,7 @@ import com.happyshop.common.entity.User;
 public class CustomerDetailsClass implements UserDetails {
 	
 	private Customer customer;
+	private String fullName;
 
 	public CustomerDetailsClass(Customer customer) {
 		this.customer = customer;
@@ -63,11 +64,16 @@ public class CustomerDetailsClass implements UserDetails {
 		return customer.isEnabled();
 	}
 	public String getFullname () {
-		return customer.getFirstName() +" " +customer.getLastName();
+		return fullName == null ?  customer.getFirstName() +" " +customer.getLastName() : fullName;
 	}
 	
 	public Customer getCustomer() {
 	    return this.customer;
 	}
+	
+	public void setFullName (String fullName) {
+        this.fullName = fullName; 
+    }
+	
 	
 }

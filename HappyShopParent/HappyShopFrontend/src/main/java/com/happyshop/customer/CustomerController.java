@@ -1,7 +1,9 @@
 package com.happyshop.customer;
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -11,15 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.security.CustomerDetailsClass;
+import com.happyshop.security.oauth2.CustomerOauth2User;
 import com.happyshop.setting.EmailSettingBag;
 import com.happyshop.setting.SettingService;
 
@@ -86,4 +95,70 @@ public class CustomerController {
     public String loginC() {
         return "customer/loginForm";
     }
+    
+    @GetMapping("customer_details")
+    public String viewCustomerDetails(HttpServletRequest request, Model model) {
+        String email = getEmailAuthenticationCustomer(request);
+        Customer customer =  customerService.findByEmail(email);
+        List<Country> listCountry = customerService.getAllCountries();
+        model.addAttribute("listCountry", listCountry);
+        model.addAttribute("customer", customer);
+        
+        return "customer/customer_details";
+    }
+    
+    private String getEmailAuthenticationCustomer(HttpServletRequest request) {
+        Object principle =  request.getUserPrincipal();
+        String email = "";
+        if(principle instanceof UsernamePasswordAuthenticationToken
+                || principle instanceof RememberMeAuthenticationToken) {
+            email = request.getUserPrincipal().getName();
+        }
+        else if(principle instanceof OAuth2AuthenticationToken){
+            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) principle;
+            CustomerOauth2User oauth2User = (CustomerOauth2User) oauth2Token.getPrincipal();
+            email =  oauth2User.getEmail();
+        }
+           
+        return email;
+    }
+    
+    @PostMapping("update")
+    private String updateCustomer( Customer customer,
+             RedirectAttributes re,HttpServletRequest request) {        
+        customerService.updateCustomer(customer);    
+        updateNameUserAuthentication(customer, request);
+        
+        re.addFlashAttribute("message", "Updated Profile successfully!");
+        return "redirect:/customer/customer_details";
+    }
+
+    private void updateNameUserAuthentication(Customer customer, HttpServletRequest request) {
+        Object principle =  request.getUserPrincipal();
+        String fullName = customer.getFirstName() + " " + customer.getLastName();
+          
+        if(principle instanceof UsernamePasswordAuthenticationToken
+                || principle instanceof RememberMeAuthenticationToken ) {
+            CustomerDetailsClass customerDetail = getUserAuthenticationDatabase(principle);
+            customerDetail.setFullName(fullName);
+        }
+        else if(principle instanceof OAuth2AuthenticationToken){
+            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) principle;
+            CustomerOauth2User oauth2User = (CustomerOauth2User) oauth2Token.getPrincipal();
+            oauth2User.setFullName(fullName);
+        }      
+    }
+    
+    private CustomerDetailsClass getUserAuthenticationDatabase(Object principle) {
+        if(principle instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken usernamePasswordToken = (UsernamePasswordAuthenticationToken) principle;
+            return (CustomerDetailsClass) usernamePasswordToken.getPrincipal();
+        }
+        else {
+            RememberMeAuthenticationToken usernamePasswordToken = (RememberMeAuthenticationToken) principle;
+            return (CustomerDetailsClass) usernamePasswordToken.getPrincipal();
+        }
+            
+    }
+      
 }

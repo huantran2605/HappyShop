@@ -13,7 +13,7 @@
 		<form th:action="@{/login}" method="post">
 			<h2 class="text-center">Sign in</h2>
 			<div class="text-center social-btn">
-				<a href="#" class="btn btn-primary btn-block"><i
+				<a th:href="@{/oauth2/authorization/facebook}" class="btn btn-primary btn-block"><i
 					class="fa fa-facebook"></i> Sign in with <b>Facebook</b></a> 
 					 <a th:href="@{/oauth2/authorization/google}"
 					class="btn btn-danger btn-block"><i class="fa fa-google"></i>

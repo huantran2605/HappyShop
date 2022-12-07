@@ -76,19 +76,19 @@ public class CustomerServiceImpl implements CustomerService {
     
     @Override
     public void updateCustomer(Customer customer) {
+        Optional<Customer> oldCustomer = customerRepo.findById(customer.getId());             
         if(customer.getPassword() == null || customer.getPassword().isEmpty()) {
-            Optional<Customer> oldCustomer = customerRepo.findById(customer.getId());
-            if(oldCustomer.isPresent()) {
-                customer.setPassword(oldCustomer.get().getPassword());
-                customer.setCreatedTime(oldCustomer.get().getCreatedTime());
-                customer.setVerificationCode(oldCustomer.get().getVerificationCode());
-                customer.setEnabled(oldCustomer.get().isEnabled());
-            }
+            customer.setPassword(oldCustomer.get().getPassword());
         }
         else {
             String encodedPass = passwordEncoder.encode(customer.getPassword());
             customer.setPassword(encodedPass);
-        }
+        }        
+        customer.setCreatedTime(oldCustomer.get().getCreatedTime());
+        customer.setVerificationCode(oldCustomer.get().getVerificationCode());
+        customer.setEnabled(oldCustomer.get().isEnabled());
+        customer.setAuthenticationType(oldCustomer.get().getAuthenticationType());
+        
         customerRepo.save(customer);
     }
 

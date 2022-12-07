@@ -23,8 +23,7 @@ import com.happyshop.setting.country.CountryService;
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     
     @Autowired private CustomerService customerService;
-    
-    
+        
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws ServletException, IOException {
@@ -33,13 +32,27 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         String name = oauth2User.getName();
         String email = oauth2User.getEmail();
         String countryCode = request.getLocale().getCountry();
+        String clientName = oauth2User.getClientName();
+        
+        AuthenticationType authenticationType = getAuthenticationType(clientName);
         Customer customer = customerService.findByEmail(email);
         if(customer == null) {
-            customerService.addNewCustomerOAuth2(name, email, countryCode);
+            customerService.addNewCustomerOAuth2(name, email, countryCode, authenticationType);
         }else {
-            customerService.updateAuthenticationType(customer, AuthenticationType.GOOGLE);
+            customerService.updateAuthenticationType(customer, authenticationType);
+            oauth2User.setFullName(customer.getFullName());
         }     
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+    
+    public AuthenticationType getAuthenticationType(String clientName) {
+        if(clientName.equals("Google")) {
+            return AuthenticationType.GOOGLE;
+        }
+        else {
+            return AuthenticationType.FACEBOOK;
+
+        }     
     }
 
 }

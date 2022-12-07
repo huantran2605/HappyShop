@@ -96,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
         return false;
     }
     @Override
-    public void addNewCustomerOAuth2(String name, String email, String countryCode) {
+    public void addNewCustomerOAuth2(String name, String email, String countryCode, AuthenticationType authenticationType) {
         Customer customer = new Customer();
         setName(name, customer);
         
@@ -109,7 +109,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPostalCode("");
         customer.setEnabled(true);
         customer.setCreatedTime(new Date());
-        customer.setAuthenticationType(AuthenticationType.GOOGLE);
+        customer.setAuthenticationType(authenticationType);
         
         Country country = countryService.findByCode(countryCode);
         customer.setCountry(country); 
@@ -125,9 +125,30 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setLastName(""); 
         }
         else {
+            String firstName = customerName[0];
             customer.setFirstName(customerName[0]);
-            customer.setLastName(customerName[1]);           
+            String lastName = name.replace(firstName + " ","");
+            customer.setLastName(lastName);           
         }
     }
+    
+    @Override
+    public void updateCustomer(Customer customer) {
+        Optional<Customer> oldCustomer = customerRepository.findById(customer.getId());    
+//        if (customer.getAuthenticationType().equals(AuthenticationType.DATABASE)) {
+            if (customer.getPassword() == null || customer.getPassword().isEmpty()) {
+                customer.setPassword(oldCustomer.get().getPassword());
+            } else {
+                encodePassword(customer);
+            }
+//        }
+        customer.setCreatedTime(oldCustomer.get().getCreatedTime());
+        customer.setVerificationCode(oldCustomer.get().getVerificationCode());
+        customer.setEnabled(oldCustomer.get().isEnabled());
+        customer.setAuthenticationType(oldCustomer.get().getAuthenticationType());
+        
+        customerRepository.save(customer);
+    }
+
     
 }
