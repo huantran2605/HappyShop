@@ -139,11 +139,14 @@ public class ProductController {
             @AuthenticationPrincipal UserDetailsClass loggedUser,
             Model model) throws IOException {
             
-            if(loggedUser.hasRole("Salesperson")) {
-                productService.saveProductPrice(product);
-                re.addFlashAttribute("message", "Updated Product successfully!");
-                return "redirect:/product/listProduct";
+            if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+                if(loggedUser.hasRole("Salesperson")) {
+                    productService.saveProductPrice(product);
+                    re.addFlashAttribute("message", "Updated Product successfully!");
+                    return "redirect:/product/listProduct";
+                }
             }
+            
             if(product.getId() != null) {    
                 re.addFlashAttribute("message", "Updated Product successfully!");
             } else {
@@ -230,12 +233,19 @@ public class ProductController {
     
     @GetMapping("update/{id}")
     private String updateProduct(@PathVariable("id") Integer  id,            
-            Model model) {
+            Model model,@AuthenticationPrincipal UserDetailsClass loggedUser) {
         Optional<Product> product = productService.findById(id);
         if (product.isEmpty()) {
             model.addAttribute("message", "The product is not exist!");
             return "redirect:/product/listProduct";
-        } else {  
+        } else { 
+            Boolean readOnlyForSalesperson = false;
+            if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+                if(loggedUser.hasRole("Salesperson")) {
+                    readOnlyForSalesperson = true;
+                }
+            }
+            model.addAttribute("readOnlyForSalesperson", readOnlyForSalesperson);
             model.addAttribute("product", product.get());
             model.addAttribute("brands", brandService.findAll(Sort.by("name")));       
             model.addAttribute("listCategories", product.get().getBrand().getCategories());

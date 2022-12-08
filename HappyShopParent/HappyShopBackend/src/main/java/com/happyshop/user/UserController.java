@@ -34,8 +34,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.happyshop.FileUploadUtil;
 import com.happyshop.common.entity.Role;
 import com.happyshop.common.entity.User;
-import com.happyshop.paging.PagingAndSortingHelper;
-import com.happyshop.paging.PagingAndSortingParam;
 import com.happyshop.role.RoleService;
 
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
@@ -165,7 +163,6 @@ public class UserController {
 
 	@GetMapping("/page/{pageNum}")
 	private String userPage (
-	        @PagingAndSortingParam PagingAndSortingHelper helper,
 	        @PathVariable ("pageNum") Integer pageNum,
 			@Param("sortField") String sortField,
 			@Param("sortDir") String sortDir,

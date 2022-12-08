@@ -10,7 +10,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.happyshop.paging.PagingAndSortingArgumentResolver;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
@@ -35,10 +34,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
             .addResourceLocations("file:/" + filePath+"/");
 	}
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new PagingAndSortingArgumentResolver());
-    }
+  
 	
 	
 }
