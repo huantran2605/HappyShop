@@ -1,4 +1,4 @@
-package com.happyshop.user;
+package com.happyshop.common.exception;
 
 public class UserException extends Exception {
 

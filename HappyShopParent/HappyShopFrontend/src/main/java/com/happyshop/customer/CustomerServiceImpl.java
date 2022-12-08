@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.exception.CustomerException;
 import com.happyshop.setting.country.CountryService;
 
 import net.bytebuddy.utility.RandomString;
@@ -54,6 +55,11 @@ public class CustomerServiceImpl implements CustomerService {
         if(!customer.getAuthenticationType().equals(type)) {
             customerRepository.updateAuthenticationType(customer.getId(), type);          
         }
+    }
+    
+    @Override
+    public Customer findByResetPasswordToken(String resetPasswordToken) {
+        return customerRepository.findByResetPasswordToken(resetPasswordToken);
     }
 
     @Override
@@ -135,19 +141,45 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateCustomer(Customer customer) {
         Optional<Customer> oldCustomer = customerRepository.findById(customer.getId());    
-//        if (customer.getAuthenticationType().equals(AuthenticationType.DATABASE)) {
-            if (customer.getPassword() == null || customer.getPassword().isEmpty()) {
-                customer.setPassword(oldCustomer.get().getPassword());
-            } else {
-                encodePassword(customer);
-            }
-//        }
+        if (customer.getPassword() == null || customer.getPassword().isEmpty()) {
+            customer.setPassword(oldCustomer.get().getPassword());
+        } else {
+            encodePassword(customer);
+        }
         customer.setCreatedTime(oldCustomer.get().getCreatedTime());
         customer.setVerificationCode(oldCustomer.get().getVerificationCode());
         customer.setEnabled(oldCustomer.get().isEnabled());
         customer.setAuthenticationType(oldCustomer.get().getAuthenticationType());
+        customer.setResetPasswordToken(oldCustomer.get().getResetPasswordToken());
         
         customerRepository.save(customer);
+    }
+    
+    @Override
+    public String updateResetPasswordToken(String email) throws CustomerException {
+        Customer customer = customerRepository.findByEmail(email);
+        if(customer != null) {
+            String token = RandomString.make(30);
+            customer.setResetPasswordToken(token);
+            return token;
+        }
+        else {
+            throw new CustomerException("The email is not existed.");
+        }
+    }
+    
+    @Override
+    public void resetPasswordCustomer(String token, String password) throws CustomerException {
+        Customer customer = customerRepository.findByResetPasswordToken(token);
+        if(customer != null) {
+            customer.setPassword(password);
+            encodePassword(customer);
+            customer.setResetPasswordToken(null);
+            customerRepository.save(customer);
+        }
+        else {
+            throw new CustomerException("Could not find the user.");
+        }
     }
 
     

@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.exception.CustomerException;
 import com.happyshop.security.CustomerDetailsClass;
 import com.happyshop.security.oauth2.CustomerOauth2User;
 import com.happyshop.setting.EmailSettingBag;
@@ -159,6 +160,39 @@ public class CustomerController {
             return (CustomerDetailsClass) usernamePasswordToken.getPrincipal();
         }
             
+    }
+    
+    @GetMapping("reset_password")
+    public String showResetForm(@Param("token") String token, Model model) {
+        Customer customer = customerService.findByResetPasswordToken(token);
+        if(customer != null) {
+            model.addAttribute("token", token);
+            return "customer/reset_password_form";
+        }
+        else {
+            model.addAttribute("message", "Invalid token");
+            model.addAttribute("titlePage", "Invalid token");
+            
+            return "message";
+        }
+    }
+    
+    @PostMapping("reset_password")
+    public String processResetForm(HttpServletRequest request, Model model) {
+        String token = request.getParameter("token");
+        String password = request.getParameter("password");
+              
+        try {
+            customerService.resetPasswordCustomer(token, password);
+            model.addAttribute("title", "Reset Your Password");
+            model.addAttribute("message", "Reseted Your Password Successfully!");
+            model.addAttribute("titlePage", "Reseted Your Password Successfully!");
+            return "message";
+        } catch (CustomerException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("titlePage", "Error");           
+            return "message";
+        }
     }
       
 }

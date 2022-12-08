@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.exception.CustomerException;
 
 public interface CustomerService {
 
@@ -36,4 +37,10 @@ public interface CustomerService {
     void setName(String name, Customer customer);
     
     void updateCustomer(Customer customer);
+
+    String updateResetPasswordToken(String email) throws CustomerException;
+    
+    Customer findByResetPasswordToken(String resetPasswordToken);
+
+    void resetPasswordCustomer(String token, String password) throws CustomerException;
 }

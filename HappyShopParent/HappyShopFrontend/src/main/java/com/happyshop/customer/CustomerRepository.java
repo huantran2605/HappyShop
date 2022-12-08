@@ -21,4 +21,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer>{
     @Modifying
     public void updateAuthenticationType(Integer id, AuthenticationType type);
     
+    public Customer findByResetPasswordToken(String resetPasswordToken);
 }
