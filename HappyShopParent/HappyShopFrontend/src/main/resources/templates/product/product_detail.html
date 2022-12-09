@@ -1,93 +1,99 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: page_head(${titlePage},'none')"> 
-</head> 
+<head th:replace="fragments :: page_head(${titlePage},'none')">
+</head>
 <body>
 
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
-		<div th:replace="breadcrumb :: content"> </div>
+		<div th:replace="breadcrumb :: content"></div>
 
 		<div class="row">
-		
+
 			<div class="col-sm">
 				<div class="m-2">
-					<img th:src="@{${product.getProductMainImagePath}}" th:index="${0}" class="img-fluid" id="mainImage" />
+					<img th:src="@{${product.getProductMainImagePath}}" th:index="${0}"
+						class="img-fluid" id="mainImage" />
 				</div>
 				<div class="d-flex justify-content-center">
 					<div class="m-2 border p-1">
 						<img th:src="@{${product.getProductMainImagePath}}"
-							th:index="${0}"
-						  	class="image-thumbnail" height="50px" />
+							th:index="${0}" class="image-thumbnail" height="50px" />
 					</div>
 					<th:block th:each="extraImage, status : ${product.images}">
 						<div class="m-2 border p-1">
-							<img class="image-thumbnail" 
-								th:index="${status.count}"
-								th:src="@{${extraImage.getPathExtraImageProduct}}" 
-								height="50px"/>
+							<img class="image-thumbnail" th:index="${status.count}"
+								th:src="@{${extraImage.getPathExtraImageProduct}}" height="50px" />
 						</div>
 					</th:block>
 				</div>
 			</div>
-			
+
 			<div class="col-sm">
 				<div>
-					<h2 class="fw-bold"> [[${product.name}]] </h2>
+					<h2 class="fw-bold">[[${product.name}]]</h2>
 				</div>
-				
+
 				<div>
-					<h4>Brand: [[${product.brand.name}]] </h4> 
+					<h4>Brand: [[${product.brand.name}]]</h4>
 				</div>
-				
-				<div th:if="${product.discountPercent <= 0}"  class="d-flex flex-row">
-					<h4> Price: 
-						<span th:replace="product/product_fragment :: productPrice(${product.price})" > </span>
+
+				<div th:if="${product.discountPercent <= 0}" class="d-flex flex-row">
+					<h4>
+						Price: <span
+							th:replace="product/product_fragment :: productPrice(${product.price})">
+						</span>
 					</h4>
 				</div>
-				<div th:if="${product.discountPercent > 0}" class="d-flex flex-row">
+				<div th:if="${product.discountPercent > 0}" class="d-flex flex-row flex-wrap">
 					<h4>Price:&nbsp;</h4>
-					<h4 style="color:darkred;">					
-						<span th:replace="product/product_fragment :: productPrice(${product.getDiscountPrice})"
-						th:remove="tag"> </span>			
+					<h4 style="color: darkred;">
+						<span
+							th:replace="product/product_fragment :: productPrice(${product.getDiscountPrice})"
+							th:remove="tag"> </span>
 					</h4>
 					&nbsp;
-					<h4><del>
-						<span th:replace="product/product_fragment :: productPrice(${product.price})"
-						th:remove="tag"> </span>
-					</del></h4>
+					<h4>
+						<del>
+							<span
+								th:replace="product/product_fragment :: productPrice(${product.price})"
+								th:remove="tag"> </span>
+						</del>
+					</h4>
 					<h4>&nbsp;([[${product.discountPercent}]]% off)</h4>
 				</div>
-				
-				<br />	
+
+				<br />
 				<div>
 					<p th:utext="${product.shortDescription}"></p>
 				</div>
-				
-			</div>
-			
-			<div class="col-sm-2">
-				<div>
-					<h5>Status:<span th:if="${product.inStock}" class="text-success">
-						In Stock</span>
-					
-					<span th:unless="${product.inStock}" class="text-danger">
-						Out Of Stock</span>
-					</h5>
+
+				<div class="">
+					<div>
+						<h5>
+							Status:<span th:if="${product.inStock}" class="text-success">
+								In Stock</span> <span th:unless="${product.inStock}"
+								class="text-danger"> Out Of Stock</span>
+						</h5>
+					</div>
+					<div class="mt-3"
+						th:replace="cart/quantity_control :: content(1,5,${product.id})">
+
+					</div>
+					<div class="mt-3">
+						<input type="button" class="btn btn-primary" value="Add To Cart" />
+					</div>
 				</div>
-				<div class="mt-3">
-					<input type="text" size="5" value = 1 />
-				</div>
-				<div class="mt-3">
-					<input type="button" class="btn btn-primary" value="Add To Cart"/> 
-				</div>
+
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-12">
-				<div><hr /></div>
+				<div>
+					<hr />
+				</div>
 			</div>
 			<div class="col-12">
 				<h3>Product Descriptions</h3>
@@ -96,35 +102,37 @@
 				<p th:utext="${product.fullDescription}"></p>
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-12">
-				<div><hr /></div>
+				<div>
+					<hr />
+				</div>
 			</div>
 			<div class="col-12">
 				<h3>Product Details</h3>
 			</div>
 			<div class="col-12">
 				<th:block th:each="detail : ${product.details}">
-					<p><b>[[${detail.name}]]: </b>
-						<span>[[${detail.value}]]</span>
+					<p>
+						<b>[[${detail.name}]]: </b> <span>[[${detail.value}]]</span>
 					</p>
 				</th:block>
 			</div>
 		</div>
-		
-		<div th:replace="fragments :: countElement('Product')"></div> 
-		<div th:replace="fragments :: pagination()"></div> 
-		
-		
-		
-		
-		
+
+		<div th:replace="fragments :: countElement('Product')"></div>
+		<div th:replace="fragments :: pagination()"></div>
+
+
+
+
+
 		<div th:replace="product/image_carousel :: content"></div>
 		<div th:replace="navigation :: footer_menu"></div>
 		<div th:replace="fragments :: footer"></div>
 	</div>
-	
+
 	<script>
 		$(document).ready(function(){
 			$(".image-thumbnail").mouseenter(function(){
@@ -141,7 +149,7 @@
 		});
 		
 	</script>
-
+	<script th:src="@{/js/cart_quantity_control.js}"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

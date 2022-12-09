@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+<body>
+	<div th:fragment="content(quantityValue, maxValue, productId)" th:remove="tag">
+		<div class=" d-flex flex-row align-items-center" style="width: 130px">
+			<i class="fa-sharp fa-solid fa-minus  link_Minus" th:pid="${productId}"></i> 
+			<input type="number" th:value="${quantityValue}" class="form-control ms-2 me-2 quantity_Input"
+				 th:id=" 'p' + ${productId}" min="1" th:max="${maxValue}"/> 
+			<i class="fa-sharp fa-solid fa-plus  link_Plus" th:pid="${productId}"></i>
+		</div>
+		<div th:id = "'m' + ${productId}" class="text-danger">
+		</div>
+	</div>
+
+</body>
+</html>
+
