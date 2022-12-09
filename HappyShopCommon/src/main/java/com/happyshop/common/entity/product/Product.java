@@ -76,6 +76,9 @@ public class Product {
     @Column
     private float weight;
     
+    @Column(nullable = false)
+    private int quantity;
+    
     @Column(name="main_image", length = 128)
     private String mainImage;
     
@@ -115,7 +118,7 @@ public class Product {
     
     public void addDetail(Integer id,String name, String value) {
         this.details.add(new ProductDetail(id, name, value, this));
-    }
+    }  
     
     @Transient
     public String getProductMainImagePath () {
@@ -144,5 +147,9 @@ public class Product {
     public float getDiscountPrice() {
         float discountprice = price - (price * discountPercent) / 100;
         return discountprice;
+    }
+
+    public Product(Integer id) {
+        this.id = id;
     }
 }

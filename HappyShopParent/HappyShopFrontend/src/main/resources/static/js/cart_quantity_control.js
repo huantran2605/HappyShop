@@ -21,8 +21,14 @@ $(document).ready(function(){
 		quantity = $("#p" + productId);
 		quantityValue = parseInt(quantity.val()) + 1;
 		maxQuantityValue =  parseInt(quantity.attr("max"));
-		if (quantityValue <= maxQuantityValue) {
+		message = $("#m" + productId);
+		if (quantityValue > maxQuantityValue) {
+			message.text("There are only " + maxQuantityValue +" quantity for this item");
+		}
+		else {
+			message.text("");
 			quantity.val(quantityValue);
+
 		}
 	});
 	checkValueQuantity();
@@ -38,8 +44,9 @@ function checkValueQuantity(){
 		maxQuantityValue =  parseInt($(this).attr("max"));
 		$(this).on("change", function(){
 			quantityValue = parseInt($(this).val());
-			if(quantityValue > maxQuantityValue){
+			if(quantityValue > maxQuantityValue){				
 				$(this).val(maxQuantityValue);
+				message.text("There are only " + maxQuantityValue +" quantity for this item");
 			}
 			else if(quantityValue < 1){
 				$(this).val(1);

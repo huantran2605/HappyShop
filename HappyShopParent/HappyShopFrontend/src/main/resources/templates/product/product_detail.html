@@ -77,15 +77,33 @@
 								class="text-danger"> Out Of Stock</span>
 						</h5>
 					</div>
-					<div class="mt-3"
-						th:replace="cart/quantity_control :: content(1,5,${product.id})">
 
-					</div>
-					<div class="mt-3">
-						<input type="button" class="btn btn-primary" value="Add To Cart" />
-					</div>
+					<th:block th:if="${product.inStock}">
+						<div class="mt-3"
+							th:replace="cart/quantity_control :: content(1,${product.quantity},${product.id})">
+						</div>
+
+						<div class="mt-3 d-flex flex-row">
+							<div>
+								<input type="button" th:addToCartId="'a' + ${product.id}" class="btn btn-primary addToCart"
+									value="Add To Cart" />
+							</div>
+
+							<div class="toast ms-3" id="addToCartToast" role="alert"
+								aria-live="assertive" aria-atomic="true">
+								<div class="toast-body text-success">
+									<b> The items added to your cart. </b>
+									<div class="mt-2 pt-2 border-top">
+										<a href="" class="btn btn-primary ">Go to cart</a>
+										<button type="button" class="btn btn-secondary "
+											data-bs-dismiss="toast">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</th:block>
+					
 				</div>
-
 			</div>
 		</div>
 
@@ -124,10 +142,6 @@
 		<div th:replace="fragments :: countElement('Product')"></div>
 		<div th:replace="fragments :: pagination()"></div>
 
-
-
-
-
 		<div th:replace="product/image_carousel :: content"></div>
 		<div th:replace="navigation :: footer_menu"></div>
 		<div th:replace="fragments :: footer"></div>
@@ -146,8 +160,40 @@
 				imageIndex = parseInt($("#mainImage").attr("index"));
 				$("#imageCarouselModal").carousel(imageIndex);
 			});
+		//	$("#addToCart").on("click", function(){
+		//		$("#addToCartToast").toast('show');
+			//})
+			
 		});
 		
+		csrfHeaderName = "[[${_csrf.headerName}]]";
+		csrfValue = "[[${_csrf.token}]]";
+		contextPath = "[[@{/}]]"
+		loginURL = "[[@{/login}]]"
+		
+		$(".addToCart").on("click", function(){
+			productIdString = $(this).attr("addToCartId");
+			productId = parseInt(productIdString.substring(1, productIdString.length));
+			quantity = parseInt($("#p" + productId).val());
+			url = contextPath + "cart/add_to_cart/" + productId + "/"+ quantity;
+			
+			$.ajax({
+				type: 'POST',
+				url: url,
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(csrfHeaderName, csrfValue);
+				},
+			}).done(function(data) {
+				if(data == "added the cart"){					
+					$("#addToCartToast").toast('show');
+				}
+				else{
+					location.replace(loginURL);
+				}
+			}).fail(function() {
+				alert("fail");
+			});
+		});	
 	</script>
 	<script th:src="@{/js/cart_quantity_control.js}"></script>
 	<script

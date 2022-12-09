@@ -141,7 +141,7 @@ public class ProductController {
             
             if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
                 if(loggedUser.hasRole("Salesperson")) {
-                    productService.saveProductPrice(product);
+                    productService.saveProductPriceAndQuantity(product);
                     re.addFlashAttribute("message", "Updated Product successfully!");
                     return "redirect:/product/listProduct";
                 }

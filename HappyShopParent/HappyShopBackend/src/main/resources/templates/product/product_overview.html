@@ -9,18 +9,13 @@
 				<label for="">Product Name: </label>
 			</div>
 			<div class="col-sm-6">
-				<th:block
-					th:if="${!#authorization.expression('hasAuthority(''Admin'')') 
-							&& !#authorization.expression('hasAuthority(''Editor'')') }">
-					<th:block
-						th:if="${#authorization.expression('hasAuthority(''Salesperson'')')}">
+				<th:block th:if="${readOnlyForSalesperson}">
 						<input type="text" readonly class="form-control"
-							th:field="*{name}" id="name" required maxlength="255">
-					</th:block>
+							th:field="*{name}" id="name" >
+				
 				</th:block>
 				<th:block
-					th:if="${#authorization.expression('hasAuthority(''Admin'')') 
-							|| #authorization.expression('hasAuthority(''Editor'')')}">
+					th:if="${!readOnlyForSalesperson}">
 					<input type="text" class="form-control" th:field="*{name}"
 						id="name" required maxlength="255">
 				</th:block>
@@ -120,6 +115,15 @@
 				<th:block th:if="${readOnlyForSalesperson}">
 						<input type="checkbox" th:field="*{inStock}" disabled="disabled">
 				</th:block>
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Quantity: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="number" th:field="*{quantity}" id="" required>
 			</div>
 		</div>
 

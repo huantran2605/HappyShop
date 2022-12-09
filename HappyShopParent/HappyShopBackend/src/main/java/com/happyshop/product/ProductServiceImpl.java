@@ -35,7 +35,12 @@ public class ProductServiceImpl implements ProductService{
             entity.setAlias(entity.getAlias().replace(" ", "-"));
         }
         entity.setUpdatedTime(new Date());
-        
+        if(entity.getQuantity() == 0) {
+            entity.setInStock(false);
+        }
+        else {
+            entity.setInStock(true);
+        }
         
         return productRepo.save(entity);
     }
@@ -149,15 +154,21 @@ public class ProductServiceImpl implements ProductService{
             status = "Enable the product id: " + product.getId() + " successfully!";
         }
         productRepo.save(product);
-        return status;
+        return status;  
     }
     
-    public void saveProductPrice(Product productInForm) {
+    public void saveProductPriceAndQuantity(Product productInForm) {
         Product productInDB = productRepo.findById(productInForm.getId()).get();
         productInDB.setCost(productInForm.getCost());
         productInDB.setPrice(productInForm.getPrice());
         productInDB.setDiscountPercent(productInForm.getDiscountPercent());
-        
+        productInDB.setQuantity(productInForm.getQuantity());
+        if(productInForm.getQuantity() == 0) {
+            productInDB.setInStock(false);
+        }
+        else {
+            productInDB.setInStock(true);
+        }
         productRepo.save(productInDB);
     }
 }

@@ -47,6 +47,6 @@ public interface ProductService {
 
     String updateEnabledStatus(Product product);
     
-    void saveProductPrice(Product productInForm);
+    void saveProductPriceAndQuantity(Product productInForm);
 
 }

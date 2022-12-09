@@ -51,8 +51,7 @@ public class CartItemRepoTest {
 //    @Test
 //    public void findByCustomerAndProduct () {
 //        Customer customer = entityManager.find(Customer.class, 3);
-//        Product product = entityManager.find(Product.class, 5);
-//        CartItem cartItem = cartItemRepo.findByCustomerAndProduct(customer, product);
+//        CartItem cartItem = cartItemRepo.findByCustomerAndProduct(customer, 5);
 //        assertThat(cartItem.getCustomer().getId()).isEqualTo(customer.getId());
 //        assertThat(cartItem.getId()).isEqualTo(2);
 //        System.out.println(cartItem);

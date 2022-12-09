@@ -99,7 +99,7 @@ public class CustomerController {
     
     @GetMapping("customer_details")
     public String viewCustomerDetails(HttpServletRequest request, Model model) {
-        String email = getEmailAuthenticationCustomer(request);
+        String email = Utility.getEmailAuthenticationCustomer(request);
         Customer customer =  customerService.findByEmail(email);
         List<Country> listCountry = customerService.getAllCountries();
         model.addAttribute("listCountry", listCountry);
@@ -108,21 +108,7 @@ public class CustomerController {
         return "customer/customer_details";
     }
     
-    private String getEmailAuthenticationCustomer(HttpServletRequest request) {
-        Object principle =  request.getUserPrincipal();
-        String email = "";
-        if(principle instanceof UsernamePasswordAuthenticationToken
-                || principle instanceof RememberMeAuthenticationToken) {
-            email = request.getUserPrincipal().getName();
-        }
-        else if(principle instanceof OAuth2AuthenticationToken){
-            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) principle;
-            CustomerOauth2User oauth2User = (CustomerOauth2User) oauth2Token.getPrincipal();
-            email =  oauth2User.getEmail();
-        }
-           
-        return email;
-    }
+    
     
     @PostMapping("update")
     private String updateCustomer( Customer customer,
