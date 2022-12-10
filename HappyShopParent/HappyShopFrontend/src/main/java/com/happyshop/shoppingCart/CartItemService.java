@@ -9,4 +9,6 @@ public interface CartItemService {
     void addProduct(Integer quantity, Integer productId, Customer customer);
     
     List<CartItem> findByCustomer(Customer customer);
+    
+    float updateQuantity(Integer quantity, Customer customer, Integer productId);
 }

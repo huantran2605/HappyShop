@@ -30,18 +30,35 @@
 								<div th:replace="product/product_fragment :: showProductPrice"></div>
 							</div>
 							<div class="d-flex flex-row" style="font-size: 20px;">
-								Total:&nbsp; 								
-								<div th:replace="product/product_fragment :: productPriceForm(${cartItem.getSubTotal})" ></div>
+								<p class="me-3">Total:</p>
+								<div>						
+									<span th:if="${CURRENCY_SYMBOL_POSITION} == 'Before price'"	
+										th:remove="tag"> [[${CURRENCY_SYMBOL}]] </span>
+									<span th:id="'subTotal' + ${product.id}" class="subTotal">							
+										[[${#numbers.formatDecimal(cartItem.getSubTotal,1,THOUSANDS_POINT_TYPE,
+										DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+									</span> <span th:if="${CURRENCY_SYMBOL_POSITION} == 'After price'"
+										th:remove="tag"> [[${CURRENCY_SYMBOL}]] </span>
+								</div>		
 							</div>
 						</div>
 					</div>
 				</th:block>
 			</div>
-			<div class="col-md m-3" style="font-size: 20px;">
+			<div class="col-md m-3" style="font-size: 20px;" th:if="${total != 0}">
 				<b class="text-info">Estimated Total: </b>
-				<div  th:replace="product/product_fragment :: productPriceForm(${estimatedTotal})">
+				<div>
+					<span th:if="${CURRENCY_SYMBOL_POSITION} == 'Before price'"
+						th:remove="tag"> [[${CURRENCY_SYMBOL}]] </span> 
+					<span id="total">[[${#numbers.formatDecimal(total,1,THOUSANDS_POINT_TYPE,
+						DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] </span> 
+					<span th:if="${CURRENCY_SYMBOL_POSITION} == 'After price'"
+						th:remove="tag"> [[${CURRENCY_SYMBOL}]] </span>
 				</div>
 				<button class="btn btn-danger mt-3">Check Out</button>
+			</div>
+			<div th:if="${total == 0}" class="text-center">
+				<p>Nothing in your shopping cart.</p>
 			</div>
 		</div>
 
@@ -50,9 +67,16 @@
 		<div th:replace="fragments :: footer"></div>
 	</div>
 	<script>
-	
+		csrfHeaderName = "[[${_csrf.headerName}]]";
+		csrfValue = "[[${_csrf.token}]]";
+		contextPath = "[[@{/}]]"
+		
+		decimalDigits = [[${DECIMAL_DIGITS}]]
+		decimalPointType = "[[${DECIMAL_POINT_TYPE}]]"
+		thousandPointType = "[[${THOUSANDS_POINT_TYPE}]]"
 	</script>
-	<script th:src="@{/js/cart_quantity_control.js}"></script>
+	<script th:src="@{/js/shopping_cart.js}"></script>
+	<script th:src="@{/js/jquery.number.min.js}"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

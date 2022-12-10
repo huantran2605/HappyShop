@@ -32,6 +32,15 @@ public class CartItemServiceImpl implements CartItemService{
     public List<CartItem> findByCustomer(Customer customer) {
         return cartItemRepo.findByCustomer(customer);
     }
+
+    public float updateQuantity(Integer quantity, Customer customer, Integer productId) {       
+        cartItemRepo.updateQuantity(quantity, customer, productId);
+        CartItem item = cartItemRepo.findByCustomerAndProduct(customer, productId);
+        float newSubTotal = item.getQuantity() * item.getProduct().getDiscountPrice();        
+        return newSubTotal;
+    }
+    
+    
     
     
     

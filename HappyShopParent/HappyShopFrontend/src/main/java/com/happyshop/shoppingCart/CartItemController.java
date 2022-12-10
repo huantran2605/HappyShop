@@ -26,12 +26,12 @@ public class CartItemController {
         String email = Utility.getEmailAuthenticationCustomer(request);
         Customer customer = customerService.findByEmail(email);
         List<CartItem> list = cartItemService.findByCustomer(customer);
-        float estimatedTotal = 0;
+        float total = 0;
         for (CartItem cartItem : list) {
-            estimatedTotal += cartItem.getSubTotal();           
+            total += cartItem.getSubTotal();           
         }
         model.addAttribute("listCartItem", list);
-        model.addAttribute("estimatedTotal", Math.round(estimatedTotal));
+        model.addAttribute("total", total);
         return "cart/shopping_cart";
     }
 }

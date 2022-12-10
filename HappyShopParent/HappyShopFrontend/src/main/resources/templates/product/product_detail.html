@@ -76,7 +76,7 @@
 								<div class="toast-body text-success">
 									<b> The items added to your cart. </b>
 									<div class="mt-2 pt-2 border-top">
-										<a href="" class="btn btn-primary ">Go to cart</a>
+										<a th:href="@{/cart}" class="btn btn-primary ">Go to cart</a>
 										<button type="button" class="btn btn-secondary "
 											data-bs-dismiss="toast">Close</button>
 									</div>
@@ -142,9 +142,6 @@
 				imageIndex = parseInt($("#mainImage").attr("index"));
 				$("#imageCarouselModal").carousel(imageIndex);
 			});
-		//	$("#addToCart").on("click", function(){
-		//		$("#addToCartToast").toast('show');
-			//})
 			
 		});
 		

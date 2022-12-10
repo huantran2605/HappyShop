@@ -1,10 +1,8 @@
 $(document).ready(function(){
-	var e;
 	$(".link_Minus").on("click", function(e){
 		e.preventDefault();
 		productId = $(this).attr("pid");
 		quantity = $("#p" + productId);
-		e = quantity
 		quantityValue = parseInt(quantity.val()) - 1;
 		message = $("#m" + productId);
 		if(quantityValue < 1){

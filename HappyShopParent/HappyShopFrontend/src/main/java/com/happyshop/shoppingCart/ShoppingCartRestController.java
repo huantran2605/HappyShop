@@ -30,4 +30,17 @@ public class ShoppingCartRestController {
         cartItemService.addProduct(quantity, productId, customer);       
         return "added the cart";
     }
+    
+    @PostMapping("/cart/update_quantity/{productId}/{quantity}")
+    public String updateQuantity(@PathVariable("productId") Integer productId,
+            @PathVariable("quantity") Integer quantity,
+           HttpServletRequest request) {
+        String email = Utility.getEmailAuthenticationCustomer(request);
+        if(email == null) {
+            return "must login";
+        }  
+        Customer customer = customerService.findByEmail(email);
+        float newSubTotal = cartItemService.updateQuantity(quantity, customer, productId);       
+        return String.valueOf(newSubTotal);
+    }
 }
