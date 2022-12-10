@@ -1,5 +1,7 @@
 package com.happyshop.shoppingCart;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,11 @@ public class CartItemServiceImpl implements CartItemService{
             cartItemRepo.save(newCartItem);
         }
     }
+
+    public List<CartItem> findByCustomer(Customer customer) {
+        return cartItemRepo.findByCustomer(customer);
+    }
+    
+    
     
 }

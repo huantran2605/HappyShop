@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.happyshop.common.entity.product.Product;
 
@@ -41,6 +42,10 @@ public class CartItem {
         this.quantity = quantity;
     }
     
+    @Transient
+    public float getSubTotal() {
+        return this.product.getDiscountPrice() * this.quantity;
+    }
     
     
 }

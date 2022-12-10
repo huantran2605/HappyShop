@@ -10,33 +10,41 @@
 			<b>[[${product.shortName}]]</b>
 		</a> <br />
 		
-		<th:block th:if="${product.discountPercent <= 0}">
-			<span th:replace="product/product_fragment :: productPrice(${product.price})"> </span>
-		</th:block>
-		
-		<th:block th:if="${product.discountPercent > 0}">
-			<span style="color: darkred; font-size: larger"> 
-				<span th:replace="product/product_fragment :: productPrice(${product.getDiscountPrice})"
-					th:remove="tag"> </span>
-			</span>
-			<del>
-				<span th:replace="product/product_fragment :: productPrice(${product.price})"
-					th:remove="tag"> </span>
-			</del>
-		</th:block>
-		
+		<div th:replace="product/product_fragment :: showProductPrice">			
+		</div>
+
 	</div>
 
-	<div th:fragment="productPrice(price)">
+	<div th:fragment="productPriceForm(price)" >
 		<span th:if="${CURRENCY_SYMBOL_POSITION} == 'Before price'" th:remove="tag">
-				[[${CURRENCY_SYMBOL}]]
+			[[${CURRENCY_SYMBOL}]] 
 		</span>
-		<span>[[${#numbers.formatDecimal(price,1,THOUSANDS_POINT_TYPE,
-		 DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
-		</span>
+		[[${#numbers.formatDecimal(price,1,THOUSANDS_POINT_TYPE,
+		 	DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
 		<span th:if="${CURRENCY_SYMBOL_POSITION} == 'After price'" th:remove="tag">
 				[[${CURRENCY_SYMBOL}]]
 		</span>
+	</div>
+
+	<div th:fragment="showProductPrice()" th:remove="tag">
+		<div th:if="${product.discountPercent <= 0 }">
+			<span
+				th:replace="product/product_fragment :: productPriceForm(${product.price})">
+			</span>
+		</div>
+
+		<div th:if="${product.discountPercent > 0}" class="d-flex flex-row">
+			<div style="color: darkred; ">
+				<span
+					th:replace="product/product_fragment :: productPriceForm(${product.getDiscountPrice})">
+				</span>
+			</div>
+			<del class="ms-2">
+				<span
+					th:replace="product/product_fragment :: productPriceForm(${product.price})"
+					th:remove="tag"> </span>
+			</del>
+		</div>
 	</div>
 
 </body>

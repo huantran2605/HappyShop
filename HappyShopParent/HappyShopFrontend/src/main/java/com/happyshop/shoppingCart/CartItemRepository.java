@@ -1,5 +1,7 @@
 package com.happyshop.shoppingCart;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +16,7 @@ import com.happyshop.common.entity.product.Product;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     
-    public CartItem findByCustomer(Customer customer);
+    public List<CartItem> findByCustomer(Customer customer);
     
     @Query("select c from CartItem c where c.customer = ?1 and c.product.id = ?2")
     public CartItem findByCustomerAndProduct(Customer customer, Integer productId);

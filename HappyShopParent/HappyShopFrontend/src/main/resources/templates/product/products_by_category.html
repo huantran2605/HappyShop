@@ -10,10 +10,7 @@
 		<div th:replace="navigation :: header_menu"></div>
 		<div th:replace="breadcrumb :: content"> </div>
 		<div th:replace="navigation :: search_nav"></div>
-		
-<!-- 		<div class="mt-3" th:if="${category.children == null}">
-			<h5>Other categories in [[${category.name}]]</h5>
-			</div> -->
+
 		<div class="row mt-3" th:if="${totalChildsInCategory > 0}">
 			<h5>Other categories in [[${category.name}]]</h5>
 			<div class="mt-3 d-flex justify-content-start flex-wrap">

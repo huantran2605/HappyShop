@@ -40,7 +40,7 @@ public class WebSecurityConfig {
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		    .antMatchers("/customer/customer_details", "/customer/update").authenticated()
+		    .antMatchers("/customer/customer_details", "/customer/update", "/cart").authenticated()
 		    .anyRequest().permitAll()
 		    .and()
             .formLogin()
