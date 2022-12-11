@@ -1,8 +1,7 @@
 decimalSeparator = decimalPointType == "COMMA" ? "," : "."
 thousandSeparator = thousandPointType == "COMMA" ? "," : ".";
-
+const productIdArray = [];
 $(document).ready(function(){
-	var e;
 	$(".link_Minus").on("click", function(e){
 		e.preventDefault();
 		decreaseQuantity($(this));
@@ -13,7 +12,14 @@ $(document).ready(function(){
 		increaseQuantity($(this));
 		
 	});
+	
+	$(".rowCheckbox").each(function(index, element) {
+			productIdArray[index] = element.getAttribute("checkboxId");
+	});
+	
 	updateSubTotalFromInputQuantityField();
+	ckeckboxSelectAll();
+	rowCheckbox();
 });
 
 function increaseQuantity(link){
@@ -99,11 +105,17 @@ function updateSubTotal(productId, quantityValue){
 
 function updateTotal(){
 	 var total = 0.0;
-	 $(".subTotal").each(function(index, element) {
-		total += parseFloat(clearFormatNumber(element.innerHTML));
-	 });
-	 total = formatNumber(total);
-	 $("#total").text(total);	
+	 if(productIdArray.length > 0){
+		 for(let i = 0; i < productIdArray.length;i++){
+			subTotalString = $("#subTotal" + productIdArray[i]).text();
+			total += parseFloat(clearFormatNumber(subTotalString));		
+		 }	 
+		 total = formatNumber(total);
+		 $("#total").text(total);				
+	}
+	else{
+		$("#total").text(0);	
+	}
 }
 
 function formatNumber(number){
@@ -116,8 +128,49 @@ function clearFormatNumber(numberString){
 	return result;
 }
 
+function ckeckboxSelectAll(){
+	$("#selectAll").on("click", function(){
+		if(this.checked){
+			$(".rowCheckbox").prop("checked", true);	
+			$(".rowCheckbox").each(function(index, element) {
+				productIdArray[index] = element.getAttribute("checkboxId");
+			});	
+			updateTotal();	
+		}
+		else{
+			$(".rowCheckbox").prop("checked", false);
+			while (productIdArray.length > 0) {
+				productIdArray.pop();
+			}
+			updateTotal();
+		}			
+	})
+}
 
-
-
+function rowCheckbox(){
+	$(".rowCheckbox").on("click", function(){
+		productId = parseInt($(this).attr("checkboxId"));
+		rowCheckbox = $("#checkbox" + productId);		
+		if(this.checked){
+			subTotalString = $("#subTotal" + productId).text();
+			subTotal = parseFloat(clearFormatNumber(subTotalString));
+			newTotal =  parseFloat(clearFormatNumber($("#total").text())) + subTotal;	
+			$("#total").text(formatNumber(newTotal));				
+		}
+		else {
+			subTotalString = $("#subTotal" + productId).text();
+			subTotal = parseFloat(clearFormatNumber(subTotalString));
+			newTotal =  parseFloat(clearFormatNumber($("#total").text())) - subTotal;	
+			$("#total").text(formatNumber(newTotal));				
+		}
+		
+		if(parseFloat($("#total").text()) == 0.0){
+			$("#selectAll").prop("checked", false);
+		}
+		if(parseFloat(clearFormatNumber($("#total").text())) == maxTotal){
+			$("#selectAll").prop("checked", true);
+		}
+	})	
+}
 
 

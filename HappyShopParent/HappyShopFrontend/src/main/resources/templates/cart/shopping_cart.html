@@ -8,7 +8,13 @@
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
 		<h1 class="text-center">Your Shopping Cart</h1>
-		
+		<div class="row">
+			<div class="col-md-9 d-flex justify-content-end align-items-center">
+				<input type="checkbox" class="form-check-input border border-primary"
+				 id="selectAll" checked="checked"/>&nbsp; Select All
+				<input type="button" class="btn btn-primary ms-3 me-3" id="delete" value="Delete" />
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-md-9">
 				<th:block th:each="cartItem,status : ${listCartItem}">
@@ -21,7 +27,11 @@
 								style="width: 200px; height: 200px;"/>
 						</div>
 						<div class="col-md-8">
-							<h5><a th:href="@{'/p/' + ${product.alias}}" th:text="${product.shortName}"></a></h5>
+							<div class="d-flex justify-content-between">
+								<h5><a th:href="@{'/p/' + ${product.alias}}" th:text="${product.shortName}"></a></h5>
+								<input type="checkbox" class="form-check-input border border-primary rowCheckbox"
+								 	th:checkboxId = "${product.id}" th:id="'checkbox' + ${product.id}" checked="checked" />
+							</div>
 							<div class="mt-3"
 								th:replace="cart/quantity_control :: content(${cartItem.quantity},${cartItem.product.quantity},${cartItem.product.id})">
 							</div>
@@ -74,6 +84,7 @@
 		decimalDigits = [[${DECIMAL_DIGITS}]]
 		decimalPointType = "[[${DECIMAL_POINT_TYPE}]]"
 		thousandPointType = "[[${THOUSANDS_POINT_TYPE}]]"
+		maxTotal = [[${total}]]
 	</script>
 	<script th:src="@{/js/shopping_cart.js}"></script>
 	<script th:src="@{/js/jquery.number.min.js}"></script>

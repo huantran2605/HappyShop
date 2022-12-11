@@ -30,7 +30,14 @@ public class CartItemServiceImpl implements CartItemService{
     }
 
     public List<CartItem> findByCustomer(Customer customer) {
-        return cartItemRepo.findByCustomer(customer);
+        List<CartItem> list = cartItemRepo.findByCustomer(customer);
+        for (CartItem cartItem : list) {
+            if(cartItem.getQuantity() > cartItem.getProduct().getQuantity()) {
+                cartItem.setQuantity(cartItem.getProduct().getQuantity());
+            }
+        }
+        cartItemRepo.saveAll(list);
+        return list;
     }
 
     public float updateQuantity(Integer quantity, Customer customer, Integer productId) {       
