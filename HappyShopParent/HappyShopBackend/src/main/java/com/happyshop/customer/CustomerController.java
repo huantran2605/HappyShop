@@ -1,7 +1,5 @@
 package com.happyshop.customer;
 
-
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +51,7 @@ public class CustomerController {
         //sort
         Sort sort = Sort.by(sortField);
         if(sortDir.equalsIgnoreCase("asc"))
-            sort = Sort.by(sortField).ascending();
+            sort = Sort.by(sortField).ascending();  
         else  sort = Sort.by(sortField).descending();
         
         Pageable pageable = PageRequest.of(pageNum - 1,
@@ -67,7 +65,7 @@ public class CustomerController {
         if(endCount > pageCustomer.getTotalElements() )
             endCount = pageCustomer.getTotalElements();
         
-        String reserveDir = sortDir.equalsIgnoreCase("asc") ? "des"  : "asc";
+        String reserveDir = sortDir.equalsIgnoreCase("asc") ? "des"  : "asc";  
         model.addAttribute("reserveDir", reserveDir);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);

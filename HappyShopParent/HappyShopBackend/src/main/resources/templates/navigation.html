@@ -78,7 +78,7 @@
 					class="nav-link" th:href="@{/customer/listCustomer}">Customers</a></li>
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
-					class="nav-link" href="#">Shipping</a></li>
+					class="nav-link" th:href="@{/shippingRate/listShippingRate}">Shipping</a></li>
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
 					class="nav-link" href="#">Sale Report</a></li>

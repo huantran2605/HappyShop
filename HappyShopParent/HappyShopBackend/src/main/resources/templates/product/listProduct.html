@@ -31,7 +31,7 @@
 			</div>
 		</th:block>
 		<!-- search-->
-		<div>
+		<div th:if="${elementsCurrentPerPage > 0}">
 			<form th:action="@{'/product/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
 				class="form-inline m-2" id="searchForm">
 				<div class="row">

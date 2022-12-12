@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
     PasswordEncoder passwordEncoder;
     
     @Override
-    public List<Customer> findAll() {
+    public List<Customer> findAll() { 
         return customerRepo.findAll();
     }
     
@@ -65,7 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
     public String checkUniqueEmail(Integer id,String email) {
         Customer customer =  customerRepo.findByEmail(email);
         if(customer != null) {
-            if(customer.getId() ==  id) {
+            if(customer.getId() ==  id) { 
               return "Ok";
           }else {
               return "Duplicated";            

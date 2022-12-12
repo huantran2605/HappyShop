@@ -30,8 +30,9 @@
 			</a>
 		</div>
 		<!-- search-->
-		<div th:replace="fragments :: search ('Brand')"></div>
-
+		<th:block th:if="${elementsCurrentPerPage > 0}">
+			<div th:replace="fragments :: search ('Brand')"></div>
+		</th:block>
 
 		<div class="full-details" th:if="${totalElement > 0}">
 			<table

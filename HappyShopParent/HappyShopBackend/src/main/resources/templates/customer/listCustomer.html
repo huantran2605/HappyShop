@@ -18,7 +18,9 @@
 		</div>
 
 		<!-- search-->
-		<div th:replace="fragments :: search ('Customer')"></div>
+		<th:block th:if="${elementsCurrentPerPage > 0}">
+			<div th:replace="fragments :: search ('Customer')"></div>
+		</th:block>
 
 		<div class="full-details" th:if="${totalElement > 0}">
 			<table
@@ -96,7 +98,7 @@
 					</a>
 					<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 						<a th:href="@{'/customer/delete/' + ${customer.id}}"
-							class="deleteCustomer me-3" th:name="${customer.getFullName}"
+							class="deleteCustomer me-3" th:email="${customer.email}"
 							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 						</a>
 					</th:block>
