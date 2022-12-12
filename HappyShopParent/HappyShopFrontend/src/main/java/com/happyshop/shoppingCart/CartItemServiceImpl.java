@@ -46,6 +46,12 @@ public class CartItemServiceImpl implements CartItemService{
         float newSubTotal = item.getQuantity() * item.getProduct().getDiscountPrice();        
         return newSubTotal;
     }
+
+    public void deleteByCustomerAndProduct(Customer cutomer, Integer productId) {
+        cartItemRepo.deleteByCustomerAndProduct(cutomer, productId);
+    }
+
+   
     
     
     

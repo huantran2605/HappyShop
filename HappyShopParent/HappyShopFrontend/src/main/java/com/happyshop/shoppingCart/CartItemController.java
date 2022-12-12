@@ -32,6 +32,7 @@ public class CartItemController {
         }
         model.addAttribute("listCartItem", list);
         model.addAttribute("total", total);
+        model.addAttribute("sizeOfList", list.size());
         return "cart/shopping_cart";
     }
 }

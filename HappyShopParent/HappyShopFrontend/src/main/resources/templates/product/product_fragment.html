@@ -6,7 +6,7 @@
 
 	<div th:fragment="content">
 		<a th:href="@{'/p/' + ${product.alias}}" th:title="${product.name}">
-			<img th:src="@{${product.getProductMainImagePath}}" width="150" /> <br />
+			<img th:src="@{${product.getProductMainImagePath}}" width="150" class="img-fluid" /> <br />
 			<b>[[${product.shortName}]]</b>
 		</a> <br />
 		

@@ -147,7 +147,7 @@
 			userId = $("#id").val();
 			let csrfValue = document.forms["save_form"]["_csrf"].value;
 	
-			params = { email: userEmail, id: userId, _csrf: csrfValue };
+			params = { email: userEmail, id: userId, _csrf: csrfValue};
 			$.post(url, params, function(response) {
 				if (response == "OK") {
 					form.submit();

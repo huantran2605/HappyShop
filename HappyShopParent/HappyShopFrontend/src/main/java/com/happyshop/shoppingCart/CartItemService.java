@@ -11,4 +11,6 @@ public interface CartItemService {
     List<CartItem> findByCustomer(Customer customer);
     
     float updateQuantity(Integer quantity, Customer customer, Integer productId);
+    
+    void deleteByCustomerAndProduct(Customer cutomer, Integer productId) ;
 }

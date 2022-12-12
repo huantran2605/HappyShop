@@ -13,13 +13,17 @@ $(document).ready(function(){
 		
 	});
 	
-	$(".rowCheckbox").each(function(index, element) {
-			productIdArray[index] = element.getAttribute("checkboxId");
-	});
+	checkAllCheckbox();
 	
 	updateSubTotalFromInputQuantityField();
-	ckeckboxSelectAll();
 	rowCheckbox();
+	ckeckboxSelectAll();
+	
+	$("#deleteItems").on("click", function(){
+		for(let i = 0; i < productIdArray.length;i++){
+			deleteItem(productIdArray[i]);					
+		}
+	});	
 });
 
 function increaseQuantity(link){
@@ -132,45 +136,109 @@ function ckeckboxSelectAll(){
 	$("#selectAll").on("click", function(){
 		if(this.checked){
 			$(".rowCheckbox").prop("checked", true);	
-			$(".rowCheckbox").each(function(index, element) {
-				productIdArray[index] = element.getAttribute("checkboxId");
-			});	
+			checkAllCheckbox();	
 			updateTotal();	
 		}
 		else{
 			$(".rowCheckbox").prop("checked", false);
-			while (productIdArray.length > 0) {
-				productIdArray.pop();
-			}
+			checkAllCheckbox();
 			updateTotal();
 		}			
 	})
 }
 
 function rowCheckbox(){
-	$(".rowCheckbox").on("click", function(){
+
+	$(".rowCheckbox").on("click", function(){		
 		productId = parseInt($(this).attr("checkboxId"));
 		rowCheckbox = $("#checkbox" + productId);		
 		if(this.checked){
+			//update new Total
 			subTotalString = $("#subTotal" + productId).text();
 			subTotal = parseFloat(clearFormatNumber(subTotalString));
 			newTotal =  parseFloat(clearFormatNumber($("#total").text())) + subTotal;	
-			$("#total").text(formatNumber(newTotal));				
+			$("#total").text(formatNumber(newTotal));	
+			
+			checkAllCheckbox()
 		}
+			
 		else {
+			//update new Total
+			$("#selectAll").prop("checked", false);
 			subTotalString = $("#subTotal" + productId).text();
 			subTotal = parseFloat(clearFormatNumber(subTotalString));
 			newTotal =  parseFloat(clearFormatNumber($("#total").text())) - subTotal;	
-			$("#total").text(formatNumber(newTotal));				
+			$("#total").text(formatNumber(newTotal));
+			
+			checkAllCheckbox()
 		}
 		
 		if(parseFloat($("#total").text()) == 0.0){
 			$("#selectAll").prop("checked", false);
 		}
-		if(parseFloat(clearFormatNumber($("#total").text())) == maxTotal){
+		if(parseFloat(clearFormatNumber($("#total").text())) == clearFormatNumber(formatNumber(maxTotal))){
 			$("#selectAll").prop("checked", true);
 		}
 	})	
 }
 
+
+function deleteItem(productId){
+	url = contextPath + "cart/delete_item/" + productId;
+	
+	$.ajax({
+		type: 'DELETE',
+		url: url,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(csrfHeaderName, csrfValue);
+		},
+	}).done(function(response) {
+		if(response == "must login"){					
+			location.replace(loginURL);
+		}
+		else{
+			$("#divItem" + productId).remove();	
+			$("#total").text(0);
+			updatePage();		
+		}
+	}).fail(function() {
+		alert("fail to delete products");
+	});	
+	
+}
+
+function checkAllCheckbox(){
+	clearProductIdArray();
+	var i = 0;
+	$(".rowCheckbox").each(function(index, element) {
+		productId= element.getAttribute("checkboxId");
+		if( $("#checkbox" + productId).prop("checked")){
+			productIdArray[i] = productId;
+			i++;
+		}
+	});
+}	
+
+function clearProductIdArray(){
+	while (productIdArray.length > 0) {
+		productIdArray.pop();
+	}
+}
+
+function updatePage(){
+	var i = 0;
+	 $(".countItems").each(function(index, element){
+		element.innerHTML = index + 1;
+		i++;
+	});
+	$("#totalItems").text(i);
+	
+	if(i == 0){
+		$("#estimatedTotalDiv").remove();
+		$("#infoDiv").remove();
+		$("#actionDiv").remove();
+		$("#infoPage").text("Nothing in your shopping cart.");
+	}  
+	
+}
 

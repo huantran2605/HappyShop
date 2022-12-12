@@ -63,11 +63,11 @@ public class CartItemRepoTest {
 //        Optional<CartItem> cartItem = cartItemRepo.findById(4);
 //        assertThat(cartItem.get().getQuantity()).isEqualTo(12);
 //    }
-    
-    @Test
-    public void deleteByCustomerAndProduct () {
-        cartItemRepo.deleteByCustomerAndProduct(1, 1);
-        Optional<CartItem> cartItem = cartItemRepo.findById(1);
-        assertThat(cartItem.get()).isNull();
-    }
+//    
+//    @Test
+//    public void deleteByCustomerAndProduct () {
+//        cartItemRepo.deleteByCustomerAndProduct(1, 1);
+//        Optional<CartItem> cartItem = cartItemRepo.findById(1);
+//        assertThat(cartItem.get()).isNull();
+//    }
 }
