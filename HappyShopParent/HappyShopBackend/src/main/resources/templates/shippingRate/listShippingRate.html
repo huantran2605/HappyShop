@@ -16,7 +16,11 @@
 			role="alert">
 			<strong>[[${message}]]</strong>
 		</div>
-
+		<div class="m-2 ms-0">
+			<a th:href="@{/shippingRate/new}" title="Add new shipping rate">
+				<i class="fa-sharp fa-solid fa-truck fa-2x"></i>
+			</a>
+		</div>
 		<!-- search-->
 		<th:block th:if="${elementsCurrentPerPage > 0}">
 			<div th:replace="fragments :: search ('ShippingRate')"></div>
@@ -45,13 +49,24 @@
 						<td th:text="${shippingRate.state}"></td>
 						<td th:text="${shippingRate.rate}"></td>
 						<td th:text="${shippingRate.days}"></td>
-						<td th:text="${shippingRate.codSupported}"></td>
 						<td>
-							<div class="float-start">							
+							<th:block th:if=${shippingRate.codSupported}>
+								<a th:href="@{'/shippingRate/updateCodSupported/' + ${shippingRate.id}}" title="Supported">
+									<i class="fa-sharp fa-solid fa-money-bills fa-2x"></i>
+								</a>
+							</th:block>
+							<th:block th:if=${!shippingRate.codSupported}>
+								<a th:href="@{'/shippingRate/updateCodSupported/' + ${shippingRate.id}}" title="Not Supported">
+									<i class="fa-sharp fa-solid fa-money-bills fa-gray fa-2x"></i>
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<div class="d-flex flex-row">							
 								<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 									<a th:href="@{'/shippingRate/delete/' + ${shippingRate.id}}"
-										class="deleteShippingRate me-3"
-											 th:name="${shippingRate.country.name} +' ' +  ${shippingRate.state}"
+										class="deleteShippingRate me-5"
+											 th:name="${shippingRate.country.name} +'-' +  ${shippingRate.state}"
 										title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 									</a>
 								</th:block>
@@ -71,24 +86,28 @@
 
 		<div class="less-details">
 			<div th:each=" shippingRate: ${shippingRates}" class="row">
-				<div class="">
+				<div class="col">
 					<p>Id: [[${shippingRate.id}]]</p>
 					<p>Country: [[${shippingRate.country.name}]]</p>
 					<p>State: [[${shippingRate.state}]]</p>
-					<p>Days: [[${shippingRate.days}]]</p>
+					<div class="d-flex justify-content-start">
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<a th:href="@{'/shippingRate/delete/' + ${shippingRate.id}}"
+								class="deleteShippingRate me-3" th:name="${shippingRate.country.name} +'-' + ${shippingRate.state}"
+								title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+							</a>
+						</th:block>
+						<th:block
+							sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
+							<div th:replace="fragments :: update(${shippingRate.id})">
+							</div>
+						</th:block>
+					</div>
 				</div>
-				<div class="d-flex justify-content-start">
-					<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
-						<a th:href="@{'/shippingRate/delete/' + ${shippingRate.id}}"
-							class="deleteShippingRate me-3" th:name="${shippingRate.country.name} +' ' + ${shippingRate.state}"
-							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-						</a>
-					</th:block>
-					<th:block
-						sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
-						<div th:replace="fragments :: update(${shippingRate.id})">
-						</div>
-					</th:block>
+				<div class="col">
+					<p>Days: [[${shippingRate.days}]]</p>
+					<p>Rates: [[${shippingRate.rate}]]</p>					
+					<p>COD Supported: [[${shippingRate.codSupported}]]</p>
 				</div>
 				<hr />
 			</div>
@@ -105,9 +124,19 @@
 	<div th:replace="fragments :: footer"></div>
 
 	<script>
-	
+		
+		$(".deleteShippingRate").click(
+			function(e) {
+				e.preventDefault();
+				country_stateName = $(this).attr("name");
+				showConfirmationModal("Are you sure to delete this rate: " + country_stateName);
+				$("#deleteOption").attr("href",$(this).attr("href"));
+		});
+		function showConfirmationModal(message) {
+			$("#modal-body").text(message);
+			$("#confirmationModal").modal("show");
+		}
 	</script>
-	<script th:src="@{/js/common_form.js}"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

@@ -76,9 +76,18 @@
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
 					class="nav-link" th:href="@{/customer/listCustomer}">Customers</a></li>
-				<li class="nav-item"
+				<li class="nav-item dropdown"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
-					class="nav-link" th:href="@{/shippingRate/listShippingRate}">Shipping</a></li>
+					class="nav-link dropdown-toggle" th:href="@{/shippingRate/listShippingRate}">Shipping</a>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a class="dropdown-item" 
+							sec:authorize="hasAnyAuthority('Admin', 'Editor')"
+							th:href="@{/shippingRate/new}">Create
+								New</a></li>
+						<li><a class="dropdown-item" th:href="@{/shippingRate/listShippingRate}">
+								View All</a></li>
+					</ul>
+				</li>
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
 					class="nav-link" href="#">Sale Report</a></li>

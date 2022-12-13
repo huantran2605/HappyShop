@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="fragments :: page_head(${titlePage},'none')"></head>
+<body>
+	<div class="container-fluid">
+		<!-- navigation -->
+		<div th:replace="navigation :: nav"></div>
+
+		<div class="text-center text-info">
+			<p class="fs-1" th:if="${update == null}">Create New Shipping Rate<p>
+			<p class="fs-1" th:if="${update != null}" th:text="${update}"></p>
+		</div>
+
+		<div>
+			<p th:if="${message != null}" class="text-center">[[${message}]]</p>
+		</div>
+
+		<form th:action="@{/shippingRate/saveOrUpdate}" method="post"
+			name="save_form" th:object="${shippingRate}" class="border border-secondary" 
+			style="max-width: 700px; margin: 0 auto;">
+			<input type="hidden" th:field="*{id}" id="id">
+
+			<div class="row p-2 mt-2">
+				<label for="" class="col-sm-4 col-form-label ">Destination
+					Country:</label>
+				<div class="col-sm-6 ">
+					<select name="" id="country" th:field="*{country}" class="form-control" required="required">
+						<th:block th:each="country : ${listCountry}">
+							<option th:value="${country.id}">[[${country.name}]]</option>
+						</th:block>
+					</select>
+				</div>
+			</div>
+			
+			<div class="row p-2 mt-2 ">
+				<label for="" class="col-sm-4 col-form-label ">Destination
+					State/Province:</label>
+				<div class="col-sm-6 ">
+					<input type="text" th:field="*{state}" class="form-control"
+							list="stateList" id="stateField"
+						 maxlength="45" minlength="2" required="required"/>
+					<datalist id="stateList"></datalist>
+				</div>
+			</div>
+			
+			<div class="row p-2 mt-2 ">
+				<label for="" class="col-sm-4 col-form-label ">Shipping Rate (per DIM weight):</label>
+				<div class="col-sm-6 ">
+					<input type="number" step="0.01" class="form-control" th:field="*{rate}" required="required" min = "0"/>					
+				</div>
+			</div>
+			
+			<div class="row p-2 mt-2 ">
+				<label for="" class="col-sm-4 col-form-label ">Days to deliver:</label>
+				<div class="col-sm-6 ">
+					<input type="number"  class="form-control" th:field="*{days}" required="required" min = "0"/>					
+				</div>
+			</div>
+			
+			<div class="row p-2 mt-2">
+				<label for="" class="col-sm-4 col-form-label ">Cash on delivery (COD):</label>
+				<div class="col-sm-6 ">
+					<input type="checkbox" th:field="*{codSupported}"  />					
+				</div>
+			</div>
+			
+			<div class="text-center m-2">
+				<button type="submit" id="Save" class="btn btn-primary m-3" th:if="${update == null}">Save</button>
+				<button type="submit" id="Update" class="btn btn-primary m-3" th:if="${update != null}">Update</button>
+				<a th:href="@{/shippingRate/listShippingRate}" class="btn btn-secondary">Cancel</a>
+			</div>
+
+		</form>
+	</div>
+
+	<!-- modal -->l
+	<div th:replace="modal_fragments :: modal"></div>
+
+	<script>
+		contextPath = "[[@{/}]]";
+		var dropDownCountry;
+		var stateList;
+		var stateField;
+		$(document).ready(function() {
+			dropDownCountry = $("#country");
+			stateList = $("#stateList");
+			stateField = $("#stateField");
+			dropDownCountry.on("change", function() {
+				stateField.val("").focus();
+				getStateListByCountry();
+			})
+		})
+		function getStateListByCountry() {
+			selectedCountryId = $("#country option:selected").val();
+			url = contextPath + "states/list_by_country/" + selectedCountryId;
+			$.get(url, function(data) {
+				stateList.empty();
+				$.each(data, function(index, state) {
+					$("<option>").val(state.name).text(state.name).appendTo(stateList);
+				});
+			})
+		}
+		
+	</script>
+
+	<!-- footer -->
+	<div th:replace="fragments :: footer"></div>
+	<script th:src="@{/js/common_form.js}"></script>
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>
