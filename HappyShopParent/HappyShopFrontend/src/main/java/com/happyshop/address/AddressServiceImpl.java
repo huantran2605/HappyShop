@@ -45,6 +45,14 @@ public class AddressServiceImpl implements AddressService {
         repo.deleteByIdAndCustomer(addressId, customerId);
     }
 
+    public void setDefaultAddress(Integer addressId, Integer customerId) {
+        if(addressId > 0) {
+            repo.setDefaultAddress(addressId);           
+        }
+        repo.setNonDefaultAddress(addressId, customerId);
+    }
+
+   
    
     
     

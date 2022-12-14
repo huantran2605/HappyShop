@@ -22,7 +22,16 @@
 			<div class=" p-3 col-md-4">
 				<div class="card border-dark mb-3" th:classappend="${usePrimaryAddressAsDefault} ? 'bg-warning' : ''">
 					<div class="card-header row">
-						<div class="col-sm-8">Your primary address</div>
+						<div class="col-sm-8">
+							Your primary address
+							<th:block th:if="${!usePrimaryAddressAsDefault}">
+									<a th:href="@{/address_book/update_default_address/0}">
+									[Set As Default]</a>
+								</th:block> 
+								<th:block th:if="${usePrimaryAddressAsDefault}">
+									<p class="text-danger">[Default]</p>
+							</th:block> 
+						</div>
 						<div class="col-sm-4 col-sm-4 d-flex justify-content-end">
 							<a th:href="@{/customer/customer_details(redirect=address_book)}" id="update"
 									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
@@ -41,7 +50,17 @@
 				<div class=" p-3 col-md-4">
 					<div class="card border-dark mb-3" th:classappend="${address.isDefaultForShipping} ? 'bg-warning' : ''">
 						<div class="card-header row">
-							<div class="col-sm-8">Address #[[${status.count} + 1]]</div>
+							<div class="col-sm-8">
+								Address #[[${status.count} + 1]]  
+								<th:block th:if="${!address.isDefaultForShipping}">
+									<a th:href="@{'/address_book/update_default_address/' + ${address.id}}">
+										[Set As Default]</a>
+								</th:block> 
+								<th:block th:if="${address.isDefaultForShipping}">
+									<p class="text-danger">[Default]</p>
+								</th:block> 
+								
+							</div>
 							<div class="col-sm-4 d-flex justify-content-end">
 								<a th:href="@{'address_book/update/' + ${address.id}}" id="update"
 									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
@@ -79,6 +98,8 @@
 			$("#modal-body").text(message);
 			$("#confirmationModal").modal("show");
 		}
+		
+		
 	</script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

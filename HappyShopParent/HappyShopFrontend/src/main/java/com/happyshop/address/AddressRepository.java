@@ -24,4 +24,16 @@ public interface AddressRepository extends JpaRepository<Address, Integer>{
     @Modifying
     @Transactional
     public void deleteByIdAndCustomer(Integer addressId, Integer customerId);   
+    
+    @Query("UPDATE Address a SET a.defaultForShipping = true where a.id = ?1")
+    @Modifying
+    @Transactional
+    public void setDefaultAddress(Integer addressId);
+    
+    @Query("UPDATE Address a SET a.defaultForShipping = false where a.id != ?1 and a.customer.id = ?2")
+    @Modifying
+    @Transactional
+    public void setNonDefaultAddress(Integer addressId, Integer customerId); 
+        
+    
 }

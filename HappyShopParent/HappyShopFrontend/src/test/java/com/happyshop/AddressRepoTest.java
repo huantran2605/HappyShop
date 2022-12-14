@@ -29,9 +29,9 @@ public class AddressRepoTest {
     @Test
     public void addTest() {
         Address a = new Address();
-        a.setFirstName("hoa");
+        a.setFirstName("huyen");
         a.setLastName("Tran");
-        a.setPhoneNumber("453656");
+        a.setPhoneNumber("41234");
         a.setAddressLine1("tp nam dinh");
         a.setCity("nam  dinh");
         a.setState("nam dinh");
@@ -41,10 +41,24 @@ public class AddressRepoTest {
         a.setCountry(country);
         Customer customer = em.find(Customer.class, 40);
         a.setCustomer(customer);
-        a.setDefaultForShipping(true);
         
         repo.save(a);
         assertThat(a.getFirstName()).isEqualTo("hoa");
     }
+    
+    @Test
+    public void setdefaultShippingTest() {
+        repo.setDefaultAddress(14);
+        Address a = em.find(Address.class, 14);
+        assertThat(a.isDefaultForShipping()).isTrue();
+    }
+    
+    @Test
+    public void setNondefaultShippingTest() {
+        repo.setNonDefaultAddress(3, 40);
+        Address a = em.find(Address.class, 3);
+        assertThat(a.isDefaultForShipping()).isFalse();
+    }
+    
     
 }

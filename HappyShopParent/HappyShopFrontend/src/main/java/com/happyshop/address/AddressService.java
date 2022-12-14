@@ -18,4 +18,7 @@ public interface AddressService {
     Address findByIdAndCustomer(Integer addressId, Integer customerId);
     
     void deleteByIdAndCustomer(Integer addressId, Integer customerId);
+    
+    void setDefaultAddress(Integer addressId, Integer customerId);
+    
 }
