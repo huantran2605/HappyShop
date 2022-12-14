@@ -2,17 +2,24 @@ package com.happyshop.shoppingCart;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.happyshop.Utility;
 import com.happyshop.common.entity.CartItem;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.customer.CustomerService;
 
 @Service
 public class CartItemServiceImpl implements CartItemService{
     @Autowired
     CartItemRepository cartItemRepo;
+    
+    @Autowired
+    CustomerService  customerService;
     
     public void addProduct(Integer quantity, Integer productId, Customer customer) {
         CartItem cartItem =  cartItemRepo.findByCustomerAndProduct(customer, productId);
@@ -49,6 +56,15 @@ public class CartItemServiceImpl implements CartItemService{
 
     public void deleteByCustomerAndProduct(Customer cutomer, Integer productId) {
         cartItemRepo.deleteByCustomerAndProduct(cutomer, productId);
+    }
+    
+    public Customer getAuthenticationCustomer(HttpServletRequest request) {
+        String email = Utility.getEmailAuthenticationCustomer(request);
+        if(email == null) {
+            return null;
+        }
+        Customer customer = customerService.findByEmail(email);
+        return customer;
     }
 
    

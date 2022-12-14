@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Your Address Book','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		<div th:replace="navigation :: search_nav"></div>
+		<h2 class="text-center">Your Address Book</h2>
+		
+		<div class="text-warning text-center" th:if="${message != null}">
+					<p>[[${message}]]</p>
+		</div>
+		
+		<div class="p-2">
+			<a th:href="@{/address_book/new}" class="btn btn-primary">Add New Address</a>
+		</div>
+		
+		<div class="row ">  
+		
+			<div class=" p-3 col-md-4">
+				<div class="card border-dark mb-3" th:classappend="${usePrimaryAddressAsDefault} ? 'bg-warning' : ''">
+					<div class="card-header row">
+						<div class="col-sm-8">Your primary address</div>
+						<div class="col-sm-4 col-sm-4 d-flex justify-content-end">
+							<a th:href="@{/customer/customer_details(redirect=address_book)}" id="update"
+									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
+							</a> 
+						</div>
+					</div>
+					<div class="card-body text-dark">
+						<p class="card-text">
+							[[${customer.getAddress}]]
+						</p>
+					</div>
+				</div>			
+			</div>
+			
+			<th:block th:each="address, status : ${listAddress}">
+				<div class=" p-3 col-md-4">
+					<div class="card border-dark mb-3" th:classappend="${address.isDefaultForShipping} ? 'bg-warning' : ''">
+						<div class="card-header row">
+							<div class="col-sm-8">Address #[[${status.count} + 1]]</div>
+							<div class="col-sm-4 d-flex justify-content-end">
+								<a th:href="@{'address_book/update/' + ${address.id}}" id="update"
+									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
+								</a> <a th:href="@{'/address_book/delete/' + ${address.id}}"
+									class="deleteAddress me-3" th:addressCount="${status.count + 1}"
+									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+								</a>
+							</div>
+						</div>
+						<div class="card-body text-dark">
+							<p class="card-text">
+								[[${address}]]
+							</p>
+						</div>
+					</div>
+				</div>
+			</th:block>
+			
+		</div>
+		
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+		
+		<div th:replace="navigation :: footer_menu"></div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+	<script>
+		$(".deleteAddress").click(
+			function(e) {
+				e.preventDefault();
+				addressCount = $(this).attr("addressCount");
+				showConfirmationModal("Are you sure to delete this address #" + addressCount);
+				$("#deleteOption").attr("href",$(this).attr("href"));
+		});
+		function showConfirmationModal(message) {
+			$("#modal-body").text(message);
+			$("#confirmationModal").modal("show");
+		}
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

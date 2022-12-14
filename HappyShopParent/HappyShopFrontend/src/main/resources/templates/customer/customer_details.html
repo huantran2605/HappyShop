@@ -16,6 +16,8 @@
 			<form th:action="@{/customer/update}" method="post" th:object="${customer}"
 				class="border boder-secondary">
 				<input type="hidden" th:field="*{id}" />
+				<input type="hidden" name = "redirect"
+				 th:value="${param.redirect}"/> 
 				<div class="row mt-3 ps-3">
 					<label for="" class="col-md-2 form-label">Authentication Type: </label>
 					<div class="col-md-8">

@@ -23,8 +23,7 @@ public class CartItemController {
     
     @GetMapping("/cart")
     public String showCart(HttpServletRequest request, Model model) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        Customer customer = customerService.findByEmail(email);
+        Customer customer = cartItemService.getAuthenticationCustomer(request);
         List<CartItem> list = cartItemService.findByCustomer(customer);
         float total = 0;
         for (CartItem cartItem : list) {

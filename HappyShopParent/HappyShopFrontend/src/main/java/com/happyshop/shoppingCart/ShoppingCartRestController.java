@@ -26,12 +26,11 @@ public class ShoppingCartRestController {
     @PostMapping("/cart/add_to_cart/{productId}/{quantity}")
     public String addToCart(@PathVariable("productId") Integer productId,
             @PathVariable("quantity") Integer quantity,
-           HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
+           HttpServletRequest request) {             
+        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        if(customer == null) {
             return "must login";
-        }               
-        Customer customer = customerService.findByEmail(email);
+        }       
         cartItemService.addProduct(quantity, productId, customer);       
         return "added the cart";
     }
@@ -40,11 +39,10 @@ public class ShoppingCartRestController {
     public String updateQuantity(@PathVariable("productId") Integer productId,
             @PathVariable("quantity") Integer quantity,
            HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
+        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        if(customer == null) {
             return "must login";
-        }  
-        Customer customer = customerService.findByEmail(email);
+        }    
         float newSubTotal = cartItemService.updateQuantity(quantity, customer, productId);       
         return String.valueOf(newSubTotal);
     }
@@ -52,14 +50,15 @@ public class ShoppingCartRestController {
     @DeleteMapping("/cart/delete_item/{productId}")
     public String DeleteItems(@PathVariable("productId") Integer productId,
             HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
+        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        if(customer == null) {
             return "must login";
-        }  
-        Customer customer = customerService.findByEmail(email);     
+        }        
         cartItemService.deleteByCustomerAndProduct(customer, productId);       
         return "deleted items";
     }
+    
+    
     
    
 }

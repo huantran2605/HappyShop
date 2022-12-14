@@ -3,6 +3,8 @@ package com.happyshop.customer;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,4 +45,6 @@ public interface CustomerService {
     Customer findByResetPasswordToken(String resetPasswordToken);
 
     void resetPasswordCustomer(String token, String password) throws CustomerException;
+    
+    Customer getAuthenticationCustomer(HttpServletRequest request);
 }
