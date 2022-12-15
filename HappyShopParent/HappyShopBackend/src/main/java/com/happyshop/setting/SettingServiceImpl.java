@@ -41,4 +41,10 @@ public class SettingServiceImpl implements SettingService{
     public List<Setting> getMailTemplatesSetting() {      
         return settingRepository.findByCategory(SettingCategory.MAIL_TEMPLATES);
     }
+
+    public List<Setting> findByCategory(SettingCategory category) {
+        return settingRepository.findByCategory(category);
+    }
+    
+    
 }

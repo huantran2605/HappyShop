@@ -15,4 +15,6 @@ public interface SettingService {
     List<Setting> getMailServerSetting();
     
     List<Setting> getMailTemplatesSetting();
+    
+    List<Setting> findByCategory(SettingCategory category);
 }
