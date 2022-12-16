@@ -52,6 +52,12 @@ public class AddressServiceImpl implements AddressService {
         repo.setNonDefaultAddress(addressId, customerId);
     }
 
+    public Address findByDefaultAddress(Integer customerId) {
+        return repo.findByDefaultAddress(customerId);
+    }
+    
+    
+
    
    
     

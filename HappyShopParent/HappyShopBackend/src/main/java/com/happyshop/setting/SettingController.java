@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
-import com.happyshop.common.entity.Currency;
-import com.happyshop.common.entity.Setting;
+import com.happyshop.common.entity.setting.Currency;
+import com.happyshop.common.entity.setting.Setting;
 
 
 

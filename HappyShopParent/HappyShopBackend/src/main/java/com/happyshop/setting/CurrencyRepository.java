@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.happyshop.common.entity.Currency;
+import com.happyshop.common.entity.setting.Currency;
 
 public interface CurrencyRepository extends JpaRepository<Currency, Integer>{
     

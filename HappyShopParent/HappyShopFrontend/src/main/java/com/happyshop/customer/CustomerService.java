@@ -10,8 +10,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.happyshop.common.entity.AuthenticationType;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.common.exception.CustomerException;
 
 public interface CustomerService {

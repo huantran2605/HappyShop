@@ -2,8 +2,8 @@ package com.happyshop.setting;
 
 import java.util.List;
 
-import com.happyshop.common.entity.Setting;
-import com.happyshop.common.entity.SettingBag;
+import com.happyshop.common.entity.setting.Setting;
+import com.happyshop.common.entity.setting.SettingBag;
 
 public class EmailSettingBag extends SettingBag {
 

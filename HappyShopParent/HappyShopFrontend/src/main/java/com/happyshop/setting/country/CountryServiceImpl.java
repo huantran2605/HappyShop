@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import com.happyshop.common.entity.Country;
+import com.happyshop.common.entity.setting.Country;
 
 @Service
 public class CountryServiceImpl implements CountryService {

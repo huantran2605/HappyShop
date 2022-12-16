@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.happyshop.common.entity.Country;
+import com.happyshop.common.entity.setting.Country;
 
 @SpringBootTest
 @AutoConfigureMockMvc

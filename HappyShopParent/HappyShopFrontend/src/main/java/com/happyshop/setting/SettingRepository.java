@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.happyshop.common.entity.Setting;
-import com.happyshop.common.entity.SettingCategory;
+import com.happyshop.common.entity.setting.Setting;
+import com.happyshop.common.entity.setting.SettingCategory;
 
 public interface SettingRepository extends JpaRepository<Setting, String>{
     

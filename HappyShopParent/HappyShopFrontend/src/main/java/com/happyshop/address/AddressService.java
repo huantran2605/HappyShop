@@ -21,4 +21,6 @@ public interface AddressService {
     
     void setDefaultAddress(Integer addressId, Integer customerId);
     
+    Address findByDefaultAddress(Integer customerId);
+    
 }

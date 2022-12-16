@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.happyshop.common.entity.Currency;
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Order;
-import com.happyshop.common.entity.OrderDetail;
-import com.happyshop.common.entity.Setting;
-import com.happyshop.common.entity.SettingCategory;
+import com.happyshop.common.entity.order.Order;
+import com.happyshop.common.entity.order.OrderDetail;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.setting.Currency;
+import com.happyshop.common.entity.setting.Setting;
+import com.happyshop.common.entity.setting.SettingCategory;
 import com.happyshop.order.OrderService;
 import com.happyshop.setting.CurrencyService;
 import com.happyshop.setting.SettingService;

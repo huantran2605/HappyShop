@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.Utility;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.common.exception.CustomerException;
 import com.happyshop.security.CustomerDetailsClass;
 import com.happyshop.security.oauth2.CustomerOauth2User;
@@ -120,6 +120,9 @@ public class CustomerController {
         if(redirectOption.equals("address_book")) {
             re.addFlashAttribute("message", "Updated address successfully!");
             return "redirect:/address_book";
+        }
+        else if(redirectOption.equals("cart")) {
+            return "redirect:/cart";
         }
         re.addFlashAttribute("message", "Updated Profilele successfully!");
                

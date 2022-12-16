@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.happyshop.common.entity.Setting;
-import com.happyshop.common.entity.SettingCategory;
+import com.happyshop.common.entity.setting.Setting;
+import com.happyshop.common.entity.setting.SettingCategory;
 
 @Service
 public class SettingServiceImpl implements SettingService{

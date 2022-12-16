@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.happyshop.common.entity.Order;
+import com.happyshop.common.entity.order.Order;
 
 public interface OrderService {
     int SIZE_PAGE_ORDER = 10;

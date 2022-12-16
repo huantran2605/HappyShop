@@ -7,8 +7,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 
 public interface CustomerService {
     

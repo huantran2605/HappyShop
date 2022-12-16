@@ -17,8 +17,8 @@ import org.springframework.test.annotation.Rollback;
 
 import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Category;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

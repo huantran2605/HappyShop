@@ -17,8 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Address;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.customer.CustomerService;
 import com.happyshop.setting.country.CountryService;
 
@@ -45,7 +45,7 @@ public class AddressController {
                 break;
             }
         }
-             
+         
         model.addAttribute("usePrimaryAddressAsDefault", usePrimaryAddressAsDefault);
         model.addAttribute("listAddress", listAddress);
         model.addAttribute("customer", customer);
@@ -107,7 +107,14 @@ public class AddressController {
     public String updateDefaultAddress(@PathVariable("idAddress") Integer idAddress,
             HttpServletRequest request,RedirectAttributes ra) {
         Customer customer = addressService.getAuthenticationCustomer(request);
-        addressService.setDefaultAddress(idAddress, customer.getId());         
+        addressService.setDefaultAddress(idAddress, customer.getId());     
+        
+        String redirectOption =  request.getParameter("redirect");
+        if(redirectOption != null && redirectOption.equals("cart")){
+            return "redirect:/cart";
+        }
+            
+        
         ra.addFlashAttribute("message", "Set As Default Address Successfully!");       
         return "redirect:/address_book"; 
     }

@@ -1,4 +1,4 @@
-package com.happyshop.common.entity;
+package com.happyshop.common.entity.setting;
 
 
 public enum SettingCategory {

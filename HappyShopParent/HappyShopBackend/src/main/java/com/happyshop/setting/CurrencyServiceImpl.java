@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.happyshop.common.entity.Currency;
-import com.happyshop.common.entity.Setting;
+import com.happyshop.common.entity.setting.Currency;
+import com.happyshop.common.entity.setting.Setting;
 
 @Service
 public class CurrencyServiceImpl implements CurrencyService{

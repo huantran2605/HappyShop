@@ -2,8 +2,8 @@ package com.happyshop.setting.state;
 
 import java.util.List;
 
-import com.happyshop.common.entity.Country;
-import com.happyshop.common.entity.State;
+import com.happyshop.common.entity.setting.Country;
+import com.happyshop.common.entity.setting.State;
 
 public interface StateService {
     List<State> findByCountryOrderByNameAsc(Country country);

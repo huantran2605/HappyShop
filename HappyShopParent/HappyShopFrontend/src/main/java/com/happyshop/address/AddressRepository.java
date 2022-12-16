@@ -34,6 +34,8 @@ public interface AddressRepository extends JpaRepository<Address, Integer>{
     @Modifying
     @Transactional
     public void setNonDefaultAddress(Integer addressId, Integer customerId); 
-        
+      
+    @Query("select a from Address a where a.customer.id = ?1 and a.defaultForShipping = true")
+    public Address findByDefaultAddress(Integer customerId);
     
 }

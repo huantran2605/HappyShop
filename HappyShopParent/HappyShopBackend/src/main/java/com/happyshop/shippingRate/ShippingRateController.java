@@ -23,9 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.common.entity.Brand;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.ShippingRate;
 import com.happyshop.common.entity.User;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.setting.country.CountryService;
 
 @Controller

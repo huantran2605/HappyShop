@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.happyshop.common.entity.Country;
-import com.happyshop.common.entity.State;
-import com.happyshop.common.entity.StateDTO;
+import com.happyshop.common.entity.setting.Country;
+import com.happyshop.common.entity.setting.State;
+import com.happyshop.common.entity.setting.StateDTO;
 import com.happyshop.setting.country.CountryService;
 
 @RestController

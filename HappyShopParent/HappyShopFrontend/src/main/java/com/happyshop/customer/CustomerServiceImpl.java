@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.happyshop.Utility;
 import com.happyshop.common.entity.AuthenticationType;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.common.exception.CustomerException;
 import com.happyshop.setting.country.CountryService;
 

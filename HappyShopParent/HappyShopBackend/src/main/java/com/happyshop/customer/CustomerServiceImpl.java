@@ -11,9 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.setting.country.CountryService;
 
 import net.bytebuddy.utility.RandomString;

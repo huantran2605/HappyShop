@@ -14,9 +14,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.ShippingRate;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.setting.Country;
 import com.happyshop.product.ProductRepository;
 
 @DataJpaTest

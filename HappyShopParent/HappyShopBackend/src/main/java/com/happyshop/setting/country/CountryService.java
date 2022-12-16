@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 
-import com.happyshop.common.entity.Country;
+import com.happyshop.common.entity.setting.Country;
 
 public interface CountryService {
     List<Country> findAllByOrderByNameAsc();

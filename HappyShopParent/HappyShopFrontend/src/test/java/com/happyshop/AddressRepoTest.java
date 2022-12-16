@@ -13,8 +13,8 @@ import org.springframework.test.annotation.Rollback;
 
 import com.happyshop.address.AddressRepository;
 import com.happyshop.common.entity.Address;
-import com.happyshop.common.entity.Country;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.setting.Country;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -60,5 +60,13 @@ public class AddressRepoTest {
         assertThat(a.isDefaultForShipping()).isFalse();
     }
     
+    @Test
+    public void findByDefaultAddressTest() {
+        
+        Address a = repo.findByDefaultAddress(5);
+        System.out.println(a);
+        
+        assertThat(a.getLastName()).isEqualTo("Abel");
+    }
     
 }

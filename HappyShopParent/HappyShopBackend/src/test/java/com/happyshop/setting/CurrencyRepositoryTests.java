@@ -14,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import org.springframework.test.annotation.Rollback;
 
-import com.happyshop.common.entity.Currency;
+import com.happyshop.common.entity.setting.Currency;
 
 
 

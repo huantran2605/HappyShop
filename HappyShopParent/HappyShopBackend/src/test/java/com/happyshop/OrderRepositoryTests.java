@@ -14,10 +14,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Order;
-import com.happyshop.common.entity.OrderDetail;
-import com.happyshop.common.entity.OrderStatus;
-import com.happyshop.common.entity.PaymentMethod;
+import com.happyshop.common.entity.order.Order;
+import com.happyshop.common.entity.order.OrderDetail;
+import com.happyshop.common.entity.order.OrderStatus;
+import com.happyshop.common.entity.order.PaymentMethod;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.order.OrderRepository;
 
