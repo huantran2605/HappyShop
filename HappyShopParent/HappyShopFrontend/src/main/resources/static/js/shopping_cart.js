@@ -2,6 +2,7 @@ decimalSeparator = decimalPointType == "COMMA" ? "," : "."
 thousandSeparator = thousandPointType == "COMMA" ? "," : ".";
 const productIdArray = [];
 $(document).ready(function(){
+	
 	$(".link_Minus").on("click", function(e){
 		e.preventDefault();
 		decreaseQuantity($(this));
@@ -12,18 +13,19 @@ $(document).ready(function(){
 		increaseQuantity($(this));
 		
 	});
-	
-	checkAllCheckbox();
-	
+	checkAllCheckbox();	
 	updateSubTotalFromInputQuantityField();
 	rowCheckbox();
 	ckeckboxSelectAll();
+	updateCheckoutButton();
 	
 	$("#deleteItems").on("click", function(){
 		for(let i = 0; i < productIdArray.length;i++){
 			deleteItem(productIdArray[i]);					
 		}
-	});	
+		$("#checkoutButton").hide();
+	});
+		
 });
 
 function increaseQuantity(link){
@@ -34,6 +36,7 @@ function increaseQuantity(link){
 	message = $("#m" + productId);
 	if (quantityValue > maxQuantityValue) {
 			message.text("There are only " + maxQuantityValue +" quantity for this item");
+			quantityValue = maxQuantityValue;
 		}
 	else {
 			message.text("");
@@ -49,6 +52,7 @@ function decreaseQuantity(link){
 	message = $("#m" + productId);
 	if(quantityValue < 1){
 		message.text("The min quatity is 1");
+		quantityValue = 1;
 	}else{
 		message.text("");
 		quantity.val(quantityValue);			
@@ -68,10 +72,12 @@ function updateSubTotalFromInputQuantityField(){
 			if(quantityValue > maxQuantityValue){				
 				$(this).val(maxQuantityValue);
 				message.text("There are only " + maxQuantityValue +" quantity for this item");
+				quantityValue = maxQuantityValue;
 			}
 			else if(quantityValue < 1){
 				$(this).val(1);
-				message.text("The min quatity is 1");				
+				message.text("The min quatity is 1");
+				quantityValue = 1;			
 			}
 			else if($(this).val() == ""){
 				$(this).val(1);	
@@ -138,28 +144,33 @@ function ckeckboxSelectAll(){
 			$(".rowCheckbox").prop("checked", true);	
 			checkAllCheckbox();	
 			updateTotal();	
+			setProductIdStringForCheckout();
+			updateCheckoutButton();
 		}
 		else{
 			$(".rowCheckbox").prop("checked", false);
 			checkAllCheckbox();
 			updateTotal();
+			updateCheckoutButton();
 		}			
 	})
 }
 
 function rowCheckbox(){
-
 	$(".rowCheckbox").on("click", function(){		
 		productId = parseInt($(this).attr("checkboxId"));
-		rowCheckbox = $("#checkbox" + productId);		
+		rowCheckbox = $("#checkbox" + productId);	
 		if(this.checked){
 			//update new Total
 			subTotalString = $("#subTotal" + productId).text();
 			subTotal = parseFloat(clearFormatNumber(subTotalString));
-			newTotal =  parseFloat(clearFormatNumber($("#total").text())) + subTotal;	
+			total = parseFloat(clearFormatNumber($("#total").text()));
+			newTotal =  total + subTotal;	
 			$("#total").text(formatNumber(newTotal));	
 			
-			checkAllCheckbox()
+			checkAllCheckbox();
+			updateCheckoutButton();
+			setProductIdStringForCheckout();
 		}
 			
 		else {
@@ -167,10 +178,16 @@ function rowCheckbox(){
 			$("#selectAll").prop("checked", false);
 			subTotalString = $("#subTotal" + productId).text();
 			subTotal = parseFloat(clearFormatNumber(subTotalString));
-			newTotal =  parseFloat(clearFormatNumber($("#total").text())) - subTotal;	
+			total = parseFloat(clearFormatNumber($("#total").text()));
+			if(total > 0){
+				newTotal =  total - subTotal;	
+				if(newTotal < 0) newTotal = 0;			
+			}
 			$("#total").text(formatNumber(newTotal));
 			
-			checkAllCheckbox()
+			checkAllCheckbox();
+			updateCheckoutButton();
+			setProductIdStringForCheckout();
 		}
 		
 		if(parseFloat($("#total").text()) == 0.0){
@@ -179,6 +196,7 @@ function rowCheckbox(){
 		if(parseFloat(clearFormatNumber($("#total").text())) == clearFormatNumber(formatNumber(maxTotal))){
 			$("#selectAll").prop("checked", true);
 		}
+		
 	})	
 }
 
@@ -242,3 +260,23 @@ function updatePage(){
 	
 }
 
+function setProductIdStringForCheckout() {
+	var productIdString = "";
+	for (let i = 0; i < productIdArray.length; i++) {
+		productIdString += productIdArray[i] + "-";
+	}
+	$("#productIdString").val(productIdString);
+
+}
+
+function updateCheckoutButton(){
+	length = productIdArray.length;
+	$("#checkoutButton").val("Check Out" + "(" + length +")");
+	if(productIdArray.length == 0){
+		$("#checkoutButton").hide();
+	}
+	else{
+		$("#checkoutButton").show();
+	}
+	
+}

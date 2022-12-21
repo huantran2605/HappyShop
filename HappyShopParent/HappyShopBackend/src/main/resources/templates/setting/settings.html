@@ -45,6 +45,11 @@
 						data-bs-target="#mail_templates" type="button" aria-controls="mailTemplates"
 						aria-selected="false">Mail Templates</button>
 				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" data-bs-toggle="tab"
+						data-bs-target="#payment" type="button" aria-controls="payment"
+						aria-selected="false">Payment</button>
+				</li>
 
 			</ul>
 
@@ -69,6 +74,10 @@
 				<div class="tab-pane fade" id="mail_templates">
 					<div th:replace="setting/mail_templates/mail_templates :: content"></div>
 				</div>
+				
+				<div class="tab-pane fade" id="payment">
+					<div th:replace="setting/payment :: content"></div>
+				</div>
 
 			</div>
 		</div>
@@ -83,7 +92,11 @@
 	csrfValue = "[[${_csrf.token}]]";
 	
 	$(document).ready(function(){
-		$("#emailContent").richText();
+		$("#customerEmailContent").richText();
+	});
+	
+	$(document).ready(function(){
+		$("#orderEmailContent").richText();
 	});
 	
 </script>

@@ -34,6 +34,8 @@ public class CartItem {
     private Product product;
     
     private int quantity;
+    
+    private float shippingCost;
 
     public CartItem(Customer customer, Product product, int quantity) {
         super();

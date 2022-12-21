@@ -1,6 +1,7 @@
 package com.happyshop.shoppingCart;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,4 +18,7 @@ public interface CartItemService {
     void deleteByCustomerAndProduct(Customer cutomer, Integer productId) ;
     
     Customer getAuthenticationCustomer(HttpServletRequest request);
+    
+    CartItem findByCustomerAndProduct(Customer customer, Integer productId);
+    
 }

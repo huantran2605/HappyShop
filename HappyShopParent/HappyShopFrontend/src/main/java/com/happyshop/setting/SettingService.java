@@ -9,4 +9,6 @@ public interface SettingService {
     List<Setting> getGeneralSettings();
     
     EmailSettingBag getEmailSetting();
+    
+    List<Setting> findByCategory(SettingCategory category);
 }

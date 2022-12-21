@@ -16,7 +16,8 @@
 				
 				<input type="hidden" th:field="*{id}"  />
 				<input type="hidden" th:field="*{defaultForShipping}"/>
-				
+				<input type="hidden" th:value="${param.redirect}" name="redirect" />
+				<input type="hidden" th:value="${param.selectedProduct}" name="selectedProduct" />
 				<div class="row mt-3 ps-3">
 				  <label for="" class="col-md-2 form-label">First Name: </label>
 				  <div class="col-md-8">

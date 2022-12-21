@@ -27,6 +27,12 @@ public class SettingServiceImpl implements SettingService{
         }
         return new EmailSettingBag(list);
     }
+
+    public List<Setting> findByCategory(SettingCategory category) {
+        return settingRepository.findByCategory(category);
+    }
+    
+    
   
     
     

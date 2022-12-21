@@ -1,6 +1,7 @@
 package com.happyshop.shoppingCart;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,10 +68,9 @@ public class CartItemServiceImpl implements CartItemService{
         return customer;
     }
 
-   
-    
-    
-    
-    
+    public CartItem findByCustomerAndProduct(Customer customer, Integer productId) {
+        return cartItemRepo.findByCustomerAndProduct(customer, productId);
+    }
+
     
 }

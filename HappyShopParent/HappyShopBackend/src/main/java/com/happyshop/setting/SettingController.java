@@ -44,7 +44,7 @@ public class SettingController {
     }
     
     @PostMapping("/setting/save_general")
-    private String save_generalSetting(Model model,
+    private String save_generalSetting(Model model,  
             HttpServletRequest request, RedirectAttributes ra,
             @RequestParam("logoFile") MultipartFile multipartFile 
             ) throws IOException{
@@ -103,7 +103,7 @@ public class SettingController {
         return "redirect:/setting";
     }
     
-    @PostMapping("/setting/save_mail_templates")
+    @PostMapping("/setting/save_mail_templates")  
     private String saveMailTemplatesSetting(
             HttpServletRequest request, RedirectAttributes ra
             ) throws IOException{
@@ -112,6 +112,18 @@ public class SettingController {
         updateSettingValuesFromForm(request, list);
            
         ra.addFlashAttribute("message", "Updated Mail Templates Setting successfully!");
+        return "redirect:/setting";
+    }
+    
+    @PostMapping("/setting/save_payment")  
+    private String savePaymentSetting(
+            HttpServletRequest request, RedirectAttributes ra
+            ) throws IOException{
+        List<Setting> list = settingService.getPaymentSetting();
+        
+        updateSettingValuesFromForm(request, list);
+           
+        ra.addFlashAttribute("message", "Updated Payment Setting successfully!");
         return "redirect:/setting";
     }
 }

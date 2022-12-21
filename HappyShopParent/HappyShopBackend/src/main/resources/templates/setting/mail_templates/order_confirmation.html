@@ -4,7 +4,26 @@
 <head></head>
 <body>
 	<div th:fragment="content">
-		dagsd
+		
+		<div class="row mt-3">
+			<label for="" class="col-sm-2 col-form-label ">Email Subject:
+			</label>
+			<div class="col-sm-6">
+				<input type="text" class="form-control"
+					name="ORDER_CONFIRMATION_SUBJECT"
+					th:value="${ORDER_CONFIRMATION_SUBJECT}" required>
+			</div>
+		</div>
+		
+		<div class="row mt-3">
+			<label for="" class="col-sm-2 col-form-label ">Email Content:
+			</label>
+			<div class="col-sm-8">
+				<textarea class="form-control" id="orderEmailContent" name="ORDER_CONFIRMATION_CONTENT"
+				rows="10" required>[[${ORDER_CONFIRMATION_CONTENT}]]</textarea>
+			</div>
+		</div>
+		
 	</div>
 
 

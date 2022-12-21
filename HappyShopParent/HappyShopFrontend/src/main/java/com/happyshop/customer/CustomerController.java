@@ -117,6 +117,7 @@ public class CustomerController {
         updateNameUserAuthentication(customer, request);
                
         String redirectOption = request.getParameter("redirect");
+        String selectedProduct =  request.getParameter("selectedProduct");
         if(redirectOption.equals("address_book")) {
             re.addFlashAttribute("message", "Updated address successfully!");
             return "redirect:/address_book";
@@ -124,7 +125,10 @@ public class CustomerController {
         else if(redirectOption.equals("cart")) {
             return "redirect:/cart";
         }
-        re.addFlashAttribute("message", "Updated Profilele successfully!");
+        else if(redirectOption.equals("checkout")) {
+            return "redirect:/address_book?redirect=checkout&selectedProduct=" + selectedProduct;   
+        }
+        re.addFlashAttribute("message", "Updated Profile successfully!");
                
         return "redirect:/customer/customer_details";
     }

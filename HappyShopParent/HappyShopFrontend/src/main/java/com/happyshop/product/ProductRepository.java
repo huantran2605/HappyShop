@@ -1,8 +1,11 @@
 package com.happyshop.product;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +24,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
             + "MATCH (name, short_description, full_description) AGAINST (?1)",
             nativeQuery = true)
     public Page<Product> searchProduct (String keyword, Pageable pageable); 
+    
+    @Modifying
+    @Query("UPDATE Product p SET p.quantity = ?1 where p.id = ?2")
+    @Transactional
+    public void updateQuantity(Integer newQuantity, Integer productId);
 
 }

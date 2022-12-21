@@ -35,6 +35,14 @@ public class ProductServiceImpl implements ProductService{
     public Page<Product> searchProduct(String keyword, Pageable pageable) {
         return productRepo.searchProduct(keyword, pageable);
     }
+
+    public void updateQuantity(Integer newQuantity, Integer productId) {
+        productRepo.updateQuantity(newQuantity, productId);
+    }
+
+    public Optional<Product> findById(Integer id) {
+        return productRepo.findById(id);
+    }
     
     
     

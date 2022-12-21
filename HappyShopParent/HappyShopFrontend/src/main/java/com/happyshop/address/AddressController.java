@@ -76,6 +76,17 @@ public class AddressController {
         }
         
         addressService.save(address);
+        
+        String redirectOption =  request.getParameter("redirect");
+        String selectedProduct =  request.getParameter("selectedProduct");
+        if(redirectOption != null){
+            if(redirectOption.equals("cart")) {
+                return "redirect:/address_book?redirect=cart";           
+            }
+            else if(redirectOption.equals("checkout")) {
+                return "redirect:/address_book?redirect=checkout&selectedProduct=" +selectedProduct;   
+            }
+        }
         return "redirect:/address_book";
     }
     
@@ -110,8 +121,14 @@ public class AddressController {
         addressService.setDefaultAddress(idAddress, customer.getId());     
         
         String redirectOption =  request.getParameter("redirect");
-        if(redirectOption != null && redirectOption.equals("cart")){
-            return "redirect:/cart";
+        String selectedProduct =  request.getParameter("selectedProduct");
+        if(redirectOption != null){
+            if(redirectOption.equals("cart")) {
+                return "redirect:/cart";               
+            }
+            else if(redirectOption.equals("checkout")) {
+                return "redirect:/checkout?selectedProduct=" +selectedProduct;   
+            }
         }
             
         

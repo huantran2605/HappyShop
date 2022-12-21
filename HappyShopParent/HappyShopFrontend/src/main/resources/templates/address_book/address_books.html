@@ -7,14 +7,21 @@
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
 		<div th:replace="navigation :: search_nav"></div>
-		<h2 class="text-center">Your Address Book</h2>
+		<h2 class="text-center" th:text="${param.redirect != null && param.redirect[0] == 'checkout'}
+			? 'Choose another address' : 'Your Address Book' ">		
+		</h2>
 		
 		<div class="text-warning text-center" th:if="${message != null}">
 					<p>[[${message}]]</p>
 		</div>
 		
 		<div class="p-2">
-			<a th:href="@{/address_book/new}" class="btn btn-primary">Add New Address</a>
+			<a th:unless="${param.redirect}" th:href="@{/address_book/new}" class="btn btn-primary">Add New Address</a>
+			<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" 
+				 th:href="@{/address_book/new(redirect=checkout
+					, selectedProduct=${param.selectedProduct[0]})}" 
+				class="btn btn-primary">Add New Address</a>
+			
 		</div>
 		
 		<div class="row ">  
@@ -27,17 +34,31 @@
 							<th:block th:if="${!usePrimaryAddressAsDefault}">
 									<a th:unless="${param.redirect}" th:href="@{/address_book/update_default_address/0}">
 									[Set As Default]</a>
-									<a th:if="${param.redirect}" th:href="@{/address_book/update_default_address/0(redirect=cart)}">
-									[Set As Default]</a>
+									<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+										 th:href="@{/address_book/update_default_address/0(redirect=checkout, selectedProduct=${param.selectedProduct[0]} )}">
+										[Choose]</a>
+									<a th:if="${param.redirect != null && param.redirect[0] == 'cart'}" 
+										th:href="@{/address_book/update_default_address/0(redirect=cart)}">
+										[Set As Default]</a>
 								</th:block> 
 								<th:block th:if="${usePrimaryAddressAsDefault}">
-									<p class="text-danger">[Default]</p>
+									<p class="text-danger" th:text="${param.redirect != null && param.redirect[0] == 'checkout'}
+										? '[Currently choose]' : '[Default]' "></p>
 							</th:block> 
 						</div>
 						<div class="col-sm-4 col-sm-4 d-flex justify-content-end">
-							<a th:href="@{/customer/customer_details(redirect=address_book)}" id="update"
+							<a th:unless="${param.redirect}" th:href="@{/customer/customer_details(redirect=address_book)}" id="update"
 									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
 							</a> 
+							
+							<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" 
+								 th:href="@{/customer/customer_details(redirect=checkout
+										, selectedProduct=${param.selectedProduct[0]})}" 
+									id="update"
+									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
+							</a> 
+							
+							
 						</div>
 					</div>
 					<div class="card-body text-dark">
@@ -54,22 +75,40 @@
 						<div class="card-header row">
 							<div class="col-sm-8">
 								Address #[[${status.count} + 1]]  
-								<th:block th:if="${!address.isDefaultForShipping}">
-									<a th:if="${param.redirect}" th:href="@{'/address_book/update_default_address/' 
-									+ ${address.id}(redirect=cart)}">
-										[Set As Default]</a>
-									<a th:unless="${param.redirect}" th:href="@{'/address_book/update_default_address/' 
+								<th:block th:if="${!address.isDefaultForShipping}">								
+										<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+											th:href="@{'/address_book/update_default_address/' 
+											+ ${address.id}(redirect=checkout, selectedProduct=${param.selectedProduct[0]})}">[Choose]
+										</a>
+										<a th:if="${param.redirect != null && param.redirect[0] == 'cart'}"
+											th:href="@{'/address_book/update_default_address/' 
+											+ ${address.id}(redirect=cart)}">[Set As Default]
+										</a>
+								
+									<a th:unless="${param.redirect}" 
+										th:href="@{'/address_book/update_default_address/' 
 									+ ${address.id}}">[Set As Default]</a>
 								</th:block> 
 								<th:block th:if="${address.isDefaultForShipping}">
-									<p class="text-danger">[Default]</p>
+									<p class="text-danger" th:text="${param.redirect != null && param.redirect[0] == 'checkout'}
+										? '[Currently choose]' : '[Default]' "></p>
 								</th:block> 
 								
 							</div>
 							<div class="col-sm-4 d-flex justify-content-end">
-								<a th:href="@{'address_book/update/' + ${address.id}}" id="update"
-									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
-								</a> <a th:href="@{'/address_book/delete/' + ${address.id}}"
+							
+								<a th:unless="${param.redirect}" th:href="@{'address_book/update/' + ${address.id}}" id="update"
+									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>	
+								</a>
+								
+								<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" 
+									th:href="@{'address_book/update/' + ${address.id}(redirect=checkout
+										, selectedProduct=${param.selectedProduct[0]})}" 
+									id="update"
+									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>	
+								</a>
+								
+								<a th:href="@{'/address_book/delete/' + ${address.id}}"
 									class="deleteAddress me-3" th:addressCount="${status.count + 1}"
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>

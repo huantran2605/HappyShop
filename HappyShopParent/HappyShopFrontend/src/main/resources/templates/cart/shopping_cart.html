@@ -7,6 +7,7 @@
 
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
+		<div th:replace="navigation :: search_nav"></div>
 		<h1 class="text-center">Your Shopping Cart</h1>
 		
 		<div class="text-center text-info" th:if="${sizeOfList != 0}" id="infoDiv">
@@ -28,10 +29,10 @@
 				<th:block th:each="cartItem,status : ${listCartItem}">
 					<div class="row border border-secondary p-3 m-3"
 						 th:with="product = ${cartItem.product}" th:id="'divItem' + ${cartItem.product.id}">
-						<div class="col-md-1 d-flex justify-content-start mb-2">
+						<div class="col-md-1 mb-2">
 							<p class="countItems"> [[${status.count}]] </p>
 							<input type="checkbox" class="form-check-input border border-primary ms-2 rowCheckbox"
-								 	th:checkboxId = "${product.id}" th:id="'checkbox' + ${product.id}" />
+								 	th:checkboxId = "${product.id}" th:id="'checkbox' + ${product.id}"/>
 						</div>
 						<div class="col-md-3">
 							<img th:src="@{${product.getProductMainImagePath}}" class="img-fluid"
@@ -43,7 +44,7 @@
 							</div>
 							<div class="mt-3"
 								th:replace="cart/quantity_control :: content(${cartItem.quantity},${cartItem.product.quantity},${cartItem.product.id})">
-							</div>
+							</div>							
 							<div class="mt-2 d-flex flex-row" style="font-size: 18px">
 								<p class="me-3">Unit Price:</p>
 								<div th:replace="product/product_fragment :: showProductPrice"></div>
@@ -74,7 +75,11 @@
 					<span th:if="${CURRENCY_SYMBOL_POSITION} == 'After price'"
 						th:remove="tag"> [[${CURRENCY_SYMBOL}]] </span>
 				</div>
-				<button class="btn btn-danger mt-3" th:if="${shippingSupported}">Check Out</button>
+				<form th:action="@{/checkout}" th:if="${shippingSupported}" method="post">
+					<input type="hidden" name="selectedProduct" value="" id="productIdString"/>
+					<input type="submit" class="btn btn-danger mt-3" value="Check Out" id="checkoutButton"/>
+				</form>
+				
 				<th:block th:if="${!shippingSupported}">
 					<p class="text-warning">No shipping available for your location</p>
 					<a th:href="@{/customer/customer_details(redirect=cart)}" th:if="${usePrimaryAddressAsDefault}">Update your address</a>

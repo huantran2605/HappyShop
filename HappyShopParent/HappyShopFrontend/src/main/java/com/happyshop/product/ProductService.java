@@ -23,4 +23,8 @@ public interface ProductService {
     Product findByAlias(String alias);
     
     Page<Product> searchProduct(String keyword, Pageable pageable);
+    
+    void updateQuantity(Integer newQuantity, Integer productId);
+    
+    Optional<Product> findById(Integer id);
 }

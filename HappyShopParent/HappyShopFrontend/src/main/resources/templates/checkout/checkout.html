@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: page_head('Checkout','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		<div th:replace="navigation :: search_nav"></div>
+		<h1 class="text-center mt-3">Checkout</h1>
+		
+		<div class="row p-2 mt-3">
+			<div class="col-sm-6 " >
+			
+				<div class="card border-dark mb-3">
+					<div class="card-header">						
+						Shipping information					
+					</div>
+					<div class="card-body text-dark">
+						<div>
+							<b>Ship to:</b>
+							<span th:if="${usePrimaryAddressAsDefault}">[[${customer.getAddress}]]
+							</span>
+							<span th:if="${!usePrimaryAddressAsDefault}">[[${defaultAddress}]]</span>
+							<a th:href="@{/address_book(redirect=checkout, selectedProduct = ${param.selectedProduct[0]})}" class="text-warning">[Choose another address]</a>
+						</div>
+						<div>
+							<b>Days to deliver:</b>
+							<span> [[${checkoutInfo.deliverDays}]] day(s)</span>
+						</div>
+						<div>
+							<b>Expected deliver date:</b>
+							<span>[[${#dates.format(checkoutInfo.getDeliverDate, 'E, dd MMM yyyy')}]]</span>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="card border-dark mb-3" >
+					<div class="card-header">						
+						Payment Method					
+					</div>
+					<div class="card-body text-dark">
+						<form th:action="@{/checkout/place_order}" method="post" th:if="${checkoutInfo.codSupported}">
+							<div>
+								<input type="hidden" name="selectedProduct" th:value="${selectedProduct}" />
+								<input type="radio" name="paymentMethod" value="COD" id="CODradio"/> Cash On Delivery (COD)
+								<button type="submit" class="btn btn-primary ms-3 d-none" id="CODPlaceOrderButton">Place order with COD</button>
+							</div>
+						</form>
+					</div>
+				</div>	
+				
+			</div>
+			
+			<div class="col-sm-6 ">
+				<div class="card border-dark mb-3" >
+					<div class="card-header">						
+						Order Summary				
+					</div>
+					<div class="card-body text-dark">
+						<th:block th:each="item,status : ${cartItems}">
+							<div class="row border-bottom p-2">
+								<div class="col-sm-1">[[${status.count}]]</div>
+								<div class="col-sm-4">
+									<img th:src="@{${item.product.getProductMainImagePath}}" class="img-fluid"
+										style="width: 150px; height: 150px;"/>
+								</div>
+								<div class="col-sm-7">
+									<a th:href="@{'/p/' + ${item.product.alias}}" th:title="${item.product.name}">
+									[[${item.product.shortName}]]
+									</a>
+									<div class="mt-2 d-flex flex-row flex-wrap">
+										<p>  
+											[[${item.quantity}]] x &nbsp; <span th:replace="fragments :: format_currency(${item.product.price})" ></span>
+										</p>
+										<p>
+											 &nbsp;= &nbsp;<span th:replace="fragments :: format_currency(${item.quantity} * ${item.product.price})"></span>
+										</p>
+										
+									</div>
+									<div class="d-flex flex-row flex-wrap">									
+										<p>Ship:</p>
+										&nbsp;<span th:replace="fragments :: format_currency(${item.shippingCost})"></span>
+									</div>
+								</div>
+							</div>
+						</th:block>
+						<div class="mt-2">
+							<div class="row">
+								<b  class="col-sm-5">Product Total:</b> 								
+								<div class="col-sm-5">
+									<span th:replace="fragments :: format_currency(${checkoutInfo.productTotal})"></span>
+								</div>
+							</div>
+							
+							<div class="row">
+								<b class="col-sm-5">Shipping Cost Total:</b> 
+								<div class="col-sm-5">
+									<span th:replace="fragments :: format_currency(${checkoutInfo.shippingCostTotal})"></span>
+								</div>
+							</div>
+							
+							<div class="row">
+								<b class="col-sm-5">Payment Total:</b> 
+								<div class="col-sm-5">
+									<b><span th:replace="fragments :: format_currency(${checkoutInfo.paymentTotal})"></span></b>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+
+		<div th:replace="navigation :: footer_menu"></div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+	
+	<script>
+		$(document).ready(function() {
+			$("#CODradio").on("click", function(){
+				$("#CODPlaceOrderButton").removeClass("d-none");
+			});
+		});
+	</script>
+	
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>
