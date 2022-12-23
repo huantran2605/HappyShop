@@ -22,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepository repo;
     
-    public void createOrder(Customer customer, Address address, List<CartItem> cartItems,
+    public Order createOrder(Customer customer, Address address, List<CartItem> cartItems,
             PaymentMethod paymentMethod, CheckoutInfo checkoutInfo) {
         Order newOrder  = new Order();
         
@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
             orderDetails.add(od);
         }
         
-        repo.save(newOrder);
+        return repo.save(newOrder);
     }
     
 }

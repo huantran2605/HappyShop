@@ -27,6 +27,12 @@ public class SettingServiceImpl implements SettingService{
         }
         return new EmailSettingBag(list);
     }
+    
+    public CurrencySettingBag getCurrencySetting(){
+        List<Setting> list = new ArrayList<>();
+        list = settingRepository.findByCategory(SettingCategory.CURRENCY);
+        return new CurrencySettingBag(list);
+    }
 
     public List<Setting> findByCategory(SettingCategory category) {
         return settingRepository.findByCategory(category);

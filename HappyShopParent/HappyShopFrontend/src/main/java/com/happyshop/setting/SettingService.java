@@ -11,4 +11,6 @@ public interface SettingService {
     EmailSettingBag getEmailSetting();
     
     List<Setting> findByCategory(SettingCategory category);
+    
+    CurrencySettingBag getCurrencySetting();
 }

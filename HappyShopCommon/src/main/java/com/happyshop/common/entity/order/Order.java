@@ -293,6 +293,31 @@ public class Order {
         setPostalCode(address.getPostalCode());
         setState(address.getState());      
     }
+    
+    @Transient
+    public String getShippingAddress() {
+        String address = "Full Name: " + firstName;
+
+        if (!lastName.isEmpty() && lastName != null)
+            address += " " + lastName;
+        if (!addressLine1.isEmpty() && addressLine1 != null)
+            address += ". Address: " + addressLine1;
+        if (addressLine2 != null && !addressLine2.isEmpty())
+            address += ", " + addressLine2;
+        if (!city.isEmpty() && city != null)
+            address += ", " + city;
+        if (!state.isEmpty() && state != null)
+            address += ", " + state;
+
+        address += ", " + country;
+        if (!postalCode.isEmpty() && postalCode != null)
+            address += ". Postal Code: " + postalCode;
+        if (!phoneNumber.isEmpty() && phoneNumber != null)
+            address += ". Phone number: " + phoneNumber;
+
+        return address;
+    }
+    
 
 }
 
