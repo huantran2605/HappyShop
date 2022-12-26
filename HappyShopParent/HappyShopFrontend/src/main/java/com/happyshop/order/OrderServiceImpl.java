@@ -24,17 +24,23 @@ public class OrderServiceImpl implements OrderService {
     
     public Order createOrder(Customer customer, Address address, List<CartItem> cartItems,
             PaymentMethod paymentMethod, CheckoutInfo checkoutInfo) {
-        Order newOrder  = new Order();
+        Order newOrder  = new Order();  
         
         newOrder.setCustomer(customer);
         if(address == null) {
             newOrder.copyAddressFromCustomer();
         }
-        else {
+        else {  
             newOrder.copyShippingAddress(address);
         }
-        newOrder.setOrderTime(new Date());
-        newOrder.setStatus(OrderStatus.NEW);
+        newOrder.setOrderTime(new Date()); 
+        if(paymentMethod.equals(PaymentMethod.PAYPAL)) {
+            newOrder.setStatus(OrderStatus.PAID);
+        }
+        else{
+            newOrder.setStatus(OrderStatus.NEW);
+        }
+        
         newOrder.setShippingCost(checkoutInfo.getShippingCostTotal());
         newOrder.setProductCost(checkoutInfo.getProductCost());
         newOrder.setSubtotal(checkoutInfo.getProductTotal());

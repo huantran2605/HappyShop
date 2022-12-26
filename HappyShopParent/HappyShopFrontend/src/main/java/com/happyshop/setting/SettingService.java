@@ -13,4 +13,8 @@ public interface SettingService {
     List<Setting> findByCategory(SettingCategory category);
     
     CurrencySettingBag getCurrencySetting();
+    
+    PaymentSettingBag getPaymentSetting();
+    
+    String getCurrencyCode();
 }

@@ -1,6 +1,13 @@
 decimalSeparator = decimalPointType == "COMMA" ? "," : "."
 thousandSeparator = thousandPointType == "COMMA" ? "," : ".";
 const productIdArray = [];
+window.onload = function() {
+  var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  for (var i = 0; i < checkboxes.length; i++) {  
+    checkboxes[i].checked = false;
+  }
+}
+
 $(document).ready(function(){
 	
 	$(".link_Minus").on("click", function(e){
@@ -139,7 +146,7 @@ function clearFormatNumber(numberString){
 }
 
 function ckeckboxSelectAll(){
-	$("#selectAll").on("click", function(){
+	$("#selectAll").on("change", function(){
 		if(this.checked){
 			$(".rowCheckbox").prop("checked", true);	
 			checkAllCheckbox();	
@@ -157,7 +164,7 @@ function ckeckboxSelectAll(){
 }
 
 function rowCheckbox(){
-	$(".rowCheckbox").on("click", function(){		
+	$(".rowCheckbox").on("change", function(){		
 		productId = parseInt($(this).attr("checkboxId"));
 		rowCheckbox = $("#checkbox" + productId);	
 		if(this.checked){

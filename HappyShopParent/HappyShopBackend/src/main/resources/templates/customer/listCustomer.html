@@ -20,6 +20,13 @@
 		<th:block th:if="${elementsCurrentPerPage > 0}">
 			<div th:replace="fragments :: search ('Customer')"></div>
 		</th:block>
+		<div class="d-flex justify-content-start">
+			<!-- export Csv -->
+			<a th:href="@{/customer/export/csv}" title="Export to CSV"
+				class="m-3 ms-0"> <i  
+				class="fa-sharp fa-solid fa-file-csv fa-2x fa-gray"></i>
+			</a>
+		</div>
 
 		<div class="full-details" th:if="${totalElement > 0}">
 			<table

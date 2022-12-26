@@ -84,7 +84,10 @@
 			<div th:each=" order: ${orders}" class="row">
 				<div class="">
 					<p>Id: [[${order.id}]]</p>
-					<p>Customer: [[${order.customer.getFullName}]]</p>
+					<a th:href="@{'/customer/detail/' + ${order.customer.id}}"
+									title="Detail customer" class="me-3 link-detail-customer">
+									[[${order.customer.getFullName}]] 
+					</a>
 					<p>Total: [[${order.total}]]</p>
 					<p>Status: [[${order.status}]]</p>
 				</div>
@@ -137,7 +140,7 @@
 				$(".link-detail-customer").on("click",function(e) {
 					e.preventDefault();
 					linkDetailUrl = $(this).attr("href");
-					$("#detailModalCustmer").modal("show").find(".modal-content").load(linkDetailUrl);
+					$("#detailModalCustomer").modal("show").find(".modal-content").load(linkDetailUrl);
 				});
 		}); 
 		$(document).ready(

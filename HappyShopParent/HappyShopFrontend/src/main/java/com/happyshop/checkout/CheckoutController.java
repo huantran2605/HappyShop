@@ -9,6 +9,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.happyshop.Utility;
 import com.happyshop.address.AddressService;
+import com.happyshop.checkout.paypal.PayPalApiException;
+import com.happyshop.checkout.paypal.PaypalService;
 import com.happyshop.common.entity.Address;
 import com.happyshop.common.entity.CartItem;
 import com.happyshop.common.entity.Customer;
@@ -37,6 +40,7 @@ import com.happyshop.order.OrderService;
 import com.happyshop.product.ProductService;
 import com.happyshop.setting.CurrencySettingBag;
 import com.happyshop.setting.EmailSettingBag;
+import com.happyshop.setting.PaymentSettingBag;
 import com.happyshop.setting.SettingService;
 import com.happyshop.shipping.ShippingRateService;
 import com.happyshop.shoppingCart.CartItemService;
@@ -52,13 +56,15 @@ public class CheckoutController {
     AddressService addressService;
     @Autowired
     ShippingRateService shippingService;
-    @Autowired
+    @Autowired  
     SettingService settingService;
     @Autowired
     OrderService orderService;
     @Autowired
     ProductService productService;
-    
+    @Autowired
+    PaypalService paypalService;
+      
     @RequestMapping("")
     public String viewCheckoutPage(@Param("selectedProduct") String selectedProduct,
             HttpServletRequest request, Model model) {
@@ -86,13 +92,20 @@ public class CheckoutController {
         
         CheckoutInfo checkoutInfo = checkoutService.prepareCheckout(selectedCartItems, sr);        
         loadCurrencySetting(request);
-              
+        
+        String currencyCode = settingService.getCurrencyCode();
+        PaymentSettingBag paymentSettings = settingService.getPaymentSetting();  
+        String paypalClientId = paymentSettings.getClientID();
+        
+        model.addAttribute("paypalClientId", paypalClientId);
+        model.addAttribute("currencyCode", currencyCode);
         model.addAttribute("checkoutInfo", checkoutInfo);
         model.addAttribute("defaultAddress", address);
         model.addAttribute("customer", customer);
         model.addAttribute("cartItems", selectedCartItems);
         model.addAttribute("selectedProduct", selectedProduct);
         model.addAttribute("usePrimaryAddressAsDefault", usePrimaryAddressAsDefault);
+              
         return "checkout/checkout";
     }
     
@@ -185,5 +198,29 @@ public class CheckoutController {
                 
         helper.setText(content, true);
         mailSender.send(message);    
+    }
+    
+    @PostMapping("/process_paypal_order")
+    public String processPaypalOrder(HttpServletRequest request, Model model
+            ,@RequestParam("selectedProduct") String selectedProduct)
+            throws UnsupportedEncodingException, MessagingException {
+        String orderId = request.getParameter("orderId");
+        String message = null;
+        String title = "Checkout Failure";
+        try {
+            if(paypalService.validateOrder(orderId)) {
+                return placeOrder(request, selectedProduct);
+            }
+            else {
+                title = "ERROR: Transaction could not be completed because order information is invalid.";
+            }
+            
+        } catch (PayPalApiException e) {
+            message = "ERROR: Transaction failed due to error: " + e.getMessage();
+        }
+        model.addAttribute("message", message);
+        model.addAttribute("title", title);
+        
+        return "message";
     }
 }

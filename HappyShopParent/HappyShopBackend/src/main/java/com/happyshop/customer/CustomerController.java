@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.entity.setting.Country;
+import com.happyshop.product.ProductCsvExporter;
 import com.happyshop.setting.SettingService;
 import com.happyshop.setting.country.CountryService;
 
@@ -159,6 +162,14 @@ public class CustomerController {
         re.addFlashAttribute("message", "Updated Customer successfully!");
         String emailPathSearch = customer.getEmail().split("@")[0];
         return "redirect:/customer/page/1?sortField=id&sortDir=asc&keyWord=" + emailPathSearch;
+    }
+    
+    @GetMapping("/export/csv")
+    public void exportCsv(HttpServletResponse response) throws IOException {
+        List<Customer> listCustomer = customerService.findAll();
+        CustomerCsvExporter customerCsvExporter = new CustomerCsvExporter();
+        customerCsvExporter.export(listCustomer, response);
+
     }
     
 }
