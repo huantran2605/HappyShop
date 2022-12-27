@@ -3,6 +3,7 @@ package com.happyshop;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.order.OrderDetail;
 import com.happyshop.common.entity.order.OrderStatus;
+import com.happyshop.common.entity.order.OrderTrack;
 import com.happyshop.common.entity.order.PaymentMethod;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.order.OrderRepository;
@@ -91,5 +93,35 @@ public class OrderRepositoryTests {
         
     }
     
+    @Test
+    public void updateOrderTracks() {
+        Order order = repo.findById(8).get();
+        OrderTrack orderTrack1 = new OrderTrack();
+        orderTrack1.setUpdatedTime(new Date());
+        orderTrack1.setNote(OrderStatus.PACKAGED.defaultDescription());
+        orderTrack1.setOrder(order);
+        orderTrack1.setStatus(OrderStatus.PACKAGED);
+        
+        OrderTrack orderTrack2 = new OrderTrack();
+        orderTrack2.setUpdatedTime(new Date());
+        orderTrack2.setNote(OrderStatus.DELIVERED.defaultDescription());
+        orderTrack2.setOrder(order);
+        orderTrack2.setStatus(OrderStatus.DELIVERED);
+        
+        OrderTrack orderTrack3 = new OrderTrack();
+        orderTrack3.setUpdatedTime(new Date());
+        orderTrack3.setNote(OrderStatus.PICKED.defaultDescription());
+        orderTrack3.setOrder(order);
+        orderTrack3.setStatus(OrderStatus.PICKED);
+        
+        List<OrderTrack> list = order.getOrderTracks();
+        list.add(orderTrack1);
+        list.add(orderTrack2);
+        list.add(orderTrack3);
+        
+        order.setOrderTracks(list);
+       
+        assertThat( repo.save(order).getOrderTracks()).hasSizeGreaterThan(0);
+    }
     
 }

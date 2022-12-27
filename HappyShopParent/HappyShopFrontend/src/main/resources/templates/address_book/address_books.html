@@ -4,10 +4,11 @@
 <head th:replace="fragments :: page_head('Your Address Book','none')"></head>
 <body>
 
-	<div class="container-fluid">
+	<div class="container-fluid" th:with="redirectedFromCheckoutPage 
+		= ${param.redirect != null && param.redirect[0] == 'checkout'}">
 		<div th:replace="navigation :: header_menu"></div>
 		<div th:replace="navigation :: search_nav"></div>
-		<h2 class="text-center" th:text="${param.redirect != null && param.redirect[0] == 'checkout'}
+		<h2 class="text-center" th:text="${redirectedFromCheckoutPage}
 			? 'Choose another address' : 'Your Address Book' ">		
 		</h2>
 		
@@ -17,7 +18,7 @@
 		
 		<div class="p-2">
 			<a th:unless="${param.redirect}" th:href="@{/address_book/new}" class="btn btn-primary">Add New Address</a>
-			<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" 
+			<a th:if="${redirectedFromCheckoutPage}" 
 				 th:href="@{/address_book/new(redirect=checkout
 					, selectedProduct=${param.selectedProduct[0]})}" 
 				class="btn btn-primary">Add New Address</a>
@@ -34,7 +35,7 @@
 							<th:block th:if="${!usePrimaryAddressAsDefault}">
 									<a th:unless="${param.redirect}" th:href="@{/address_book/update_default_address/0}">
 									[Set As Default]</a>
-									<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+									<a th:if="${redirectedFromCheckoutPage}"
 										 th:href="@{/address_book/update_default_address/0(redirect=checkout, selectedProduct=${param.selectedProduct[0]} )}">
 										[Choose]</a>
 									<a th:if="${param.redirect != null && param.redirect[0] == 'cart'}" 
@@ -42,7 +43,7 @@
 										[Set As Default]</a>
 								</th:block> 
 								<th:block th:if="${usePrimaryAddressAsDefault}">
-									<p class="text-danger" th:text="${param.redirect != null && param.redirect[0] == 'checkout'}
+									<p class="text-danger" th:text="${redirectedFromCheckoutPage}
 										? '[Currently choose]' : '[Default]' "></p>
 							</th:block> 
 						</div>
@@ -51,7 +52,7 @@
 									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>
 							</a> 
 							
-							<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" 
+							<a th:if="${redirectedFromCheckoutPage}" 
 								 th:href="@{/customer/customer_details(redirect=checkout
 										, selectedProduct=${param.selectedProduct[0]})}" 
 									id="update"
@@ -76,7 +77,7 @@
 							<div class="col-sm-8">
 								Address #[[${status.count} + 1]]  
 								<th:block th:if="${!address.isDefaultForShipping}">								
-										<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+										<a th:if="${redirectedFromCheckoutPage}"
 											th:href="@{'/address_book/update_default_address/' 
 											+ ${address.id}(redirect=checkout, selectedProduct=${param.selectedProduct[0]})}">[Choose]
 										</a>
@@ -90,7 +91,7 @@
 									+ ${address.id}}">[Set As Default]</a>
 								</th:block> 
 								<th:block th:if="${address.isDefaultForShipping}">
-									<p class="text-danger" th:text="${param.redirect != null && param.redirect[0] == 'checkout'}
+									<p class="text-danger" th:text="${redirectedFromCheckoutPage}
 										? '[Currently choose]' : '[Default]' "></p>
 								</th:block> 
 								
@@ -101,7 +102,7 @@
 									title="Update"> <i class="fa-solid fa-pen-to-square fa-red me-3"></i>	
 								</a>
 								
-								<a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" 
+								<a th:if="${redirectedFromCheckoutPage}" 
 									th:href="@{'address_book/update/' + ${address.id}(redirect=checkout
 										, selectedProduct=${param.selectedProduct[0]})}" 
 									id="update"

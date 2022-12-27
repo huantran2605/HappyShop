@@ -25,6 +25,12 @@
 				aria-selected="false">Shipping</button>
 		</li>
 		
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" data-bs-toggle="tab"
+				data-bs-target="#track" type="button" aria-controls="track"
+				aria-selected="false">Track</button>
+		</li>
+		
 	</ul>
 
 	<div class="tab-content" id="myTabContent">
@@ -275,7 +281,46 @@
 			</div>
 
 		</div>
+
+		<div class="tab-pane fade" id="track">
 		
+			<div class="full-details">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">Time</th>
+							<th scope="col">Status</th>
+							<th scope="col">Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="track : ${order.orderTracks}">
+							<td>[[${track.updatedTime}]]</td>
+							<td>[[${track.status}]]</td>
+							<td>[[${track.note}]]</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="less-details">
+				<th:block th:each="track : ${order.orderTracks}">					
+					<div>
+						[[${track.updatedTime}]]
+					</div>
+					<div>
+						<b>[[${track.status}]]</b>
+					</div>					
+					<div>
+						[[${track.note}]]
+					</div>
+					<hr />
+				</th:block>
+			</div>
+
+
+		</div>
+
 	</div>
 </div>
 

@@ -98,9 +98,8 @@ public class OrderController {
         model.addAttribute("elementsCurrentPerPage", pageOrder.getNumberOfElements());
         model.addAttribute("elementsPerPage", OrderService.SIZE_PAGE_ORDER);
         model.addAttribute("keyWord", keyWord);
-        model.addAttribute("moduleURL", "/order");
-        
-        loadCurrencySetting(request);
+        model.addAttribute("moduleURL", "/order");        
+        loadCurrencySetting(request);  
         return"order/listOrder";
     }
     
