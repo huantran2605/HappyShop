@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<div th:fragment="track" class="container-fluid">
+		<div id="trackList">
+			<th:block th:each=" track, status : ${order.orderTracks}">
+				<div class="row p-3 mt-3 border border-bottom"
+					th:with="isTrackWithStatusNew = ${track.status.toString() == 'NEW'}"
+					th:id="'rowTrack' + ${status.index}">
+					
+					<input type="hidden" name="trackId" th:value="${track.id}"
+						class="hiddenTrackId" />
+
+					<div class="col-1">
+						<span class="divTrackCount">[[${status.count}]]</span>
+						<a href="" class="fa-sharp fa-solid fa-trash fa-gray removeTrack"
+							th:if="${!isTrackWithStatusNew}"
+						 th:rowNumber="${status.index}"></a>
+					</div>
+
+					<div class="col-sm-10">
+						<div class="row">
+							<div class="col-sm-2">
+								<label for="">Time: </label>
+							</div>
+							<div class="col-sm-5">
+								<input type="datetime-local" name="trackDate"
+									th:value="${track.updatedTimeOnForm}" class="form-control"
+									th:readonly="${isTrackWithStatusNew}"
+									th:required="${!isTrackWithStatusNew}" />
+							</div>
+						</div>
+
+						<div class="row mt-3">
+							<div class="col-sm-2">
+								<label for="">Status: </label>
+							</div>
+							<div class="col-sm-5">
+								<th:block th:if="${isTrackWithStatusNew}">
+									<input type="hidden" name="trackStatus" value="NEW" />
+								</th:block>
+								<select name="trackStatus" class="form-control dropDownStatus"
+									required th:rowNumber="${status.index}"
+									th:disabled="${isTrackWithStatusNew}"
+									th:id="${isTrackWithStatusNew ? 'trackStatusOptions' : ''}">
+									<th:block
+										th:each="os : ${T(com.happyshop.common.entity.order.OrderStatus).values()}">
+										<option	th:value="${os}" th:text="${os}"
+											th:selected="${os.toString() == track.status.toString()}"
+											th:defaultDescription="${os.defaultDescription}" />
+									</th:block>
+								</select>
+							</div>
+						</div>
+
+						<div class="row mt-3">
+							<div class="col-sm-2">
+								<label for="">Notes: </label>
+							</div>
+							<div class="col-sm-5">
+								<textarea rows="2" class="form-control" name="trackNote"
+									th:id="'trackNote' + ${status.index}"
+									th:readonly="${isTrackWithStatusNew}" required>[[${track.note}]]</textarea>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</th:block>
+		</div>
+
+		<div class="mt-3">
+			<input type="button" class="btn btn-success" id="addTrack"
+				value="Add Track" />
+		</div>
+	</div>
+</body>
+</html>

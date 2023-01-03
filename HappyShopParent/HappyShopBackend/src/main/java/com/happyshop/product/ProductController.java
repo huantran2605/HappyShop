@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -71,7 +72,7 @@ public class ProductController {
             sort = Sort.by(sortField).ascending();
         else  sort = Sort.by(sortField).descending();  
         
-        org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNum - 1,
+        Pageable pageable = PageRequest.of(pageNum - 1,
                 ProductService.SIZE_PAGE_PRODUCT, sort);
         
         Page<Product> pageProduct = productService.findAll(pageable,keyWord,categoryID); 
@@ -97,13 +98,9 @@ public class ProductController {
         }
         model.addAttribute("listCategories", categoryService.showListCategory());
         
-        if(endCount >  pageProduct.getTotalElements()) {
-            endCount = pageProduct.getTotalElements();
-        }
-        
-        model.addAttribute("totalElement", pageProduct.getTotalElements());
         
         model.addAttribute("products", listProduct);
+        model.addAttribute("totalElement", pageProduct.getTotalElements());
         
         model.addAttribute("elementsCurrentPerPage", pageProduct.getNumberOfElements());
         model.addAttribute("elementsPerPage", ProductService.SIZE_PAGE_PRODUCT);

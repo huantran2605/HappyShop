@@ -45,7 +45,7 @@ public class WebSecurityConfig {
                 
             .antMatchers("/product/**").hasAnyAuthority("Admin", "Editor")           
             .antMatchers("/product/detail/**", "/customers/detail/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
-			.antMatchers("/customer/**", "/order/**").hasAnyAuthority("Admin", "Salesperson")
+			.antMatchers("/customer/**", "/order/**", "/get_shipping_cost").hasAnyAuthority("Admin", "Salesperson")
             .anyRequest().authenticated() 
 			.and()
 			.formLogin()
@@ -58,7 +58,8 @@ public class WebSecurityConfig {
 			.rememberMe()
 				.key("hfgeurhgebgb1236744jh2345er")
 				.tokenValiditySeconds( 5 * 24 * 60 * 60);
-
+		
+		  http.headers().frameOptions().sameOrigin();
 		return http.build();
 	}
 

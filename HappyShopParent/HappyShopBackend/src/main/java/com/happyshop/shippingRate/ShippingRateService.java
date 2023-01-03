@@ -27,4 +27,6 @@ public interface ShippingRateService {
     String isRateUnique (ShippingRate sr);
     
     void deleteById(Integer id) ;
+    
+    float calculateShippingCost(Integer productId, Integer countryId, String state)  throws ShippingRateNotFoundException;
 }

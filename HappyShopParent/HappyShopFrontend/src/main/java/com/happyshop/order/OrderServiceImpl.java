@@ -14,6 +14,7 @@ import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.order.OrderDetail;
 import com.happyshop.common.entity.order.OrderStatus;
+import com.happyshop.common.entity.order.OrderTrack;
 import com.happyshop.common.entity.order.PaymentMethod;
 import com.happyshop.common.entity.product.Product;
 
@@ -65,6 +66,15 @@ public class OrderServiceImpl implements OrderService {
             
             orderDetails.add(od);
         }
+        
+        List<OrderTrack> orderTracks = newOrder.getOrderTracks();
+        OrderTrack ot = new OrderTrack();
+        ot.setUpdatedTime(new Date());
+        ot.setStatus(OrderStatus.NEW);
+        ot.setOrder(newOrder);
+        ot.setNote(OrderStatus.NEW.defaultDescription());
+        orderTracks.add(ot);
+        newOrder.setOrderTracks(orderTracks);
         
         return repo.save(newOrder);
     }

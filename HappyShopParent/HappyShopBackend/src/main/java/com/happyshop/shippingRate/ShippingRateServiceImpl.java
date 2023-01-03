@@ -13,51 +13,57 @@ import org.springframework.stereotype.Service;
 import com.happyshop.common.entity.Brand;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.ShippingRate;
+import com.happyshop.common.entity.product.Product;
+import com.happyshop.product.ProductRepository;
 
 @Service
 public class ShippingRateServiceImpl implements ShippingRateService {
     @Autowired
-    ShippingRateRepository repo;
+    ShippingRateRepository shipRepo;
+    @Autowired
+    ProductRepository productRepo;
+    
+    private static final int DIM_DIVISOR = 319;
 
     @Override
     public List<ShippingRate> findAll() { 
-        return repo.findAll();
+        return shipRepo.findAll();
     }
     
     @Override   
     public Page<ShippingRate> findAll(Pageable pageable, String keyWord) {       
         if (!keyWord.isBlank()) {
-            return repo.findAllByKeyword(keyWord, pageable);  
+            return shipRepo.findAllByKeyword(keyWord, pageable);  
         }
-        return repo.findAll(pageable);
+        return shipRepo.findAll(pageable);
     }
 
     public void updateCODSupport(Integer id, boolean enabled) {
-        repo.updateCODSupport(id, enabled);
+        shipRepo.updateCODSupport(id, enabled);
     }
 
     public Optional<ShippingRate> findById(Integer id) {
-        return repo.findById(id);
+        return shipRepo.findById(id);
     }
 
     public <S extends ShippingRate> S save(S entity) {
-        return repo.save(entity);
+        return shipRepo.save(entity);
     }
 
     public ShippingRate findByCountryAndState(Integer countryId, String state) {
-        return repo.findByCountryAndState(countryId, state);
+        return shipRepo.findByCountryAndState(countryId, state);
     }
     
     
     
     public void deleteById(Integer id) {
-        repo.deleteById(id);
+        shipRepo.deleteById(id);
     }
 
     @Override
     public String isRateUnique (ShippingRate sr) {
         
-        ShippingRate rateInDb = repo.findByCountryAndState(sr.getCountry().getId(),
+        ShippingRate rateInDb = shipRepo.findByCountryAndState(sr.getCountry().getId(),
                 sr.getState());         
         if(sr.getId() == null) { //create new 
             if(rateInDb != null) {
@@ -82,5 +88,21 @@ public class ShippingRateServiceImpl implements ShippingRateService {
         }
     }  
     
+    public float calculateShippingCost(Integer productId, Integer countryId, String state) 
+            throws ShippingRateNotFoundException {
+        ShippingRate shippingRate = shipRepo.findByCountryAndState(countryId, state);
+        
+        if (shippingRate == null) {
+            throw new ShippingRateNotFoundException("No shipping rate found for the given "
+                    + "destination. You have to enter shipping cost manually.");
+        }
+        
+        Product product = productRepo.findById(productId).get();
+        
+        float dimWeight = (product.getLength() * product.getWidth() * product.getHeight()) / DIM_DIVISOR;
+        float finalWeight = product.getWeight() > dimWeight ? product.getWeight() : dimWeight;
+                
+        return finalWeight * shippingRate.getRate();
+    }
     
 }

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+	<div th:fragment="shipping" class="container" th:remove="tag">
+		<div class="row mb-3 mt-3">
+			<div class="col-sm-2">
+				<label for="">Deliver Days: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="number" min="1" class="form-control" th:field="*{deliverDays}" required>
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Expected Deliver Date: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="date" class="form-control" th:field="*{deliverDateOnForm}" required>
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">First Name: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text"  class="form-control"  th:field="*{firstName}" required>
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Last Name: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:field="*{lastName}" required />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Phone Number: </label>
+			</div>
+			<div class="col-sm-6">
+				 <input type="text" class="form-control" th:field="*{phoneNumber}" required />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Address Line 1: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:field="*{addressLine1}" required />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Address Line 2: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:field="*{addressLine2}" />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">City: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" id="city" th:field="*{city}" required />
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Country: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="hidden" name="countryName" id="countryName" th:value="${order.country}" />
+				<select name="" id="country"
+					class="form-control" required="required">
+					<th:block th:each="country : ${listCountry}">
+						<option th:value="${country.id}" th:selected="${order.country == country.name}">[[${country.name}]]</option>
+					</th:block>
+				</select>
+
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">State: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" th:field="*{state}" class="form-control"
+					list="stateList" id="stateField" maxlength="45" minlength="2"
+					required="required" />
+				<datalist id="stateList"></datalist>
+			</div>
+		</div>
+		
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Postal Code: </label>
+			</div>
+			<div class="col-sm-6">
+				 <input type="text" class="form-control" th:field="*{postalCode}" required />
+			</div>
+		</div>
+		
+
+		
+
+	</div>
+
+</body>
+</html>

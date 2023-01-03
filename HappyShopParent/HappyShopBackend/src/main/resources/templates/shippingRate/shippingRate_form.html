@@ -79,34 +79,11 @@
 
 	<script>
 		contextPath = "[[@{/}]]";
-		var dropDownCountry;
-		var stateList;
-		var stateField;
-		$(document).ready(function() {
-			dropDownCountry = $("#country");
-			stateList = $("#stateList");
-			stateField = $("#stateField");
-			dropDownCountry.on("change", function() {
-				stateField.val("").focus();
-				getStateListByCountry();
-			})
-		})
-		function getStateListByCountry() {
-			selectedCountryId = $("#country option:selected").val();
-			url = contextPath + "states/list_by_country/" + selectedCountryId;
-			$.get(url, function(data) {
-				stateList.empty();
-				$.each(data, function(index, state) {
-					$("<option>").val(state.name).text(state.name).appendTo(stateList);
-				});
-			})
-		}
-		
 	</script>
 
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
-	<script th:src="@{/js/common_form.js}"></script>
+	<script th:src="@{/js/common_form_country_state.js}"></script>
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

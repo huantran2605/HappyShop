@@ -92,6 +92,12 @@ public class OrderRepositoryTests {
         assertThat(savedOrder.getPaymentMethod()).isEqualTo(PaymentMethod.COD);      
         
     }
+    @Test
+    public void deleteOrder() {
+        
+        repo.deleteById(8);
+        
+    }
     
     @Test
     public void updateOrderTracks() {

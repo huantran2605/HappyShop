@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<head th:replace="fragments :: page_head('Update Order', 'none')"></head>
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- navigation -->
+		<div th:replace="navigation :: nav"></div>
+		
+		
+		<div class="text-center text-info">
+			<p class="fs-1">
+				Manage Orders | <span class="fs-2" >Update Order</span>
+			</p>
+		</div>
+		
+		<div>
+			<p th:if="${message != null}" class="text-center">[[${message}]]</p>
+		</div>
+		
+		<form th:action="@{/order/save}" 
+			method="post" name="save_form" th:object="${order}" onsubmit="return processFormBeforeSubmit();">
+			<div>
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" data-bs-toggle="tab"
+							data-bs-target="#overview" type="button" 
+							aria-controls="overview" aria-selected="true">Overview</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#products" type="button"
+							aria-controls="products" aria-selected="false">Products</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#shipping" type="button"
+							aria-controls="shipping" aria-selected="false">Shipping</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" data-bs-toggle="tab"
+							data-bs-target="#track" type="button"
+							aria-controls="track" aria-selected="false">Track</button>
+					</li>
+					
+				</ul>
+
+				<div class="tab-content" id="myTabContent">
+				
+					<div class="tab-pane fade show active" id="overview">
+						<div th:replace="order/order_overview :: overview"></div>
+					</div>
+					
+					<div class="tab-pane fade" id="shipping">
+						<div th:replace="order/order_shipping :: shipping"></div>
+					</div>
+					
+					<div class="tab-pane fade" id="products">
+						<div th:replace="order/order_product :: product"></div>
+					</div>
+					
+					<div class="tab-pane fade" id="track">
+						<div th:replace="order/order_track :: track"></div>
+					</div>
+					
+					
+				</div>
+			</div>
+
+  
+			<div class="text-center m-3">
+				<button type="submit" class="btn btn-primary me-3">Save</button>
+				<a th:href="@{/order/listOrder}"
+					class="btn btn-secondary">Cancel</a>
+			</div>
+		</form>
+
+	</div>
+	
+	<div th:replace="fragments :: footer"></div>
+	<!-- modal -->
+	<div th:replace="modal_fragments :: modal"></div>  
+	<div th:replace="order/add_product_modal :: content"></div>  
+	<script th:src="@{/js/common_form.js}"></script>
+	<script th:src="@{/js/common_form_country_state.js}"></script>
+	<script th:src="@{/js/jquery.number.min.js}"></script>
+	<script th:src="@{/js/order_form_overview_products.js}"></script>
+	<script th:src="@{/js/order_form_add_product.js}"></script>
+	<script th:src="@{/js/order_form_track.js}"></script>
+	<script>	
+		contextPath = "[[@{/}]]";  
+		csrfHeaderName = "[[${_csrf.headerName}]]";
+		csrfValue = "[[${_csrf.token}]]";
+		
+		//remove product
+		$(document).ready(function(){
+			checkRemoveProductIcon();//this function at /js/order_form_add_product.js
+			$("#productList").on("click",".removeProduct",function(e){ 
+				e.preventDefault();
+				rowNumber = $(this).attr("rowNumber");
+				$("#row" + rowNumber).remove();
+				 updateOrderAmounts();
+				updateDivCount(); 
+			});			
+		});
+		
+		function updateDivCount(){
+			count = 1;
+			$(".divCount").each(function(){
+				$(this).text(count);
+				count++;
+			})
+			checkRemoveProductIcon();	
+		}
+		
+	</script>
+	
+	
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

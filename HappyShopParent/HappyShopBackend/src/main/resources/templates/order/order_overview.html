@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+	<div th:fragment="overview" class="container" th:remove="tag">
+		<div class="row mb-3 mt-3">
+			<div class="col-sm-2">
+				<label for="">Order ID: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" readonly class="form-control" th:field="*{id}">
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Customer: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="hidden" th:field="${order.customer}" />
+				<input type="text" readonly class="form-control" th:value="${order.customer.getFullName}">
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Product Cost: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" id="productCost" required class="form-control" th:field="*{productCost}">
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Sub total: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" id="subtotal" required  class="form-control" th:field="*{subtotal}">
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Shipping cost: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" id="shippingCost" required class="form-control" th:field="*{shippingCost}">
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Tax: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" id="tax" required class="form-control" th:field="*{tax}">
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Total: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" id="orderTotal" required class="form-control" th:field="*{total}">
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Payment Method: </label>
+			</div>
+			<div class="col-sm-6">
+				<select class="form-control" th:field="*{paymentMethod}">
+					<th:block th:each="pm : ${T(com.happyshop.common.entity.order.PaymentMethod).values()}">
+						<option th:value="${pm}">[[${pm}]]</option>
+					</th:block>
+				</select>
+			</div>
+		</div>
+		
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Status: </label>
+			</div>
+			<div class="col-sm-6">
+				<select class="form-control" th:field="*{status}">
+					<th:block
+						th:each="status : ${T(com.happyshop.common.entity.order.OrderStatus).values()}">
+						<option th:value="${status}">[[${status}]]</option>
+					</th:block>
+				</select>
+			</div>
+		</div>
+
+		
+
+	</div>
+
+</body>
+</html>

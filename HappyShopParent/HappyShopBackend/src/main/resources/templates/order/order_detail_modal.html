@@ -130,8 +130,7 @@
 					<label for="">Order Date:</label>
 				</div>
 				<div class="col-sm-6">
-					<input type="text" class="form-control"
-						th:value="${order.orderTime}" readonly />
+					<div th:replace="fragments :: format_time(${order.orderTime})"></div>	
 				</div>
 			</div>
 			
@@ -160,7 +159,9 @@
 								</span>
 							</p>
 						</div>
-						<p>Shipping Cost: [[${oD.shippingCost}]]</p>
+						<div class="d-flex flex-row">
+							<p>Shipping Cost: &nbsp;<span th:replace="fragments :: format_currency(${oD.shippingCost})"></span></p>
+						</div>
 					</div>
 				</div>
 			</th:block>
@@ -295,7 +296,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="track : ${order.orderTracks}">
-							<td>[[${track.updatedTime}]]</td>
+							<td><div th:replace="fragments :: format_time(${track.updatedTime})"></div></td>
 							<td>[[${track.status}]]</td>
 							<td>[[${track.note}]]</td>
 						</tr>

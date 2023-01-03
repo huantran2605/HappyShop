@@ -1,5 +1,7 @@
 package com.happyshop.common.entity.order;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -70,7 +72,7 @@ public class Order {
     private float shippingCost;
     private float productCost;
     private float subtotal;
-    private float tax;
+    private float tax;      
     private float total;
     
     private int deliverDays;
@@ -86,11 +88,11 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
     
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("updatedTime ASC")
     private List<OrderTrack> orderTracks = new ArrayList<>();
     
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderDetail> orderDetails = new HashSet<>();
     //-----------
     public Integer getId() {
@@ -336,6 +338,11 @@ public class Order {
         return address;
     }
     
+    @Transient
+    public String getDeliverDateOnForm() {
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormatter.format(this.deliverDate);
+    }
 
 }
 

@@ -39,7 +39,6 @@ public class SettingController {
             model.addAttribute(setting.getKey(), setting.getValue());
         }
         
-        
         return "setting/settings";
     }
     

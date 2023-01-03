@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<div th:fragment="product" class="container-fluid">
+		<div id="productList">
+			<th:block th:each=" oD, status : ${order.orderDetails}">
+				<div class="row p-3 mt-3 border border-bottom" th:id="'row' + ${status.index}"
+					th:with="product = ${oD.product}">
+					<input type="hidden" name="detailId" th:value="${oD.id}"/>
+					<input type="hidden" class="hiddenProductId" name="productId"
+						th:value="${product.id}" />
+					<div class="col-1"> 
+						<span class="divCount">[[${status.count}]]</span>
+						<a href="" class="fa-sharp fa-solid fa-trash fa-gray removeProduct" th:rowNumber="${status.index}"></a>
+					</div>
+					<div class="col-3">
+						<img th:src="@{${product.getProductMainImagePath}}"
+							class="img-fluid" width="150" />
+					</div>
+					<div class="m-1">
+						<b th:title="${product.name}">[[${product.shortName}]]</b>
+					</div>
+					<div class="form-group row mt-3">
+						<label class="col-sm-2">Product Cost:</label>
+						<div class="col-sm-3">
+							<input class="form-control cost-input"
+								name="productDetailCost"
+								th:rowNumber="${status.index}" type="text"
+								th:value="${oD.productCost}">
+						</div>
+					</div>
+					<div class="form-group row mt-3">
+						<label class="col-sm-2">Quantity:</label>
+						<div class="col-sm-3">
+							<input class="form-control quantity-input" type="number"
+								name="productQuantity"
+								th:rowNumber="${status.index}"
+								th:maxQuantity="${product.quantity}" min="1"
+								th:value="${oD.quantity}" th:id="'quantity' + ${status.index} ">
+							<small th:id="'warning' + ${status.index}" class="text-warning"></small>
+						</div>
+					</div>
+					<div class="form-group row mt-3">
+						<label class="col-sm-2">Unit Price:</label>
+						<div class="col-sm-3">
+							<input class="form-control price-input"
+								name="productPrice"
+								th:id="'unitPrice' + ${status.index}"
+								th:rowNumber="${status.index}" type="text"
+								th:value="${oD.unitPrice}">
+						</div>
+					</div>
+					<div class="form-group row mt-3">
+						<label class="col-sm-2">Sub Total:</label>
+						<div class="col-sm-3">
+							<input class="form-control subtotal-output"
+								name="productSubTotal"
+								th:rowNumber="${status.index}"
+								th:id="'subTotal' + ${status.index}" readonly type="text"
+								th:value="${oD.subtotal}">
+						</div>
+					</div>
+					<div class="form-group row mt-3">
+						<label class="col-sm-2">Shipping Cost:</label>
+						<div class="col-sm-3">
+							<input class="form-control ship-input"
+								name="productShipCost"
+								th:rowNumber="${status.index}" type="text"
+								th:value="${oD.shippingCost}">
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+		
+		<div class="mt-3">
+			<a th:href="@{/order/search_product}" class="btn btn-success"
+				id="linkAddProduct">Add Product</a>
+		</div>
+	</div>
+</body>
+</html>
