@@ -8,6 +8,11 @@
 	color: gray;
 }
 
+.fa-green{
+	color: green;
+}
+
+
 
 @media screen and (max-width: 576px){
 	/* small screen */

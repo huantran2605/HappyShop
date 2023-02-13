@@ -45,52 +45,53 @@
 						readonly />
 				</div>
 			</div>
-
-			<div class="row mb-3 ">
-				<div class="col-sm-2">
-					<label for="">Customer:</label>
+			<th:block th:if="${visibleForAdminOrSalesperson}">
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Customer:</label>
+					</div>
+					<div class="col-sm-6">
+						<input type="text" class="form-control"
+							th:value="${order.customer.getFullName}" readonly />
+					</div>
 				</div>
-				<div class="col-sm-6">
-					<input type="text" class="form-control"
-						th:value="${order.customer.getFullName}" readonly />
+	
+				<div class="row mb-3">
+					<div class="col-sm-2">
+						<label for="">Product Cost: </label>
+					</div>
+					<div class="col-sm-6">
+						<div th:replace="fragments :: format_currency_input(${order.productCost})"></div>
+					</div>
 				</div>
-			</div>
-
-			<div class="row mb-3">
-				<div class="col-sm-2">
-					<label for="">Product Cost: </label>
+	
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Subtotal:</label>
+					</div>
+					<div class="col-sm-6">
+						<div th:replace="fragments :: format_currency_input(${order.subtotal})"></div>
+					</div>
 				</div>
-				<div class="col-sm-6">
-					<div th:replace="fragments :: format_currency_input(${order.productCost})"></div>
+				
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Shipping Cost:</label>
+					</div>
+					<div class="col-sm-6">
+						<div th:replace="fragments :: format_currency_input(${order.shippingCost})"></div>
+					</div>
 				</div>
-			</div>
-
-			<div class="row mb-3 ">
-				<div class="col-sm-2">
-					<label for="">Subtotal:</label>
+				
+				<div class="row mb-3 ">
+					<div class="col-sm-2">
+						<label for="">Tax:</label>
+					</div>
+					<div class="col-sm-6">
+						<div th:replace="fragments :: format_currency_input(${order.tax})"></div>
+					</div>
 				</div>
-				<div class="col-sm-6">
-					<div th:replace="fragments :: format_currency_input(${order.subtotal})"></div>
-				</div>
-			</div>
-			
-			<div class="row mb-3 ">
-				<div class="col-sm-2">
-					<label for="">Shipping Cost:</label>
-				</div>
-				<div class="col-sm-6">
-					<div th:replace="fragments :: format_currency_input(${order.shippingCost})"></div>
-				</div>
-			</div>
-			
-			<div class="row mb-3 ">
-				<div class="col-sm-2">
-					<label for="">Tax:</label>
-				</div>
-				<div class="col-sm-6">
-					<div th:replace="fragments :: format_currency_input(${order.tax})"></div>
-				</div>
-			</div>
+			</th:block>
 			
 			<div class="row mb-3 ">
 				<div class="col-sm-2">
@@ -101,9 +102,11 @@
 				</div>
 			</div>
 			
-			<div>
-				<p class="text-info">Total = Subtotal + Shipping Cost + Tax</p>
-			</div>
+			<th:block th:if="${visibleForAdminOrSalesperson}">
+				<div>
+					<p class="text-info">Total = Subtotal + Shipping Cost + Tax</p>
+				</div>
+			</th:block>
 			
 			<div class="row mb-3 ">
 				<div class="col-sm-2">
@@ -148,20 +151,22 @@
 					</div>
 					<div class="col-sm-8">
 						<p><b>[[${oD.product.shortName}]]</b></p>
-						<p>Product Cost: [[${oD.productCost}]]</p>
-						<div class="d-flex flex-row">
-							<p>
-								<span> Subtotal: [[${oD.quantity}]] X &nbsp; <span
-									th:replace="fragments :: format_currency(${oD.unitPrice})">
-								</span> &nbsp; =
-								</span>  &nbsp; <span
-									th:replace="fragments :: format_currency(${oD.quantity} * ${oD.unitPrice})">
-								</span>
-							</p>
-						</div>
-						<div class="d-flex flex-row">
-							<p>Shipping Cost: &nbsp;<span th:replace="fragments :: format_currency(${oD.shippingCost})"></span></p>
-						</div>
+						<th:block th:if="${visibleForAdminOrSalesperson}">
+							<p>Product Cost: [[${oD.productCost}]]</p>
+							<div class="d-flex flex-row">
+								<p>
+									<span> Subtotal: [[${oD.quantity}]] X &nbsp; <span
+										th:replace="fragments :: format_currency(${oD.unitPrice})">
+									</span> &nbsp; =
+									</span>  &nbsp; <span
+										th:replace="fragments :: format_currency(${oD.quantity} * ${oD.unitPrice})">
+									</span>
+								</p>
+							</div>
+							<div class="d-flex flex-row">
+								<p>Shipping Cost: &nbsp;<span th:replace="fragments :: format_currency(${oD.shippingCost})"></span></p>
+							</div>
+						</th:block>
 					</div>
 				</div>
 			</th:block>

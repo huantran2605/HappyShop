@@ -92,7 +92,7 @@
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
 					class="nav-link" href="#">Sale Report</a></li>
 				<li class="nav-item"
-					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a
+					sec:authorize="hasAnyAuthority('Admin','Salesperson', 'Shipper')"><a
 					class="nav-link" th:href="@{/order/listOrder}">Orders</a></li>
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a

@@ -343,6 +343,70 @@ public class Order {
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormatter.format(this.deliverDate);
     }
+    
+    @Transient
+    public String getRecipientName() {
+        String name = firstName;
+        if (!lastName.isEmpty() && lastName != null) {
+            name += " " + lastName;
+        }
+        return name;
+    }
+    
+    @Transient
+    public String getRecipientAddress() {
+        String address = "";
 
+        if (!addressLine1.isEmpty() && addressLine1 != null)
+            address += ". Address: " + addressLine1;
+        if (addressLine2 != null && !addressLine2.isEmpty())
+            address += ", " + addressLine2;
+        if (!city.isEmpty() && city != null)
+            address += ", " + city;
+        if (!state.isEmpty() && state != null)
+            address += ", " + state;
+
+        address += ", " + country;
+        if (!postalCode.isEmpty() && postalCode != null)
+            address += ". Postal Code: " + postalCode;
+
+        return address;
+    }
+    
+    @Transient
+    public boolean isCOD() {
+        if(!paymentMethod.equals(PaymentMethod.COD)) {
+            return false; 
+        }
+        return true;
+    }
+    
+    @Transient
+    public boolean isPicked() {
+        return hasStatus(OrderStatus.PICKED);
+    }
+    @Transient
+    public boolean isShipping() {
+        return hasStatus(OrderStatus.SHIPPING);
+    }
+    @Transient
+    public boolean isDelivered() {
+        return hasStatus(OrderStatus.DELIVERED);
+    }    
+    @Transient
+    public boolean isReturned() {
+        return hasStatus(OrderStatus.RETURNED);
+    }  
+    
+    
+    public boolean hasStatus (OrderStatus status) {
+        for (OrderTrack orderTrack : orderTracks) {
+            if(orderTrack.getStatus().equals(status)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,7 @@ import com.happyshop.common.entity.setting.Setting;
 import com.happyshop.common.entity.setting.SettingCategory;
 import com.happyshop.order.OrderService;
 import com.happyshop.product.ProductService;
+import com.happyshop.security.UserDetailsClass;
 import com.happyshop.setting.CurrencyService;
 import com.happyshop.setting.SettingService;
 import com.happyshop.setting.country.CountryService;
@@ -65,7 +67,9 @@ public class OrderController {
             @Param("sortField") String sortField,
             @Param("sortDir") String sortDir,
             @Param("keyWord") String keyWord,          
-            Model model, HttpServletRequest request) {
+            Model model, HttpServletRequest request,
+            @AuthenticationPrincipal UserDetailsClass loggedUser ) {
+        
         //sort
         Sort sort = null;
         if(sortField.equals("destination")) {
@@ -111,7 +115,12 @@ public class OrderController {
         model.addAttribute("elementsPerPage", OrderService.SIZE_PAGE_ORDER);
         model.addAttribute("keyWord", keyWord);
         model.addAttribute("moduleURL", "/order");        
-        loadCurrencySetting(request);  
+        loadCurrencySetting(request); 
+        
+        if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Salesperson") && loggedUser.hasRole("Shipper")) {
+            return "order/order_shippers";
+        }
+        
         return"order/listOrder";
     }
     
@@ -125,12 +134,19 @@ public class OrderController {
     
     @GetMapping("detail/{id}")
     private String detailOrder(@PathVariable("id") Integer  id,            
-            Model model, RedirectAttributes re, HttpServletRequest request) {
+            Model model, RedirectAttributes re, HttpServletRequest request,
+            @AuthenticationPrincipal UserDetailsClass loggedUser) {
         Optional<Order> order = orderService.findById(id);
         if (order.isEmpty()) {
             re.addFlashAttribute("message", "The order is not existed!");
             return defaultRedirectURL;
         } else {
+            boolean visibleForAdminOrSalesperson = false;
+            if(loggedUser.hasRole("Admin") || loggedUser.hasRole("Salesperson")  ) {
+                visibleForAdminOrSalesperson = true;
+            }
+            System.out.println(visibleForAdminOrSalesperson);
+            model.addAttribute("visibleForAdminOrSalesperson", visibleForAdminOrSalesperson); 
             model.addAttribute("order", order.get()); 
             Set<OrderDetail> orderDetails = order.get().getOrderDetails();
             model.addAttribute("orderDetails", orderDetails); 

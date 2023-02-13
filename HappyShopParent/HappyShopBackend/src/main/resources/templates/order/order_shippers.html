@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="fragments :: page_head('List Order','none')">
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- navigation -->
+		<div th:replace="navigation :: nav"></div>
+
+		<div class="text-center text-info">
+			<p class="fs-1">Manage Orders(Shippers)</p>
+		</div>
+		<div class="alert alert-primary" th:if="${message != null}"
+			role="alert">
+			<strong>[[${message}]]</strong>
+		</div>
+
+		<!-- search-->
+		<th:block th:if="${elementsCurrentPerPage > 0}">
+			<div th:replace="fragments :: search ('Order')"></div>
+		</th:block>
+
+		<div th:each=" order: ${orders}" class="row">
+			<div class="col">
+				<div class="card border-dark mb-3"
+					th:classappend="${usePrimaryAddressAsDefault} ? 'bg-warning' : ''">
+					<div class="card-header row">
+						<div class="col">
+							<p>Order Id #[[${order.id}]]</p>  
+						</div>
+						<div class="col d-flex justify-content-end">
+							<a th:href="@{'/order/detail/' + ${order.id}}"
+									title="Detail order" class="me-3 link-detail-order"> <i
+									class="fa-sharp fa-solid fa-circle-info"></i>
+							</a>
+						</div>
+					</div>
+					<div class="card-body">
+						<div>
+							<i class="fa-sharp fa-solid fa-user"></i>
+							<b>[[${order.RecipientName}]]</b>
+						</div>
+						<div>
+							<i class="fa-sharp fa-solid fa-house"></i>
+							[[${order.RecipientAddress}]]
+						</div>
+						<div>
+							<i class="fa-sharp fa-solid fa-phone"></i>
+							[[${order.phoneNumber}]]
+						</div>
+						<div th:if="${order.isCOD}">
+							<div class="d-flex flex-row"> 
+								COD: &nbsp;
+								<b><div th:replace="fragments :: format_currency(${order.total})"></div></b>
+							</div> 
+						</div>
+						<div class="row mt-3">
+							<div class="col">
+								<th:block th:if="${order.Picked}">
+									<i class="fa-sharp fa-solid  fa-people-carry fa-green fa-2x"></i>
+								</th:block>
+								<th:block th:unless="${order.Picked}">
+									<i class="fa-sharp fa-solid  fa-people-carry fa-gray fa-2x"></i>
+								</th:block>
+							</div>
+							<div class="col">
+								<th:block th:if="${order.Shipping}">
+									<i class="fa-sharp fa-solid fa-truck-fast fa-green fa-2x"></i>
+								</th:block>
+								<th:block th:unless="${order.Shipping}">
+									<i class="fa-sharp fa-solid fa-truck-fast fa-gray fa-2x"></i>
+								</th:block>
+							</div>
+							<div class="col">
+								<th:block th:if="${order.Delivered}">
+									<i class="fa-sharp fa-solid fa-box-open fa-green fa-2x"></i>
+								</th:block>
+								<th:block th:unless="${order.Delivered}">
+									<i class="fa-sharp fa-solid fa-box-open fa-gray fa-2x"></i>
+								</th:block>
+							</div>
+							<div class="col">
+								<th:block th:if="${order.Returned}">
+									<i class="fa-sharp fa-solid fa-arrow-rotate-left fa-green fa-2x"></i>
+								</th:block>
+								<th:block th:unless="${order.Returned}">
+									<i class="fa-sharp fa-solid fa-arrow-rotate-left fa-gray fa-2x"></i>
+								</th:block>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- modal -->
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+
+		<div class="modal fade" id="detailModalCustomer">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="detailModalOrder">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+
+		<div th:replace="fragments :: countElement('Order')"></div>
+		<!-- pagination -->
+		<div th:replace="fragments :: pagination()"></div>
+		<!-- footer -->
+		<div th:replace="fragments :: footer"></div>
+
+		<script>
+			$(document).ready(
+					function() {
+						$("[name='keyWord']").attr("placeholder", "Type #number to search by Order ID");
+						$(".link-detail-order").on(
+								"click",
+								function(e) {
+									e.preventDefault();
+									linkDetailUrl = $(this).attr("href");
+									$("#detailModalOrder").modal("show").find(
+											".modal-content").load(
+											linkDetailUrl);
+								});
+					});
+		</script>
+		<script th:src="@{/js/common_form.js}"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+			integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+			integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+			crossorigin="anonymous"></script>
+</body>
+</html>
