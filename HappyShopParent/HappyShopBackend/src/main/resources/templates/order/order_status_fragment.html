@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+	<div th:fragment="content(statusVar, statusName, iconName)" class="col">
+		<th:block th:if="${statusVar}">
+			<i th:class="'fa-sharp fa-solid ' + ${iconName}   +' fa-green fa-2x'"></i>
+		</th:block>
+		<th:block th:unless="${statusVar}">
+			<a
+				th:class="'fa-sharp fa-solid '+  ${iconName} + ' fa-gray fa-2x linkUpdateStatus'"
+				th:orderId="${order.id}" th:status="${statusName}"
+				th:id="'link' + ${statusName} + ${order.id}"
+				th:href="@{'/order_shippers/update/' + ${order.id} + '/' + ${statusName}}">
+			</a>
+		</th:block>
+	</div>
+				
+
+
+</body>
+</html>

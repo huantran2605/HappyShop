@@ -55,41 +55,12 @@
 								<b><div th:replace="fragments :: format_currency(${order.total})"></div></b>
 							</div> 
 						</div>
-						<div class="row mt-3">
-							<div class="col">
-								<th:block th:if="${order.Picked}">
-									<i class="fa-sharp fa-solid  fa-people-carry fa-green fa-2x"></i>
-								</th:block>
-								<th:block th:unless="${order.Picked}">
-									<i class="fa-sharp fa-solid  fa-people-carry fa-gray fa-2x"></i>
-								</th:block>
-							</div>
-							<div class="col">
-								<th:block th:if="${order.Shipping}">
-									<i class="fa-sharp fa-solid fa-truck-fast fa-green fa-2x"></i>
-								</th:block>
-								<th:block th:unless="${order.Shipping}">
-									<i class="fa-sharp fa-solid fa-truck-fast fa-gray fa-2x"></i>
-								</th:block>
-							</div>
-							<div class="col">
-								<th:block th:if="${order.Delivered}">
-									<i class="fa-sharp fa-solid fa-box-open fa-green fa-2x"></i>
-								</th:block>
-								<th:block th:unless="${order.Delivered}">
-									<i class="fa-sharp fa-solid fa-box-open fa-gray fa-2x"></i>
-								</th:block>
-							</div>
-							<div class="col">
-								<th:block th:if="${order.Returned}">
-									<i class="fa-sharp fa-solid fa-arrow-rotate-left fa-green fa-2x"></i>
-								</th:block>
-								<th:block th:unless="${order.Returned}">
-									<i class="fa-sharp fa-solid fa-arrow-rotate-left fa-gray fa-2x"></i>
-								</th:block>
-							</div>
-						</div>
-						
+						<div class="row mt-3">							
+							<div th:replace="order/order_status_fragment :: content(${order.Picked}, 'PICKED', 'fa-people-carry')"></div>
+							<div th:replace="order/order_status_fragment :: content(${order.Shipping}, 'SHIPPING', 'fa-truck-fast')"></div>
+							<div th:replace="order/order_status_fragment :: content(${order.Delivered}, 'DELIVERED', 'fa-box-open')"></div>
+							<div th:replace="order/order_status_fragment :: content(${order.Returned}, 'RETURNED', 'fa-arrow-rotate-left')"></div>						
+						</div>				
 					</div>
 				</div>
 			</div>
@@ -97,13 +68,7 @@
 
 		<!-- modal -->
 		<div th:replace="modal_fragments :: confirmationModal"></div>
-
-		<div class="modal fade" id="detailModalCustomer">
-			<div class="modal-dialog modal-xl">
-				<div class="modal-content"></div>
-			</div>
-		</div>
-
+		<div th:replace="modal_fragments :: modal"></div>
 		<div class="modal fade" id="detailModalOrder">
 			<div class="modal-dialog modal-xl">
 				<div class="modal-content"></div>
@@ -117,6 +82,8 @@
 		<div th:replace="fragments :: footer"></div>
 
 		<script>
+			csrfHeaderName = "[[${_csrf.headerName}]]";
+			csrfValue = "[[${_csrf.token}]]";
 			$(document).ready(
 					function() {
 						$("[name='keyWord']").attr("placeholder", "Type #number to search by Order ID");
@@ -132,6 +99,7 @@
 					});
 		</script>
 		<script th:src="@{/js/common_form.js}"></script>
+		<script th:src="@{/js/order_shippers.js}"></script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 			integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

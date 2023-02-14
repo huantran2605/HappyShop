@@ -17,4 +17,6 @@ public interface OrderService {
     <S extends Order> S save(S entity);
     
     void deleteById(Integer id);
+    
+    void updateStatus(Integer orderId, String status);
 }

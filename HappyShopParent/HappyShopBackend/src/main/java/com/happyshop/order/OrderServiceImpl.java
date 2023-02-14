@@ -1,5 +1,7 @@
 package com.happyshop.order;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.order.Order;
+import com.happyshop.common.entity.order.OrderStatus;
+import com.happyshop.common.entity.order.OrderTrack;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -34,4 +38,23 @@ public class OrderServiceImpl implements OrderService {
         repo.deleteById(id);
     }
        
+    public void updateStatus(Integer orderId, String status) {
+        Order orderInDB = repo.findById(orderId).get();
+        OrderStatus statusToUpdate = OrderStatus.valueOf(status);
+        if(!orderInDB.hasStatus(statusToUpdate)) {
+            List<OrderTrack> tracks =  orderInDB.getOrderTracks();
+            
+            OrderTrack newTrack = new OrderTrack();
+            newTrack.setOrder(orderInDB);
+            newTrack.setStatus(statusToUpdate);
+            newTrack.setUpdatedTime(new Date());
+            newTrack.setNote(statusToUpdate.defaultDescription());
+            
+            tracks.add(newTrack);
+            
+            orderInDB.setStatus(statusToUpdate);
+            
+            repo.save(orderInDB);          
+        }
+    }
 }
