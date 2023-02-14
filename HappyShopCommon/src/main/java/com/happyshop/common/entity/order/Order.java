@@ -397,7 +397,10 @@ public class Order {
     public boolean isReturned() {
         return hasStatus(OrderStatus.RETURNED);
     }  
-    
+    @Transient
+    public boolean isReturnRequested() {
+        return hasStatus(OrderStatus.RETURN_REQUESTED);
+    }  
     
     public boolean hasStatus (OrderStatus status) {
         for (OrderTrack orderTrack : orderTracks) {
@@ -408,5 +411,16 @@ public class Order {
         
         return false;
     }
+    
+    @Transient
+    public List<String> getProductNames() {
+        List<String> names = new ArrayList<>();
+        for (OrderDetail detail : orderDetails) {
+            names.add(detail.getProduct().shortName());
+        }
+        
+        return names;
+    }  
+    
 }
 

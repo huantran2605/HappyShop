@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: page_head('My orders','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		
+		<h2 class="text-center"> My Orders		
+		</h2>
+		
+		<div class="row">
+			<div class="col-6 d-flex justify-content-start ">
+				<form
+					th:action="@{${moduleURL} +'/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+					class="form-inline ">
+					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+						type="hidden" name="sortDir" th:value="${sortDir}" /> <input
+						class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
+						type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success m-3 ms-0" type="submit">
+						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+					</button>
+					<a th:href="@{${moduleURL}}"
+						class="btn btn-outline-success m-3 "> <i
+						class="fa-sharp fa-solid fa-eraser"></i>
+					</a>
+
+				</form>
+			</div>
+		</div>
+		
+		<div class="full-details" th:if="${totalElement > 0}">
+			<table
+				class="table table-active table-striped table-inverse
+				table-hover table-responsive mt-4 ">
+				<thead class="thead-inverse ">
+					<tr>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('orderTime', 'Order Time')"></th>
+						<th>Products</th>
+						<th th:replace="fragments :: column_link('total', 'Total')"></th>
+						<th th:replace="fragments :: column_link('status', 'Status')"></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each=" order: ${orders}">
+						<td scope="row" th:text="${order.id}"></td>						
+						<td>	
+							<div th:replace="fragments :: format_time(${order.orderTime})"></div>						
+						</td>
+
+						<td>
+							<ul>
+								<th:block th:each=" oD: ${order.orderDetails}">
+									<li>
+										<a th:href="@{'/p/' + ${oD.product.alias}}" th:title="${oD.product.name}">
+										[[${oD.product.shortName}]]
+										</a>
+									</li>
+								</th:block>
+							</ul>
+						</td>
+
+						<td>
+							<div th:replace="fragments :: format_currency(${order.total})"></div>
+						</td>
+						<td th:text="${order.status}"></td>
+						<td>
+							<div class="float-start">
+								<a th:href="@{'/order/detail/' + ${order.id}}"
+									title="Detail order" class="me-3 link-detail-order"> <i
+									class="fa-sharp fa-solid fa-circle-info fa-2x"></i>
+								</a>
+								<th:block th:unless="${order.isReturnRequested}">
+									<i class="fa-sharp fa-solid fa-arrow-rotate-left fa-2x" title="Return"></i>
+								</th:block>  
+							</div> 
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="less-details">
+			
+				<div th:each=" order: ${orders}" class="row">
+				<div class="card border-dark mb-3 col">
+					<div class="card-header row">
+						<div class="col">
+							<p>Order Id #[[${order.id}]]</p>  
+						</div>
+						<div class="col d-flex justify-content-end">
+							<a th:href="@{'/order/detail/' + ${order.id}}"
+									title="Detail order" class="me-3 link-detail-order"> <i
+									class="fa-sharp fa-solid fa-circle-info fa-2x"></i>
+							</a>
+							<th:block th:unless="${order.isReturnRequested}">
+								<i class="fa-sharp fa-solid fa-arrow-rotate-left fa-2x" title="Return"></i>
+							</th:block>  
+						</div>
+					</div>
+					<div class="card-body">
+						<ul>
+							<th:block th:each=" oD: ${order.orderDetails}">
+								<li><a th:href="@{'/p/' + ${oD.product.alias}}"
+									th:title="${oD.product.name}"> [[${oD.product.shortName}]]
+								</a></li>
+							</th:block>
+						</ul>
+						<div class="row mt-2 mb-2">
+							<div class="col">
+								<div th:replace="fragments :: format_currency(${order.total})"></div>
+							</div>
+							<div class="col">[[${order.status}]]</div>
+						</div>
+						<div th:replace="fragments :: format_time(${order.orderTime})"></div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div th:replace="fragments :: countElement('Order')"></div>
+		<!-- pagination -->
+		<div th:replace="fragments :: pagination()"></div>
+
+		<div th:replace="navigation :: footer_menu"></div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

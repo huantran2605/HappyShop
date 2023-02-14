@@ -57,7 +57,7 @@ public class OrderController {
     private String defaultRedirectURL = "redirect:/order/page/1?sortField=orderTime&sortDir=des&keyWord=";
     
     @GetMapping("/listOrder")
-    private String viewFirstPageProduct(Model model,
+    private String viewFirstPageOrder(Model model,
             RedirectAttributes re, HttpServletRequest request) {
         return defaultRedirectURL;
     }

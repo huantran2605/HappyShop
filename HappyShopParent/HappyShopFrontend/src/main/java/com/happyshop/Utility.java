@@ -16,6 +16,8 @@ import com.happyshop.setting.CurrencySettingBag;
 import com.happyshop.setting.EmailSettingBag;
 
 public class Utility {
+   
+    
   public static String getSiteUrl(HttpServletRequest request) {
     String url = request.getRequestURL().toString();
     return url.replace(request.getServletPath(), "");
@@ -84,4 +86,6 @@ public class Utility {
       
       return formatter.format(amount);
   }
+  
+
 }

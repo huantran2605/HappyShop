@@ -61,3 +61,13 @@ a{
 }
 
 
+@media screen and (max-width: 576px){
+	/* small screen */
+	.full-details{display: none;}
+	.less-details{display:block;}
+}
+@media screen and (min-width: 576px){
+	/* not small screen */
+	.full-details{display: block;}
+	.less-details{display:none;}
+}

@@ -23,8 +23,7 @@
 
 		<div th:each=" order: ${orders}" class="row">
 			<div class="col">
-				<div class="card border-dark mb-3"
-					th:classappend="${usePrimaryAddressAsDefault} ? 'bg-warning' : ''">
+				<div class="card border-dark mb-3">
 					<div class="card-header row">
 						<div class="col">
 							<p>Order Id #[[${order.id}]]</p>  

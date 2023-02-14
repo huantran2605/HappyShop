@@ -26,10 +26,29 @@
 		<p class="text-center">[[${COPYRIGHT}]]</p>
 	</div>
 	
+	<th th:fragment="column_link(fieldName, colTitle)"><span
+		th:if="${sortField == fieldName}"> <a
+			style="text-decoration: none" class="text-reset"
+			th:href="@{${moduleURL} + '/page/' + ${pageNum} +
+							'?sortField=' + ${sortField}+ '&sortDir=' +
+							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}
+							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
+				[[${colTitle}]]</a> <i class="fa-sharp fa-solid fa-caret-up"
+			th:if="${sortDir == 'asc'}"></i> <i
+			class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
+	</span> <span th:if="${sortField != fieldName}"> <a
+			style="text-decoration: none" class="text-reset"
+			th:href="@{${moduleURL} + '/page/' + ${pageNum} +
+							'?sortField=' + ${fieldName} + '&sortDir=' + ${reserveDir} +
+							 ${keyWord != null ? '&keyWord=' + keyWord : ''}
+							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
+				[[${colTitle}]]</a>
+	</span></th>
+	
 	
 	<a th:fragment="page_link(pageNum, label)" class="page-link"
-		th:href="@{${moduleURL} + '/page/' +${pageNum}+${keyword != null ? '?keyword=' + keyword : ''}}">[[${label}]]</a>
-	
+		th:href="@{${moduleURL} + '/page/' +${pageNum} +'?sortField=' + ${sortField}+
+					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}}">[[${label}]]</a>
 	
 	<!-- pagination------------- -->
 	<!-- Pagination1 -->
@@ -202,6 +221,9 @@
 		</span>
 	</div>
 	
+	<div th:fragment="format_time(dateTime)" th:remove="tag">
+		<span th:text="${#dates.format(dateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+	</div>	
 
 </body>
 </html>

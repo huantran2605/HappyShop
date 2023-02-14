@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.happyshop.checkout.CheckoutInfo;
@@ -77,6 +79,14 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setOrderTracks(orderTracks);
         
         return repo.save(newOrder);
+    }
+    
+    @Override
+    public Page<Order> findAll(String keyword, Integer customerId, Pageable pageable){
+        if (!keyword.isBlank()) {
+            return repo.findAll(keyword,customerId, pageable);
+        }
+        return repo.findAll(customerId, pageable);
     }
     
 }
