@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.setting.Country;
-import com.happyshop.common.exception.CustomerException;
+import com.happyshop.common.exception.CustomerNotFoundException;
 
 public interface CustomerService {
 
@@ -40,11 +40,11 @@ public interface CustomerService {
     
     void updateCustomer(Customer customer);
 
-    String updateResetPasswordToken(String email) throws CustomerException;
+    String updateResetPasswordToken(String email) throws CustomerNotFoundException;
     
     Customer findByResetPasswordToken(String resetPasswordToken);
 
-    void resetPasswordCustomer(String token, String password) throws CustomerException;
+    void resetPasswordCustomer(String token, String password) throws CustomerNotFoundException;
     
     Customer getAuthenticationCustomer(HttpServletRequest request);
 }

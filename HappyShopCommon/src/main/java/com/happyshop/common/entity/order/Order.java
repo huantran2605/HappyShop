@@ -398,6 +398,10 @@ public class Order {
         return hasStatus(OrderStatus.RETURNED);
     }  
     @Transient
+    public boolean isProcessing() {
+        return hasStatus(OrderStatus.PROCESSING);
+    }  
+    @Transient
     public boolean isReturnRequested() {
         return hasStatus(OrderStatus.RETURN_REQUESTED);
     }  

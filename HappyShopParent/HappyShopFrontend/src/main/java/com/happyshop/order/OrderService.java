@@ -11,6 +11,7 @@ import com.happyshop.common.entity.CartItem;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.order.PaymentMethod;
+import com.happyshop.common.exception.OrderNotFoundException;
 
 public interface OrderService {
     int SIZE_PAGE_ORDER = 5;
@@ -19,5 +20,10 @@ public interface OrderService {
             PaymentMethod paymentMethod, CheckoutInfo checkoutInfo);
     
     Page<Order> findAll(String keyword, Integer customerId, Pageable pageable);
+    
+    Order findByOrderIdAndCustomer(Integer orderId, Integer customerId);
+    
+    void setOrderReturnRequested(OrderReturnRequest request, Customer customer) 
+            throws OrderNotFoundException;
     
 }

@@ -17,7 +17,7 @@ import com.happyshop.Utility;
 import com.happyshop.common.entity.AuthenticationType;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.setting.Country;
-import com.happyshop.common.exception.CustomerException;
+import com.happyshop.common.exception.CustomerNotFoundException;
 import com.happyshop.setting.country.CountryService;
 
 import net.bytebuddy.utility.RandomString;
@@ -158,7 +158,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
     
     @Override
-    public String updateResetPasswordToken(String email) throws CustomerException {
+    public String updateResetPasswordToken(String email) throws CustomerNotFoundException {
         Customer customer = customerRepository.findByEmail(email);
         if(customer != null) {
             String token = RandomString.make(30);
@@ -166,12 +166,12 @@ public class CustomerServiceImpl implements CustomerService {
             return token;
         }
         else {
-            throw new CustomerException("The email is not existed.");
+            throw new CustomerNotFoundException("The email is not existed.");
         }
     }
     
     @Override
-    public void resetPasswordCustomer(String token, String password) throws CustomerException {
+    public void resetPasswordCustomer(String token, String password) throws CustomerNotFoundException {
         Customer customer = customerRepository.findByResetPasswordToken(token);
         if(customer != null) {
             customer.setPassword(password);
@@ -180,7 +180,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepository.save(customer);
         }
         else {
-            throw new CustomerException("Could not find the user.");
+            throw new CustomerNotFoundException("Could not find the user.");
         }
     }
     

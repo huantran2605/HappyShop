@@ -1,6 +1,8 @@
 package com.happyshop.order;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.order.Order;
+import com.happyshop.common.entity.order.OrderDetail;
 import com.happyshop.customer.CustomerService;
 
 @Controller
@@ -98,6 +101,19 @@ public class OrderController {
         }
         Customer customer = customerService.findByEmail(email);
         return customer;
+    }
+    
+    @GetMapping("detail/{id}")
+    private String detailOrder(@PathVariable("id") Integer orderId,
+            Model model, RedirectAttributes re, HttpServletRequest request) {
+        Customer customer = getAuthenticationCustomer(request);
+        Order order = orderService.findByOrderIdAndCustomer(orderId, customer.getId());
+
+        model.addAttribute("order", order);
+        Set<OrderDetail> orderDetails = order.getOrderDetails();
+        model.addAttribute("orderDetails", orderDetails);
+
+        return "order/order_detail_modal";
     }
     
     

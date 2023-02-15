@@ -1,0 +1,46 @@
+<div th:fragment="orderReturnModal" class="modal" id="orderReturnModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="'modal-title">Return Order</h5>
+				</div>
+			<form action="" onsubmit="return submitOrderReturnForm();">
+				<div class="modal-body" id="modal-body">
+					<div class="divReason">
+						<div>
+							<p>Reason:</p>
+						</div>
+	
+						<div>
+							<input type="radio" name="returnReason" value="I bought wrong products" required="required" /> I
+							bought wrong products.
+						</div>
+						<div>
+							<input type="radio" value="I received wrong products" name="returnReason" /> I received wrong
+							products.
+						</div>
+						<div>
+							<input type="radio" value="The products were damaged/defective" name="returnReason" /> The products were
+							damaged/defective.
+						</div>
+						<div>
+							<input type="radio" value="The products arrived too late" name="returnReason" /> The products arrived
+							too late.
+						</div>
+	
+						<div class="row mt-2">
+							<textarea rows="4" class="col" id="addInfo" maxlength="120"
+								placeholder="Additional reason"></textarea>
+						</div>
+					</div>
+					<div class="divMessage"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-danger firstOption">Send Request</button>
+					<button type="button" class="btn btn-secondary secondOption"
+						data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+		</div>
+</div>

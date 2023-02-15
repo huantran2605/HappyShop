@@ -219,6 +219,9 @@ public class OrderController {
             ot.setUpdatedTimeOnForm(trackDates[i]);
             
             listOrderTrack.add(ot);
+            if(i == trackIds.length-1) {
+                order.setStatus(OrderStatus.valueOf(trackStatuses[i]));
+            }
         }
 
     }

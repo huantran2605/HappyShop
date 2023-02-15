@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.setting.Country;
-import com.happyshop.common.exception.CustomerException;
+import com.happyshop.common.exception.CustomerNotFoundException;
 import com.happyshop.security.CustomerDetailsClass;
 import com.happyshop.security.oauth2.CustomerOauth2User;
 import com.happyshop.setting.EmailSettingBag;
@@ -187,7 +187,7 @@ public class CustomerController {
             model.addAttribute("message", "Reseted Your Password Successfully!");
             model.addAttribute("titlePage", "Reseted Your Password Successfully!");
             return "message";
-        } catch (CustomerException e) {
+        } catch (CustomerNotFoundException e) {
             model.addAttribute("message", e.getMessage());
             model.addAttribute("titlePage", "Error");           
             return "message";

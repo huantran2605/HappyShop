@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.happyshop.Utility;
-import com.happyshop.common.exception.CustomerException;
+import com.happyshop.common.exception.CustomerNotFoundException;
 import com.happyshop.customer.CustomerService;
 import com.happyshop.setting.EmailSettingBag;
 import com.happyshop.setting.SettingService;
@@ -40,7 +40,7 @@ public class ForgotPasswordController {
             model.addAttribute("message", "We have sent the link to change your password to your email.");  
         }catch (UnsupportedEncodingException | MessagingException e) {
             model.addAttribute("error", "Could not send message.");      
-        } catch (CustomerException e) {
+        } catch (CustomerNotFoundException e) {
             model.addAttribute("error", e.getMessage());
         }
         

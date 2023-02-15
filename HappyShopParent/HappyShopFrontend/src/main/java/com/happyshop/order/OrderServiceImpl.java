@@ -19,6 +19,7 @@ import com.happyshop.common.entity.order.OrderStatus;
 import com.happyshop.common.entity.order.OrderTrack;
 import com.happyshop.common.entity.order.PaymentMethod;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.exception.OrderNotFoundException;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -87,6 +88,37 @@ public class OrderServiceImpl implements OrderService {
             return repo.findAll(keyword,customerId, pageable);
         }
         return repo.findAll(customerId, pageable);
+    }
+
+    public Order findByOrderIdAndCustomer(Integer orderId, Integer customerId) {
+        return repo.findByOrderIdAndCustomer(orderId, customerId);
+    }
+    
+    public void setOrderReturnRequested(OrderReturnRequest request, Customer customer) 
+            throws OrderNotFoundException {
+        Order order = repo.findByOrderIdAndCustomer(request.getOrderId(), customer.getId());
+        if (order == null) {
+            throw new OrderNotFoundException("Order ID " + request.getOrderId() + " not found");
+        }
+        
+        if (order.isReturnRequested()) return;
+        
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setUpdatedTime(new Date());
+        track.setStatus(OrderStatus.RETURN_REQUESTED);
+        
+        String notes = "Reason: " + request.getReason();
+        if (!"".equals(request.getNote())) {
+            notes += ". " + request.getNote();
+        }
+        
+        track.setNote(notes);
+        
+        order.getOrderTracks().add(track);
+        order.setStatus(OrderStatus.RETURN_REQUESTED);
+        
+        repo.save(order);
     }
     
 }

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+	<div th:fragment="content(statusVar, status, iconName)" class="col">
+		<th:block th:if="${statusVar}">
+			<i th:class="'fa-sharp fa-solid ' + ${iconName}   +' fa-green fa-2x'"></i>
+		</th:block>
+		<th:block th:unless="${statusVar}">
+			<i
+				th:class="'fa-sharp fa-solid '+  ${iconName} + ' fa-gray fa-2x '">
+			</i>
+		</th:block>
+		
+		<p>[[${status}]]</p>
+	</div>
+				
+
+
+</body>
+</html>
