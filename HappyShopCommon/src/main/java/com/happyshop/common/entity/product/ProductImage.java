@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.happyshop.common.Constants;
+
 
 @Entity
 @Table (name="product_images")
@@ -67,7 +69,7 @@ public class ProductImage {
 
     @Transient
     public String getPathExtraImageProduct() {
-        return "/product-images/" + this.getProduct().getId() + "/extras/" + this.name;
+        return Constants.S3_BASE_URI+ "/product-images/" + this.getProduct().getId() + "/extras/" + this.name;
     }
     
 }

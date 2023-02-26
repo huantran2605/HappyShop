@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.happyshop.common.Constants;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,7 +43,7 @@ public class Brand {
     private Set<Category> categories = new HashSet<>();
     @Transient
     public String getBrandLogoPath () {
-        return "/brand-logos/"+ this.id+"/" + this.logo; 
+        return Constants.S3_BASE_URI+ "/brand-logos/"+ this.id+"/" + this.logo; 
     }
     
 }

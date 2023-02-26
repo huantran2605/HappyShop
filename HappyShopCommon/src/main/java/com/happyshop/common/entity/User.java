@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.happyshop.common.Constants;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -57,10 +59,9 @@ public class User {
 		this.lastName = lastName;
 		this.roles = roles;
 	}
-	
 	@Transient
 	public String getUserPhotoPath () {
-		return "/users-photo/"+ this.id+"/" + this.photo ; 
+		return Constants.S3_BASE_URI+ "/users-photo/"+ this.id+"/" + this.photo ;   
 	}
 	
 	@Transient

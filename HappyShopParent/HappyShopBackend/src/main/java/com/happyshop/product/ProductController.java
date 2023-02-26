@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
+import com.happyshop.admin.AmazonS3Util;
 import com.happyshop.brand.BrandService;
 import com.happyshop.category.CategoryCsvExporter;
 import com.happyshop.category.CategoryService;
@@ -219,8 +220,8 @@ public class ProductController {
         else {    
             productService.deleteById(id); 
           //delete folder contains images
-            String dir = "../product-images/" + id;
-            FileUtils.deleteDirectory(new File(dir));
+            String dir = "product-images/" + id;
+            AmazonS3Util.removeFolder(dir);
             
             re.addFlashAttribute("message","Delete product id: "+ id + " successfully!");           
             return "redirect:/product/listProduct";

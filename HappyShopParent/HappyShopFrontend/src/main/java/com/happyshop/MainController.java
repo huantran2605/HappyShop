@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.happyshop.category.CategoryService;
+import com.happyshop.common.Constants;
 import com.happyshop.common.entity.Category;
 
 @Controller
@@ -22,6 +23,7 @@ public class MainController {
 	private String viewHomePage(Model model) {
 	    List<Category> listCategory = categoryService.listNoChildrenCategories();
 	    model.addAttribute("listCategory", listCategory);
+	    
 		return "index";
 	}
 	

@@ -23,7 +23,7 @@ import com.happyshop.common.entity.order.PaymentMethod;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.order.OrderRepository;
 
-@DataJpaTest
+@DataJpaTest  
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class OrderRepositoryTests {

@@ -15,7 +15,7 @@
 				
 				</th:block>
 				<th:block
-					th:if="${!readOnlyForSalesperson}">
+					th:unless="${readOnlyForSalesperson}">
 					<input type="text" class="form-control" th:field="*{name}"
 						id="name" required maxlength="255">
 				</th:block>
@@ -33,7 +33,7 @@
 							th:field="*{alias}"> 
 				</th:block>
 				
-				<th:block th:if="${!readOnlyForSalesperson}">
+				<th:block th:unless="${readOnlyForSalesperson}">
 					<input type="text" class="form-control"
 							placeholder="Default is product name (spaces is replaced by dashes)"
 							th:field="*{alias}"> 
@@ -46,7 +46,7 @@
 				<label for="">Brand: </label>
 			</div>
 			<div class="col-sm-6">
-				<th:block th:if="${!readOnlyForSalesperson}">
+				<th:block th:unless="${readOnlyForSalesperson}">
 					<select th:field="*{brand}" required>
 						<th:block th:each=" brand: ${brands}">
 							<option th:value="${brand.id}" th:text="${brand.name}"></option>
@@ -66,7 +66,7 @@
 				<label for="">Category: </label>
 			</div>
 			<div class="col-sm-6">
-				<th:block th:if="${!readOnlyForSalesperson}">
+				<th:block th:unless="${readOnlyForSalesperson}">
 					<th:block th:if="product.category != null">
 						<select th:field="*{category}" required>
 							<th:block th:each="category : ${listCategories}">
@@ -93,7 +93,7 @@
 				<label for="">Enabled: </label>
 			</div>
 			<div class="col-sm-6">
-				<th:block th:if="${!readOnlyForSalesperson}">
+				<th:block th:unless="${readOnlyForSalesperson}">
 					<input type="checkbox" th:field="*{enable}">
 				</th:block>
 				
@@ -108,7 +108,7 @@
 				<label for="">In Stock: </label>
 			</div>
 			<div class="col-sm-6">
-				<th:block th:if="${!readOnlyForSalesperson}">
+				<th:block th:unless="${readOnlyForSalesperson}">
 					<input type="checkbox" th:field="*{inStock}">
 				</th:block>
 				

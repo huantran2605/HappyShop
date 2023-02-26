@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
+import com.happyshop.admin.AmazonS3Util;
+import com.happyshop.common.Constants;
 import com.happyshop.common.entity.setting.Currency;
 import com.happyshop.common.entity.setting.Setting;
 
@@ -38,6 +40,8 @@ public class SettingController {
         for (Setting setting : listSetting) {
             model.addAttribute(setting.getKey(), setting.getValue());
         }
+        
+        model.addAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
         
         return "setting/settings";
     }
@@ -61,9 +65,10 @@ public class SettingController {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             settings.updateSiteLogo(fileName);
-            String uploadDir = "../site-logo/";
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(multipartFile, fileName, uploadDir);
+            String uploadDir = "site-logo";
+            
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         }
     }
     

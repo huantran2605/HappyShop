@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
+import com.happyshop.admin.AmazonS3Util;
 import com.happyshop.common.entity.Role;
 import com.happyshop.common.entity.User;
 import com.happyshop.role.RoleService;
@@ -64,7 +65,7 @@ public class UserController {
 	}
 
 	@RequestMapping("/saveOrUpdate")
-	private String saveUser(User user, @RequestParam("image") MultipartFile mutipartFile,
+	private String saveUser(User user, @RequestParam("image") MultipartFile multipartFile,
 	        @RequestParam("id") Optional<Long> id ,RedirectAttributes re,
 			Model model) throws IOException {
 		// encode pass
@@ -77,14 +78,14 @@ public class UserController {
             user.setPassword(oldUser.get().getPassword());
         } 
 		// upload photo
-		if (!mutipartFile.isEmpty()) {
-			String fileName = StringUtils.cleanPath(mutipartFile.getOriginalFilename());
+		if (!multipartFile.isEmpty()) { 
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			user.setPhoto(fileName);
 			User savedUser = userService.save(user);
-			String fileDir = "users-photo/" + savedUser.getId();
+			String uploadDir = "users-photo/" + savedUser.getId();
 			// delete old photos if have
-			FileUploadUtil.cleanDir(fileDir);
-			FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
+			AmazonS3Util.removeFolder(uploadDir);
+	        AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 
 		} else {
 		    if(!id.isEmpty()) {//update
@@ -136,7 +137,7 @@ public class UserController {
 			userService.deleteById(id);
 			//delete folder contains photos
 			String dir = "users-photo/" + id;
-			FileUtils.deleteDirectory(new File(dir));
+			AmazonS3Util.removeFolder(dir);
 			
 			re.addFlashAttribute("message","Delete User has id: "+ id + " successfully!");			
 			return "redirect:/user/listUser";

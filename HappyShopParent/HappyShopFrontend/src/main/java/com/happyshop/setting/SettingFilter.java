@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.happyshop.common.Constants;
 import com.happyshop.common.entity.setting.Setting;
 
 @Component
@@ -38,6 +39,7 @@ public class SettingFilter implements Filter {
         for (Setting setting : generalSettings) {
             request.setAttribute(setting.getKey(), setting.getValue());
         }
+        request.setAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
         
         chain.doFilter(request, response);
     }

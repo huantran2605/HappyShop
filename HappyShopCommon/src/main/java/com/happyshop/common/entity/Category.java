@@ -15,6 +15,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.happyshop.common.Constants;
+
 
 @Entity
 @Table(name = "categories")
@@ -120,7 +122,7 @@ public class Category {
     
     @Transient
     public String getCategoryImagePath () {
-        return "/category-images/"+ this.id+"/" + this.image; 
+        return Constants.S3_BASE_URI+ "/category-images/"+ this.id+"/" + this.image; 
     }
     
     @Transient

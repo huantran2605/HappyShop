@@ -1,13 +1,16 @@
 server:
   port: 80
-  servlet:
-    context-path: /HappyShop
+  #servlet:
+   # context-path: /HappyShop
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: huan
     url: jdbc:mysql://localhost:3306/happyshopdb
     username: root
+    hikari:
+      maximum-pool-size: 2
+      minimum-idle: 1
   jpa:
     hibernate:
       ddl-auto: update

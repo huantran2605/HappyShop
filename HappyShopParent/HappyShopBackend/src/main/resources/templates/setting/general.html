@@ -27,7 +27,7 @@
 
 					<input type="file" name="logoFile" id="fileImage"
 						accept="logo/png, logo/jpeg, logo/jpg" /> <img
-						th:src="@{'/site-logo/' + ${SITE_LOGO}}" id="thumbnail"
+						th:src="@{${S3_BASE_URI} + '/site-logo/' + ${SITE_LOGO}}" id="thumbnail"
 						alt="Logo Brand" width="150" height="150">
 				</div>
 			</div>

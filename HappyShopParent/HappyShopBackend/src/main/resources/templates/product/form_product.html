@@ -25,7 +25,7 @@
 		</div>
 		
 		<form th:action="@{/product/saveOrUpdate}" 
-			onsubmit="return IsNameUnique(this);"
+			onsubmit="return IsNameUnique(this);"  
 			enctype="multipart/form-data"
 			method="post" name="save_form" th:object="${product}">
 			<input type="hidden" th:field="*{id}" id="id"/>
@@ -71,7 +71,7 @@
 							 <div th:replace="product/product_description_readonly :: content"></div> 
 						</th:block>
 						
-						<th:block th:if="${!readOnlyForSalesperson}">
+						<th:block th:unless="${readOnlyForSalesperson}">
 							<div th:replace="product/product_description :: description"></div>
 						</th:block>
 					</div>
@@ -81,7 +81,7 @@
 							 <div th:replace="product/product_images_readonly :: content"></div> 
 						</th:block>
 						
-						<th:block th:if="${!readOnlyForSalesperson}">
+						<th:block th:unless="${readOnlyForSalesperson}">
 							 <div th:replace="product/product_images :: images"></div> 
 						</th:block>
 					</div>
@@ -91,7 +91,7 @@
 							 <div th:replace="product/product_details_readonly :: content"></div> 
 						</th:block>
 						
-						<th:block th:if="${!readOnlyForSalesperson}">
+						<th:block th:unless="${readOnlyForSalesperson}">
 							<div th:replace="product/product_details :: details"></div>
 							<div class="p-3">
 								<button type="button" onclick="addNextDivDetail()"
@@ -105,7 +105,7 @@
 							 <div th:replace="product/product_shipping_readonly :: content"></div> 
 						</th:block>
 						
-						<th:block th:if="${!readOnlyForSalesperson}">
+						<th:block th:unless="${readOnlyForSalesperson}">
 							 <div th:replace="product/product_shipping :: shipping"></div> 
 						</th:block>
 					</div>

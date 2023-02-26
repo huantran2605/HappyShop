@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.happyshop.common.Constants;
 import com.happyshop.common.entity.Brand;
 import com.happyshop.common.entity.Category;
 
@@ -122,7 +123,7 @@ public class Product {
     
     @Transient
     public String getProductMainImagePath () {
-        return "/product-images/"+ this.id+"/" + this.mainImage; 
+        return Constants.S3_BASE_URI+ "/product-images/"+ this.id+"/" + this.mainImage; 
     }
 
     public boolean containsImageName(String fileName) {

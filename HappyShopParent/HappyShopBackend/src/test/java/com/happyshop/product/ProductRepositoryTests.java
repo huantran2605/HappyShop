@@ -1,4 +1,4 @@
-package com.happyshop.admin.product;
+package com.happyshop.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

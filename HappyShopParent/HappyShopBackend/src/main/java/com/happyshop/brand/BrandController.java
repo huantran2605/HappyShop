@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
+import com.happyshop.admin.AmazonS3Util;
 import com.happyshop.category.CategoryCsvExporter;
 import com.happyshop.category.CategoryService;
 import com.happyshop.common.entity.Brand;
@@ -54,20 +56,20 @@ public class BrandController {
     }
     
     @PostMapping("/saveOrUpdate")
-    private String saveBrand(Brand brand, @RequestParam("logoFile") MultipartFile mutipartFile,
+    private String saveBrand(Brand brand, @RequestParam("logoFile") MultipartFile multipartFile,
             @RequestParam("id") Optional<Integer> id,
             RedirectAttributes re,
             Model model) throws IOException {
    
         // upload photo
-        if (!mutipartFile.isEmpty()) {
-            String fileName = org.springframework.util.StringUtils.cleanPath(mutipartFile.getOriginalFilename());
+        if (!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             brand.setLogo(fileName);
             Brand savedCate = brandService.save(brand);
-            String fileDir = "../brand-logos/" + savedCate.getId();
+            String uploadDir = "brand-logos/" + savedCate.getId();
             // delete old photos if have  
-            FileUploadUtil.cleanDir(fileDir);  
-            FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             if(!id.isEmpty()) {
                 Optional<Brand> oldBrand = brandService.findById(id.get());
@@ -167,8 +169,8 @@ public class BrandController {
         else {
             brandService.deleteById(id); 
           //delete folder contains logos
-            String dir = "../brand-logos/" + id;
-            FileUtils.deleteDirectory(new File(dir));
+            String dir = "brand-logos/" + id;
+            AmazonS3Util.removeFolder(dir);
             
             re.addFlashAttribute("message","Delete brand id: "+ id + " successfully!");           
             return "redirect:/brand/listBrand";
