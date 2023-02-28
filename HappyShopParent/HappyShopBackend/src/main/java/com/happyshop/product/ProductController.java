@@ -44,7 +44,7 @@ import com.happyshop.common.entity.product.ProductImage;
 import com.happyshop.security.UserDetailsClass;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/product")  
 public class ProductController {
     @Autowired
     ProductService productService;
@@ -69,11 +69,11 @@ public class ProductController {
             Model model) {
         //sort
         Sort sort = Sort.by(sortField);
-        if(sortDir.equalsIgnoreCase("asc"))
+        if(sortDir.equalsIgnoreCase("asc"))  
             sort = Sort.by(sortField).ascending();
         else  sort = Sort.by(sortField).descending();  
         
-        Pageable pageable = PageRequest.of(pageNum - 1,
+        Pageable pageable = PageRequest.of(pageNum - 1,  
                 ProductService.SIZE_PAGE_PRODUCT, sort);
         
         Page<Product> pageProduct = productService.findAll(pageable,keyWord,categoryID); 

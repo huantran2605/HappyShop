@@ -114,7 +114,12 @@ public class OrderController {
         model.addAttribute("elementsCurrentPerPage", pageOrder.getNumberOfElements());
         model.addAttribute("elementsPerPage", OrderService.SIZE_PAGE_ORDER);
         model.addAttribute("keyWord", keyWord);
-        model.addAttribute("moduleURL", "/order");        
+        model.addAttribute("moduleURL", "/order");  
+        //time-zone
+        String timezone = request.getHeader("Time-Zone");
+        model.addAttribute("timezone", timezone);
+        System.out.println(timezone + "----------------");
+        
         loadCurrencySetting(request); 
         
         if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Salesperson") && loggedUser.hasRole("Shipper")) {
@@ -150,6 +155,11 @@ public class OrderController {
             model.addAttribute("order", order.get()); 
             Set<OrderDetail> orderDetails = order.get().getOrderDetails();
             model.addAttribute("orderDetails", orderDetails); 
+            
+            //time-zone
+            String timezone = request.getHeader("Time-Zone");
+            model.addAttribute("timezone", timezone);
+            System.out.println(timezone + "----------------");
             loadCurrencySetting(request);
         }
         return "order/order_detail_modal";

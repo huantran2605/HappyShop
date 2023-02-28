@@ -72,7 +72,7 @@
 					<div class="m-1 row ">
 						<label for="userPhoto" class="col-sm-2 col-form-label">Photo</label>
 						<div class="col-sm-4 offset-sm-2">
-							<input type="file" name="image" id="inputPhoto"
+							<input type="file" name="image" id="fileImage"
 								accept="image/png, image/jpeg, image/jpg" />
 						</div>  
 
@@ -80,10 +80,10 @@
 					<div class="m-1 row ">
 						<div class="col-sm-4 offset-sm-4">
 							<span th:if="*{photo == null}"> <img
-								th:src="@{/images/default_person.jpg}" id="Photo"
+								th:src="@{/images/default_person.jpg}" id="thumbnail"
 								alt="Default Photo" width="200" height="200">
 							</span> <span th:if="*{photo != null}"> <img
-								th:src="@{*{getUserPhotoPath}}" id="Photo"
+								th:src="@{*{getUserPhotoPath}}" id="thumbnail"
 								alt="Default Photo" width="200" height="200">
 							</span>
 						</div>
@@ -103,6 +103,9 @@
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
 	<script th:src="@{/js/common_form.js}"></script>
+	<script>
+		MAX_FILE_SIZE = 1048576;
+	</script>
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

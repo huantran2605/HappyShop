@@ -148,7 +148,7 @@
 		csrfHeaderName = "[[${_csrf.headerName}]]";
 		csrfValue = "[[${_csrf.token}]]";
 		contextPath = "[[@{/}]]"
-		loginURL = "[[@{/login}]]"
+		loginURL = "[[@{/login?redirect=/HappyShop/cart}]]"
 		
 		$(".addToCart").on("click", function(){
 			productIdString = $(this).attr("addToCartId");

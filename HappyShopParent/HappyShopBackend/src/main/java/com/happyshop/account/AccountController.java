@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.FileUploadUtil;
+import com.happyshop.admin.AmazonS3Util;
 import com.happyshop.common.entity.User;
 import com.happyshop.security.UserDetailsClass;
 import com.happyshop.user.UserService;
@@ -40,20 +41,20 @@ public class AccountController {
 	}
 
 	@PostMapping("/updateAccount")
-	public String updateAccount(User user, @RequestParam("image") MultipartFile mutipartFile,
+	public String updateAccount(User user, @RequestParam("image") MultipartFile multipartFile,
 			@AuthenticationPrincipal UserDetailsClass loggedAcc,
 			RedirectAttributes re, Model model) throws IOException {
 
-		User oldUser = userService.findByEmail(user.getEmail());
+		User oldUser = userService.findByEmail(user.getEmail()); 
 		// upload photo
-		if (!mutipartFile.isEmpty()) {
-			String fileName = StringUtils.cleanPath(mutipartFile.getOriginalFilename());
-			user.setPhoto(fileName);
-			User savedUser = userService.save(user);
-			String fileDir = "users-photo/" + savedUser.getId();
-			// delete old photos if have
-			FileUploadUtil.cleanDir(fileDir);
-			FileUploadUtil.saveFile(mutipartFile, fileName, fileDir);
+		if (!multipartFile.isEmpty()) {			
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            user.setPhoto(fileName);
+            User savedUser = userService.save(user);
+            String uploadDir = "users-photo/" + savedUser.getId();
+            // delete old photos if have
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 
 		} else {
 			user.setPhoto(oldUser.getPhoto());			

@@ -5,7 +5,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.authenticator.SavedRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +34,12 @@ public class DatabaseLoginSuccessHandler extends SavedRequestAwareAuthentication
         
         CustomerDetailsClass customerDetail = (CustomerDetailsClass) authentication.getPrincipal();
         Customer customer =  customerDetail.getCustomer();
-        customerService.updateAuthenticationType(customer, AuthenticationType.DATABASE);       
+        customerService.updateAuthenticationType(customer, AuthenticationType.DATABASE);   
+        
+        
         super.onAuthenticationSuccess(request, response, authentication);
+        
+     
     }
 
 }
