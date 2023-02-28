@@ -28,6 +28,10 @@ public class ProductServiceImpl implements ProductService{
         if(entity.getId() == null) {
             entity.setCreatedTime(new Date());
         }
+        else {
+            Product productInDb = productRepo.findById(entity.getId()).get();
+            entity.setCreatedTime(productInDb.getCreatedTime());
+        }
         if(entity.getAlias() == null || entity.getAlias().isEmpty()) {
             entity.setAlias(entity.getName().replace(" ", "-"));
         }
