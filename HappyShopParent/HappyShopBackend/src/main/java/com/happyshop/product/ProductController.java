@@ -44,7 +44,7 @@ import com.happyshop.common.entity.product.ProductImage;
 import com.happyshop.security.UserDetailsClass;
 
 @Controller
-@RequestMapping("/product")  
+@RequestMapping("product")  
 public class ProductController {
     @Autowired
     ProductService productService;
@@ -208,7 +208,7 @@ public class ProductController {
         return "redirect:/product/page/1?categoryID=0&sortField=id&sortDir=asc&keyWord=" + nameSerach;
     }    
     
-    @GetMapping("/delete/{id}")
+    @GetMapping("delete/{id}")
     private String deleteProduct(@PathVariable("id") Integer id,
             RedirectAttributes re,Model model) throws IOException {
         Optional<Product> product =  productService.findById(id);
