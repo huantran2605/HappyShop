@@ -1,7 +1,7 @@
-#server:
-#  port: 80
-#  servlet:
-#    context-path: /HappyShop
+server:
+  port: ${PORT_SERVER_FRONTEND:80}
+  servlet:
+    context-path: ${CONTEXT_PATH_FRONTEND:/HappyShop}
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -141,8 +141,7 @@
 					<label for="">Updated Time: </label>
 				</div>
 				<div class="col-sm-6">
-					<div
-						th:text="${#dates.format(product.updatedTime, 'yyyy-MM-dd hh:mm:ss')}"></div>
+					<div th:replace="fragments :: format_time(${product.updatedTime})"></div>	
 				</div>
 			</div>
 
