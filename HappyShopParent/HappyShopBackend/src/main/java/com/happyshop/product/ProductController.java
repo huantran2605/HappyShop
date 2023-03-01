@@ -171,7 +171,7 @@ public class ProductController {
             
             productService.save(product);
       
-            String nameSerach = product.getAlias();
+            String nameSerach = product.getName();
             return "redirect:/product/page/1?sortField=id&sortDir=asc&categoryID=0&keyWord=" + nameSerach;
     }
     
@@ -204,7 +204,7 @@ public class ProductController {
             status = productService.updateEnabledStatus(product.get());
             re.addFlashAttribute("message", status);     
         }
-        String nameSerach = product.get().getAlias();
+        String nameSerach = product.get().getName();
         return "redirect:/product/page/1?categoryID=0&sortField=id&sortDir=asc&keyWord=" + nameSerach;
     }    
     
