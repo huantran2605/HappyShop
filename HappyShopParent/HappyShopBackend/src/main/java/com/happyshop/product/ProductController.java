@@ -159,7 +159,6 @@ public class ProductController {
             ProductSaveHelper.setNewExtraImageName(extraImageMultipartFile, product);
             
             Product savedProduct = productService.save(product);
-            ProductSaveHelper.createImageFileDir(savedProduct);
             
             if(exsitingExtraImageMultipartFile != null) {
                 ProductSaveHelper.saveUploadedNewExsitingExtraImages(exsitingExtraImageMultipartFile, savedProduct);            

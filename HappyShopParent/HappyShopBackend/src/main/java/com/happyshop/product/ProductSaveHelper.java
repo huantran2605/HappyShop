@@ -21,30 +21,15 @@ public class ProductSaveHelper {
     static void saveUploadedNewExsitingExtraImages(MultipartFile[] exsitingExtraImageMultipartFile,
             Product savedProduct) throws IOException {
         if (exsitingExtraImageMultipartFile.length > 0) {
-            String fileDir = "../product-images/" + savedProduct.getId() + "/extras";
+            String fileDir = "product-images/" + savedProduct.getId() + "/extras";
             for (MultipartFile multipartFile : exsitingExtraImageMultipartFile) {
                 if (!multipartFile.isEmpty()) {
                     String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-                    FileUploadUtil.saveFile(multipartFile, fileName, fileDir);
+                    AmazonS3Util.uploadFile(fileDir, fileName, multipartFile.getInputStream());
                 }
             }
         }
 
-    }
-
-    static void createImageFileDir(Product savedProduct) throws IOException {
-        String mainImageFileDirr = "../product-images/" + savedProduct.getId();
-        Path mainImageUploadPath = Paths.get(mainImageFileDirr);
-        if (!Files.exists(mainImageUploadPath)) {
-            Files.createDirectory(mainImageUploadPath);
-        }
-        
-        String extraImageFileDirr = "../product-images/" + savedProduct.getId() + "/extras";
-        Path ExtraImageUploadPath = Paths.get(extraImageFileDirr);
-        if (!Files.exists(ExtraImageUploadPath)) {
-            Files.createDirectory(ExtraImageUploadPath);
-        }
     }
 
     static void deleteExtraImagesWeredRemovedOnForm(Product product) throws IOException {
@@ -54,7 +39,6 @@ public class ProductSaveHelper {
         for (String key : objectKeys) {
             int indexLastSlash = key.lastIndexOf("/");
             String extraFileName = key.substring(indexLastSlash+1, key.length());
-            System.out.println(extraFileName);
             if(!product.containsImageName(extraFileName)) {
                 AmazonS3Util.deleteFile(key);
             }           
