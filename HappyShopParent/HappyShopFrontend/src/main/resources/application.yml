@@ -9,8 +9,8 @@ spring:
     url: jdbc:mysql://localhost:3306/happyshopdb
     username: root
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
+      maximum-pool-size: 2
+      minimum-idle: 1
   jpa:
     hibernate:
       ddl-auto: update
