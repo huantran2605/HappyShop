@@ -34,4 +34,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer>{
             + " ORDER BY o.orderTime ASC")
     public List<Order> findByOrderTimeBetween(Date startTime, Date endTime);
     
+
 }

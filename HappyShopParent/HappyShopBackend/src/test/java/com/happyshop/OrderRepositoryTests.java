@@ -33,6 +33,7 @@ public class OrderRepositoryTests {
     @Autowired private OrderRepository repo;
     @Autowired private TestEntityManager entityManager;
     
+    
     @Test
     public void testCreateNewOrderWithSingleProduct() {
         Customer customer = entityManager.find(Customer.class, 3);
@@ -137,8 +138,8 @@ public class OrderRepositoryTests {
     @Test
     public void findByOrderTimeBetween() throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date timeStart = dateFormat.parse("2020-10-1");
-        Date timeEnd = dateFormat.parse("2020-10-31");
+        Date timeStart = dateFormat.parse("2022-10-1");
+        Date timeEnd = dateFormat.parse("2023-1-31");
         
         List<Order> listOrder = repo.findByOrderTimeBetween(timeStart, timeEnd);
         assertThat(listOrder.size()).isGreaterThan(0);
@@ -147,6 +148,26 @@ public class OrderRepositoryTests {
             System.out.printf("%s | %s | %.2f \n", order.getId(), order.getProductCost(), order.getTotal() );
             
         }
+    }
+    
+    @Test
+    public void findInCategoryByOrderTimeBetween() throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date timeStart = dateFormat.parse("2022-10-1");
+        Date timeEnd = dateFormat.parse("2022-1-31");
+        
+        List<Order> listOrder = repo.findByOrderTimeBetween(timeStart, timeEnd);
+        
+        for (Order order : listOrder) {
+            
+        }
+        
+        
+//        for (Order order : listOrder) {
+//            System.out.printf("%s | %s | %.2f \n", order.getId(), order.getProductCost(), order.getTotal());
+//            
+//        }
+        
     }
     
 }
