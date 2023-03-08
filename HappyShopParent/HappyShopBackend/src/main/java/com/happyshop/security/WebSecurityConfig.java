@@ -46,7 +46,7 @@ public class WebSecurityConfig {
             .antMatchers("/product/**").hasAnyAuthority("Admin", "Editor")           
             .antMatchers("/product/detail/**", "/customers/detail/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
             .antMatchers("/order", "/order/", "/order/page/**","/order/listOrder", "/order/detail/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
-			.antMatchers("/customer/**", "/order/**", "/get_shipping_cost").hasAnyAuthority("Admin", "Salesperson")
+			.antMatchers("/customer/**", "/order/**", "/get_shipping_cost", "/reports/**").hasAnyAuthority("Admin", "Salesperson")
 			.antMatchers("/order_shippers/update/**").hasAnyAuthority("Shipper")         
 			.anyRequest().authenticated() 
 			.and()

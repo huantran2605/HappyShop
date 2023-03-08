@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.product.Product;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +32,26 @@ public class OrderDetail {
     private float shippingCost;
     private float unitPrice;
     private float subtotal;
+   
+
+    public OrderDetail(String categoryName, float productCost, float shippingCost, float subtotal) {
+        this.product = new Product();
+        this.product.setCategory(new Category(categoryName));
+        this.productCost = productCost;
+        this.shippingCost = shippingCost;
+        this.subtotal = subtotal;
+    }
     
+    public OrderDetail(int quantity, String name, float productCost, float shippingCost, float subtotal) {
+        this.product = new Product(name);
+        this.quantity = quantity;
+        this.productCost = productCost;
+        this.shippingCost = shippingCost;
+        this.subtotal = subtotal;
+    }
+    
+
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -40,7 +60,7 @@ public class OrderDetail {
     @JoinColumn(name = "order_id")
     private Order order;
 
-  
+    
     
   
 }

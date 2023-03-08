@@ -2,6 +2,9 @@ package com.happyshop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -85,7 +88,7 @@ public class OrderRepositoryTests {
     public void updateOrder() {
         Order order = repo.findById(1).get();
         
-        order.setPaymentMethod(PaymentMethod.COD);
+        order.setPaymentMethod(PaymentMethod.CREDIT_CARD);
         
         Order savedOrder = repo.save(order);
         
@@ -128,6 +131,22 @@ public class OrderRepositoryTests {
         order.setOrderTracks(list);
        
         assertThat( repo.save(order).getOrderTracks()).hasSizeGreaterThan(0);
+    }
+    
+    
+    @Test
+    public void findByOrderTimeBetween() throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date timeStart = dateFormat.parse("2020-10-1");
+        Date timeEnd = dateFormat.parse("2020-10-31");
+        
+        List<Order> listOrder = repo.findByOrderTimeBetween(timeStart, timeEnd);
+        assertThat(listOrder.size()).isGreaterThan(0);
+        
+        for (Order order : listOrder) {
+            System.out.printf("%s | %s | %.2f \n", order.getId(), order.getProductCost(), order.getTotal() );
+            
+        }
     }
     
 }

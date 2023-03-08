@@ -159,7 +159,6 @@ public class OrderController {
             //time-zone
             String timezone = request.getHeader("Time-Zone");
             model.addAttribute("timezone", timezone);
-            System.out.println(timezone + "----------------");
             loadCurrencySetting(request);
         }
         return "order/order_detail_modal";

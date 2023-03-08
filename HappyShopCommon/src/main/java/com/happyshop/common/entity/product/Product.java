@@ -97,7 +97,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductDetail> details = new ArrayList<>();
 //    
- 
+    
     
     @Transient
     public String getBrandName() {
@@ -153,4 +153,10 @@ public class Product {
     public Product(Integer id) {
         this.id = id;
     }
+
+    public Product(String name) {
+        this.name = name;
+    }
+
+    
 }
