@@ -1,5 +1,4 @@
 var chartOptions;
-var chartDiv;
 var data;
 
 var totalGrossSales;
@@ -8,95 +7,30 @@ var avgGrossSales;
 var avgNetSales;
 var ordersCount;
 
-var endTimeInput;
-var startTimeInput;
-var daysOfRange;
-
-decimalSeparator = decimal_point_type == "COMMA" ? "," : "."
-thousandSeparator = thousands_point_type == "COMMA" ? "," : ".";
-if(currency_symbol_position.charAt(0) == "B"){
-	number_prefix = currency_symbol;
-	number_suffix = "";
-}
-else{
-	number_suffix = currency_symbol;
-	number_prefix = "";
-}
 
 $(document).ready(function() {
-	endTimeInput = document.getElementById("endTime");
-	startTimeInput = document.getElementById("startTime");
-	chartDiv = document.getElementById('chart_div');
-	$(".btn_sales_by_date").on("click", function(){
-		$("#customeTimeDiv").addClass("d-none");
-		
-		$(".btn_sales_by_date").each(function(e){
-			$(this).removeClass("btn-primary").addClass("btn-light");
-		});
-		
-		$(this).removeClass("btn-light").addClass("btn-primary");
-		
-		period = $(this).attr("period");
-		loadSaleReportByDate(period);				
-	});
-	
-	$("#btnCustomTime").on("click", function(){
-		$(this).removeClass("btn-light").addClass("btn-primary");
-		$("#customeTimeDiv").removeClass("d-none");		
-		initCustomDateRangeInput();  	
-		loadSaleReportByDate("custom_date");	
-	});
-	$("#btnViewReportDataByDateRange").on("click", function(){
-		valid = validateDateRange();
-		if(valid){
-			loadSaleReportByDate("custom_date");
-		}
-	})
-	
-	
+	initButtonSaleBy("_date", loadSaleReportByDate);
+	initButtonCustomTimeAndViewReportData("_date", loadSaleReportByDate);		
 
 });
 
-function initCustomDateRangeInput(){
-	today = new Date();  
-	endTimeInput.valueAsDate = today;
-	startTime = new Date();
-	startTime.setDate(today.getDate() - 30);
-	startTimeInput.valueAsDate = startTime;
-}
-
-function validateDateRange(){
-	startTime = startTimeInput.valueAsDate;
-	endTime = endTimeInput.valueAsDate;
-	
-	differenceInMiliseconds = endTime - startTime;
-	
-	daysOfRange = differenceInMiliseconds / (24 * 60 * 60 * 1000);
-	if(daysOfRange < 1 || daysOfRange > 30){
-		startTimeInput.setCustomValidity("The time must be between 1 to 30 days");
-		startTimeInput.reportValidity();
-		return false;
-	}
-	return true;
-	
-}
-
-
 function loadSaleReportByDate(period){
-	if(period == "custom_date"){
-		startTime = $("#startTime").val();
-		endTime = $("#endTime").val();
-		url = contextPath + "reports/sale_by_date/" + startTime + "/" + endTime;				
+	if(period == "custom"){
+		startTime = $("#startTime_date").val();
+		endTime = $("#endTime_date").val();
+		url = contextPath + "reports/sale_by_date/"+  startTime + "/" + endTime;				
 	}else{
 		url = contextPath + "reports/sale_by_date/" + period;		
 	}
 	$.get(url, function(response){
 		prepareData(response);
 		customizeChart(period);
+		formatChartData(1,2);
 		drawChart(period);		
 	});
 	
 }
+
 
 function prepareData(responseJSON){
 	data = new google.visualization.DataTable();
@@ -135,82 +69,21 @@ function customizeChart(period){
 			1: {title: 'Number of Orders'}
 		}
 	};
-	
-	var formatter = new google.visualization.NumberFormat(
-		{
-			decimalSymbol: decimalSeparator, fractionDigits: decimal_digits,
-			groupingSymbol: thousandSeparator, prefix: number_prefix,
-			suffix: number_suffix
-		});
-	
-//	if(currency_symbol_position.charAt(0) == "B"){
-//		formatter.setPrefix(currency_symbol);
-//	}
-//	else{
-//		formatter.setSuffix(currency_symbol);setSuffix
-//	}
-//	formatter.setDecimalDigits(decimal_digits);
-//	formatter.setGroupingSymbol(thousandSeparator);
-//	formatter.setDecimalSymbol(decimalSeparator);
-	
-	formatter.format(data, 1);
-	formatter.format(data, 2);
+
 }
 
 function drawChart(period){  
-	var salesChart = new google.visualization.ColumnChart(chartDiv);
+	var salesChart = new google.visualization.ColumnChart(document.getElementById('chart_div_date'));
 	salesChart.draw(data, chartOptions);
-	$("#textTotalGrossSales").text( formatNumber(totalGrossSales) );
-	$("#textTotalNetSales").text( formatNumber(totalNetSales));
-	$("#textTotalOrders").text(ordersCount);
+	$("#textTotalGrossSales_date").text( formatNumber(totalGrossSales) );
+	$("#textTotalNetSales_date").text( formatNumber(totalNetSales));
+	$("#textTotalItems_date").text(ordersCount);
 	
 	
-	$("#textAvgGrossSales").text( formatNumber(totalGrossSales / getDenominator(period)) );
-	$("#textAvgNetSales").text( formatNumber(totalNetSales / getDenominator(period)) );
+	$("#textAvgGrossSales_date").text( formatNumber(totalGrossSales / getDenominator(period)) );
+	$("#textAvgNetSales_date").text( formatNumber(totalNetSales / getDenominator(period)) );
 	
 }
 
-function getDenominator(period){
-	if(period == "last_7_days"){
-		return 7;
-	}
-	else if(period == "last_28_days"){
-		return 28;
-	}
-	else if(period == "last_6_months"){
-		return 6;
-	}
-	else if(period == "last_year"){
-		return 12;
-	}
-	else if(period == "custom_date"){
-		return daysOfRange;
-	}
-	
-	return 7;
-}
 
-function getChartTitle(period){
-	if(period == "last_7_days"){
-		return "report last 7 days";
-	}
-	else if(period == "last_28_days"){
-		return "report last 28 days";
-	}
-	else if(period == "last_6_months"){
-		return "report last 6 months";
-	}
-	else if(period == "last_year"){
-		return "report last year";
-	}
-	else if(period == "custom_date"){
-		return "report with custom date";
-	}
-	
-	return "report last 7 days";
-}
-function formatNumber(number){
-	return number_prefix +  $.number(number, decimal_digits, decimalSeparator, thousandSeparator) + number_suffix;		
-	
-}
 

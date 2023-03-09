@@ -49,7 +49,7 @@ public class MasterOrderReportService extends AbstractReportService{
             if(listReportItem.contains(rI)){
                 int index = listReportItem.indexOf(rI);
                 ReportItem reportItem = listReportItem.get(index);
-                reportItem.addGrowwSales(order.getSubtotal());
+                reportItem.addGrossSales(order.getSubtotal());
                 reportItem.addNetSales(order.getSubtotal() - order.getProductCost());
                 reportItem.plusCountOrder();
             }

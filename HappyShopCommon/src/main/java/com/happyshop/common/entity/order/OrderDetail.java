@@ -34,18 +34,19 @@ public class OrderDetail {
     private float subtotal;
    
 
-    public OrderDetail(String categoryName, float productCost, float shippingCost, float subtotal) {
+    public OrderDetail(String categoryName, float productCost, float shippingCost, float subtotal, int quantity) {
         this.product = new Product();
         this.product.setCategory(new Category(categoryName));
-        this.productCost = productCost;
+        this.productCost = productCost * quantity;
         this.shippingCost = shippingCost;
         this.subtotal = subtotal;
+        this.quantity = quantity;
     }
     
     public OrderDetail(int quantity, String name, float productCost, float shippingCost, float subtotal) {
         this.product = new Product(name);
         this.quantity = quantity;
-        this.productCost = productCost;
+        this.productCost = productCost * quantity;
         this.shippingCost = shippingCost;
         this.subtotal = subtotal;
     }

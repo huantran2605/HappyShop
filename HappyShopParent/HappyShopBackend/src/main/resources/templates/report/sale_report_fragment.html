@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+<body>
+	<div th:fragment="content(reportType)" >
+		
+		<div>
+			<div th:with="buttonClass = 'btn_sales_by' + ${reportType} ">
+				<button period="last_7_days" class="btn btn-primary mt-2" th:classappend= "${buttonClass}" >Last 7 days</button>
+				<button period="last_28_days" class="btn btn-light mt-2" th:classappend= "${buttonClass}" >Last 28 days</button>
+				<button period="last_6_months" class="btn btn-light mt-2" th:classappend= "${buttonClass}" >Last 6 months</button>
+				<button period="last_year" class="btn btn-light mt-2" th:classappend= "${buttonClass}" >Last Year</button>
+				<button period="custom_date" th:id="btnCustomTime + ${reportType}" class="btn btn-light mt-2" th:classappend= "${buttonClass}" >Custom Time</button>
+			</div>
+			
+			<div class="row mt-3 d-none" th:id="customeTimeDiv + ${reportType}">  
+				<div class="col-sm-2">
+					<div class="input-group mb-3">
+						<span class="input-group-text">From: </span> <input
+							type="date" th:id="startTime + ${reportType}" class="form-control">
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="input-group mb-3">
+						<span class="input-group-text" >To: </span> <input
+							type="date" th:id="endTime + ${reportType}" class="form-control">
+					</div>
+				</div>
+				<div class="col-sm-1">
+					<button th:id="btnViewReportDataByDateRange + ${reportType}" class="btn btn-secondary">
+					View</button>
+				</div>
+			</div>
+			
+		</div>
+		<div th:id="chart_div + ${reportType}" class="justify-content-center mt-3" ></div>
+		<div class="row justify-content-center mt-3">
+		
+			<div class="col-sm-2 card text-bg-secondary mb-3 me-2">
+				<div class="card-header">Total Gross Sales:</div>
+				<div class="card-body" th:id="textTotalGrossSales + ${reportType} ">
+					
+				</div>
+			</div>
+			
+			<div class="col-sm-2 card text-bg-secondary mb-3 me-2" >
+				<div class="card-header">Total Net Sales:</div>
+				<div class="card-body" th:id="textTotalNetSales + ${reportType}">
+					
+				</div>
+			</div>
+			
+			<div class="col-sm-2 card text-bg-secondary mb-3 me-2">
+				<div class="card-header">Avg. Gross Sales:</div>
+				<div class="card-body" th:id="textAvgGrossSales + ${reportType}">
+					
+				</div>
+			</div>
+			
+			<div class="col-sm-2 card text-bg-secondary mb-3 me-2" >
+				<div class="card-header">Avg. Net Sales:</div>
+				<div class="card-body" th:id="textAvgNetSales + ${reportType}">
+					
+				</div>
+			</div>
+			
+			<div class="col-sm-2 card text-bg-secondary mb-3">
+				<div class="card-header"> <span th:id="total_item + ${reportType}"></span> </div>
+				<div class="card-body" th:id="textTotalItems + ${reportType}">
+					
+				</div>
+			</div>
+			
+		</div>
+
+	</div>
+
+
+
+
+
+</body>
+</html>

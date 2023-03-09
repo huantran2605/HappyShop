@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportRestController {
     @Autowired
     MasterOrderReportService masterOrderReportService;
+    @Autowired
+    OrderDetailReportService orderDetailReportService;
     
     @GetMapping("/reports/sale_by_date/{period}")
     public List<ReportItem> getReportDateByDate(@PathVariable("period") String period) {
@@ -40,4 +42,36 @@ public class ReportRestController {
         return masterOrderReportService.getReportDataCustomTime(startTime, endTime, ReportType.DAY);
     
     }
+    
+    @GetMapping("/reports/{groupBy}/{period}")
+    public List<ReportItem> getReportDataByCategoryOrProduct(@PathVariable("period") String period,
+            @PathVariable("groupBy") String groupBy) {
+        
+        ReportType reportType = ReportType.valueOf(groupBy.toUpperCase());
+        switch (period) {
+            case "last_7_days":   
+                return orderDetailReportService.getReportDataLast7Days(reportType);
+            case "last_28_days":
+                return orderDetailReportService.getReportDataLast28Days(reportType);
+            case "last_6_months":
+                return orderDetailReportService.getReportDataLast6Months(reportType);
+            case "last_year":
+                return orderDetailReportService.getReportDataLastYear(reportType);
+            default:
+                return orderDetailReportService.getReportDataLast7Days(reportType);
+                
+        }
+        
+    }
+    
+    @GetMapping("/reports/{groupBy}/{startTime}/{endTime}")
+    public List<ReportItem> getReportDateByCategory(@PathVariable("startTime") String startTime,
+            @PathVariable("endTime") String endTime,
+            @PathVariable("groupBy") String groupBy) throws ParseException {
+        ReportType reportType = ReportType.valueOf(groupBy.toUpperCase());
+        
+        return orderDetailReportService.getReportDataCustomTime(startTime, endTime, reportType);            
+  
+    }
+    
 }

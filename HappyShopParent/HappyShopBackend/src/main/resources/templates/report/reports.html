@@ -34,13 +34,15 @@
 			<div class="tab-content" id="settingTabContent">
 
 				<div class="tab-pane fade show active" id="saleByDate">
-					<div th:replace="report/sale_by_date_fragment :: content"></div>
+					<div th:replace="report/sale_report_fragment :: content('_date')"></div>
 				</div>
 
 				<div class="tab-pane fade" id="saleByCategory">
+					<div th:replace="report/sale_report_fragment :: content('_category')"></div>					
 				</div>
 
 				<div class="tab-pane fade" id="saleByProduct">
+					<div th:replace="report/sale_report_fragment :: content('_product')"></div>									
 				</div>
 				
 			</div>
@@ -58,17 +60,22 @@
 	decimal_digits = "[[${DECIMAL_DIGITS}]]";
 	decimal_point_type = "[[${DECIMAL_POINT_TYPE}]]";
 	thousands_point_type = "[[${THOUSANDS_POINT_TYPE}]]";
-	
-	
+		
 	$(document).ready(function() {
-		google.charts.load('current', {'packages':['corechart', 'bar']});
-		google.charts.setOnLoadCallback(loadSaleReportByDate);		
+		google.charts.load('current', {'packages': ['corechart']});
+		google.charts.load('current', {'packages': ['table']});
+		google.charts.setOnLoadCallback(loadSaleReportByDate);	
+		google.charts.setOnLoadCallback(loadSaleReportByCategory);	
+		google.charts.setOnLoadCallback(loadSaleReportByProduct);	
 	});
 	
 	
 </script>
 <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/sales_sale_report_common.js}"></script>
 <script type="text/javascript" th:src="@{/js/sales_sale_by_date.js}"></script>
+<script type="text/javascript" th:src="@{/js/sales_sale_by_category.js}"></script>
+<script type="text/javascript" th:src="@{/js/sales_sale_by_product.js}"></script>
 	<!-- footer -->
 	<div th:replace="fragments :: footer"></div>
 	<!-- Bootstrap JavaScript Libraries -->

@@ -15,6 +15,7 @@ public class ReportItem {
     private float grossSales;
     private float netSales;
     private int ordersCount;
+    private int productsCount;
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -34,7 +35,7 @@ public class ReportItem {
         this.identifier = identifier;
     }
     
-    public void  addGrowwSales(float amount) {
+    public void  addGrossSales(float amount) {
         this.grossSales += amount;
     }
     public void  addNetSales(float amount) {
@@ -43,6 +44,8 @@ public class ReportItem {
     public void  plusCountOrder() {
         this.ordersCount++;
     }
-    
+    public void  plusCountProduct(int count) {
+        this.productsCount += count;
+    }
     
 }

@@ -45,4 +45,22 @@ public class ReportOrderRestControllerTest {
         String url = "/reports/sale_by_date/2023-01-20/2023-02-02";
         mockMvc.perform(get(url)).andExpect(status().isOk()).andDo(print());
     }
+    
+    @Test
+    @WithMockUser(username = "user1", password = "pass1", authorities = {"Admin"})
+    public void testGetReportDataByCategory7Days() throws Exception {
+        
+        String url = "/reports/category/last_7_days";
+        mockMvc.perform(get(url)).andExpect(status().isOk()).andDo(print());
+    }
+    
+    @Test
+    @WithMockUser(username = "user1", password = "pass1", authorities = {"Admin"})
+    public void testGetReportDataByProduct7Days() throws Exception {
+        
+        String url = "/reports/product/last_7_days";
+        mockMvc.perform(get(url)).andExpect(status().isOk()).andDo(print());
+    }
+    
+    
 }
