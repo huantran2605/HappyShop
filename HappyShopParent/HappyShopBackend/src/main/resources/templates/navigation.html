@@ -69,9 +69,15 @@
 								New</a></li>
 						<li><a class="dropdown-item" th:href="@{/product/listProduct}">
 								View All</a></li>
+						<li><a class="dropdown-item" th:href="@{/review/listReview}">
+								Reviews</a></li>
 					</ul>
 				</li>
 				</th:block>
+				
+				<li class="nav-item"
+					sec:authorize="hasAuthority('Assistant')"><a
+					class="nav-link" th:href="@{/review/listReview}">Reviews</a></li>
 				
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin','Salesperson')"><a

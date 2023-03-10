@@ -179,12 +179,7 @@
 	</div>
 	<!-- modal -->
 	<div th:replace="modal_fragments :: confirmationModal"></div>
-
-	<div class="modal fade" id="detailModal">
-		<div class="modal-dialog modal-xl">   
-			<div class="modal-content"></div>
-		</div>
-	</div>
+	<div th:replace="modal_fragments :: detailModal('detailModal')"></div>
 	
 	<div th:replace="fragments :: countElement('Product')"></div>
 

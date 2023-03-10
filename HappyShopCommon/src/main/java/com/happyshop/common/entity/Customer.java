@@ -103,5 +103,10 @@ public class Customer {
            
         return address;
     }
+
+    public Customer(Integer id) {
+        super();
+        this.id = id;
+    }
     
 }

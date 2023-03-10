@@ -1,0 +1,81 @@
+
+<div class="modal-header">
+	<h5 class="modal-title">Review Details</h5>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="modal-body" id="modal-body">
+	<div class="row mb-3 mt-5">
+			<div class="col-sm-2">
+				<label for="">Review ID: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${review.id}"
+					readonly />
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Product:</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${review.product.shortName}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-sm-2">
+				<label for="">Customer: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${review.customer.FullName}"
+					readonly />
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Rating:</label>
+			</div>
+			<div class="col-sm-6">
+				[[${review.rating}]]
+				<i class="fa-sharp fa-regular fa-star"></i>
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-sm-2">
+				<label for="">Headline: </label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${review.headline}"
+					readonly />
+			</div>
+		</div>
+
+		<div class="row mb-3 ">
+			<div class="col-sm-2">
+				<label for="">Comment:</label>
+			</div>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" th:value="${review.comment}"
+					readonly />
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-sm-2">
+				<label for="">Review Time: </label>
+			</div>
+			<div class="col-sm-6">
+				<div th:replace="fragments :: format_time(${review.reviewTime})"></div>
+			</div>
+		</div>
+
+
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>

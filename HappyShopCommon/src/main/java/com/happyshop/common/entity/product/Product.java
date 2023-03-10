@@ -80,6 +80,12 @@ public class Product {
     @Column(nullable = false)
     private int quantity;
     
+    @Column
+    private float average_rating;
+    
+    @Column
+    private int review_count;
+    
     @Column(name="main_image", length = 128)
     private String mainImage;
     
@@ -90,6 +96,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+    
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images = new HashSet<>();
@@ -157,6 +164,8 @@ public class Product {
     public Product(String name) {
         this.name = name;
     }
+
+   
 
     
 }

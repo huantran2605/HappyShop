@@ -59,7 +59,7 @@ public class ProductController {
         return productPage(1, "id", "asc", "", 0, model);
     }
         
-    @GetMapping("/page/{pageNum}") 
+    @GetMapping("/page/{pageNum}")
     private String productPage (@PathVariable ("pageNum") Integer pageNum,
             @Param("sortField") String sortField,
             @Param("sortDir") String sortDir,

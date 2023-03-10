@@ -90,11 +90,11 @@ public class BrandController {
     }
     
     @GetMapping("update/{id}")
-    private String updateBrand(@PathVariable("id") Integer  id,            
+    private String updateBrand(@PathVariable("id") Integer  id, RedirectAttributes re,           
             Model model) {
         Optional<Brand> brand = brandService.findById(id);
         if (brand.isEmpty()) {
-            model.addAttribute("message", "The brand is not exist!");
+            re.addFlashAttribute("message", "The brand is not exist!");
             return "redirect:/brand/listBrand";
         } else {  
             model.addAttribute("listCategory", categoryService.showListCategory());

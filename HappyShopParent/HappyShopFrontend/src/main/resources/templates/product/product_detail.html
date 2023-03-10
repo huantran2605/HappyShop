@@ -145,10 +145,10 @@
 			
 		});
 		
+		contextPath = "[[@{/}]]";
+		loginURL = "[[@{/login}]]";
 		csrfHeaderName = "[[${_csrf.headerName}]]";
 		csrfValue = "[[${_csrf.token}]]";
-		contextPath = "[[@{/}]]"
-		loginURL = "[[@{/login}]]"
 		
 		$(".addToCart").on("click", function(){
 			productIdString = $(this).attr("addToCartId");

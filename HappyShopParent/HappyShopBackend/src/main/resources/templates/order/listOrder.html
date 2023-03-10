@@ -115,18 +115,9 @@
 
 	<!-- modal -->
 	<div th:replace="modal_fragments :: confirmationModal"></div>
+	<div th:replace="modal_fragments :: detailModal('detailModalCustomer')"></div>
+	<div th:replace="modal_fragments :: detailModal('detailModalOrder')"></div>
 
-	<div class="modal fade" id="detailModalCustomer">
-		<div class="modal-dialog modal-xl">
-			<div class="modal-content"></div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="detailModalOrder">
-		<div class="modal-dialog modal-xl">
-			<div class="modal-content"></div>
-		</div>
-	</div>
 
 	<div th:replace="fragments :: countElement('Order')"></div>
 	<!-- pagination -->
