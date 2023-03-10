@@ -41,7 +41,7 @@ public class WebSecurityConfig {
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		    .antMatchers("/customer/customer_details", "/customer/update", "/cart","/address_book/**",
-		            "/order/**",
+		            "/order/**","/review/**",
 		            "/checkout/**").authenticated()
 		    .anyRequest().permitAll()
 		    .and()

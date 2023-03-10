@@ -236,6 +236,31 @@
 	<div th:fragment="format_time(dateTime)" th:remove="tag">
 		<span th:text="${#dates.format(dateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
 	</div>	
+	
+		<!-- search-->
+	<div th:fragment="search(nameModule)">
+		<div class="row">
+			<div class="col-6 d-flex justify-content-start ">
+				<form
+					th:action="@{${moduleURL} +'/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+					class="form-inline ">
+					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+						type="hidden" name="sortDir" th:value="${sortDir}" /> <input
+						class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
+						type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success m-3 ms-0" type="submit">
+						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+					</button>
+					<a th:href="@{${moduleURL} + '/list' + ${nameModule}}"
+						class="btn btn-outline-success m-3 "> <i
+						class="fa-sharp fa-solid fa-eraser"></i>
+					</a>
+
+				</form>
+			</div>
+		</div>
+
+	</div>
 
 </body>
 </html>
