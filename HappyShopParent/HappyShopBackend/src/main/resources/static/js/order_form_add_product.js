@@ -45,7 +45,7 @@ function getShippingCost(productId) {
 function getProductInfo(productId, shippingCost){
 	url = contextPath + "products/get/" + productId;
 	$.get(url, function(response) {
-		imagePath = contextPath.substring(0, contextPath.length - 1) + response.imagePath;
+		imagePath =  response.imagePath;
 		name = response.name;
 		shortName = response.shortName;
 		cost =  $.number(response.cost, 2);
@@ -128,7 +128,6 @@ function generateProductCode(productId, imagePath, name, shortName, cost, quanti
 					</div>
 				</div>
 			</div>`;
-			
 		return htmlCode;
 }
 

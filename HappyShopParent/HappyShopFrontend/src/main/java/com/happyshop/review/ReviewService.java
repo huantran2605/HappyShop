@@ -19,4 +19,8 @@ public interface ReviewService {
     
     public List<Review> getMostRecentReviewOfProduct(Product product);
     
+    public List<Review> findByProduct(Product product);
+    
+    public Page<Review> findByProduct(Product product, Pageable pageable);
+    
 }

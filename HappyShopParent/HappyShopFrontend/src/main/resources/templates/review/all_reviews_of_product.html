@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('All Reviews','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<input type="hidden" th:avr_rating = "${product.average_rating}" 
+			th:productID = "${product.id}" 
+			th:review_count = "${product.review_count}"
+			id="hiddenInput"/>
+		<div class="row">
+			<div class="col-sm-3">
+				<img th:src="@{${product.getProductMainImagePath}}" alt="product image review" 
+					class="img-thumbnail"/>
+			</div>
+			<div class="col-sm-9">
+				<h5><strong>[[${product.shortName}]]</strong></h5>
+				<div th:id="customer_reviews + ${product.id}">
+				</div>				
+			</div>
+		
+		</div>
+		
+		<div>
+			<th:block th:each="review : ${listReview}">
+				<div class="col-6"><hr /></div>			
+				<div class="">
+					<div th:id="review_star_by_customer + ${review.id}"
+					 	th:reviewId="${review.id}" 
+						class="customer_review" 
+						th:rating="${review.rating}"></div>
+					<h6><strong>[[${review.headline}]]</strong></h6>
+					<p>[[${review.comment}]]</p>
+					<small>[[${review.customer.FullName}]]</small>
+					<small class="ms-3" th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd')}"> </small>
+				</div>	
+			</th:block>	
+		</div>
+		
+	</div>
+	<div th:replace="fragments :: countElement('Review')"></div> 
+	<div th:replace="fragments :: pagination()"></div>
+	
+	<script th:src="@{/js/product_rating_common.js}"></script>
+	<script th:src="@{/js/product_rating_in_all_reviews_page.js}"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

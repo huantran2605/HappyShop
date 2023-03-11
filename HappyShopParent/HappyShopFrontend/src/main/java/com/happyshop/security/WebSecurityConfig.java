@@ -62,7 +62,11 @@ public class WebSecurityConfig {
             .and()
             .rememberMe()
                 .key("hfgeurhgefsdfsfsbgb1236744jh2345er")
-                .tokenValiditySeconds( 14 * 24 * 60 * 60);
+                .tokenValiditySeconds( 14 * 24 * 60 * 60)
+            .and()
+            .headers()
+            .frameOptions()
+                .sameOrigin();
 
 		return http.build();
 	}

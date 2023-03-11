@@ -140,25 +140,47 @@
 				<h3>Customer Reviews</h3>
 			</div>
 			<div class="col-12">
-				<div th:id="customer_review + ${product.id}">
+				<div th:id="customer_reviews + ${product.id}">
 				</div>				
-				<a href=""><small>View all reviews</small></a>				
+				<a href="" id="viewAllReviewsBtn" th:if="${product.review_count} != 0"><small>View all reviews</small></a>				
 			</div>
 		</div>
 		
-		<div class="mt-2">
-			<p>Most recent reviews</p>
+		<div class="mt-2 row">
+			<h5>Most recent reviews</h5>
 			<th:block th:each="review : ${recentReviews}">
-				<strong>[[${review.headline}]]</strong>
-				<p>[[${review.comment}]]</p>
-				
-				
-			</th:block>
-			
-		
+				<div class="col-6"><hr /></div>			
+				<div class="">
+					<div th:id="review_star_by_customer + ${review.id}" th:reviewId="${review.id}" 
+						class="customer_review" th:rating="${review.rating}"></div>
+					<h6><strong>[[${review.headline}]]</strong></h6>
+					<p>[[${review.comment}]]</p>
+					<small>[[${review.customer.FullName}]]</small>
+					<small class="ms-3" th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd')}"> </small>
+				</div>	
+			</th:block>		
 		</div>
-		
 
+		<div class="modal" id="viewAllReviewsModal">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal-title">All Reviews</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body" id="modal-body">
+						<div class="ratio ratio-4x3">
+							<iframe th:src="@{'/review/all_reviews/page/1?productId=' + ${product.id}}" allowfullscreen></iframe>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<div th:replace="product/image_carousel :: content"></div>
 		<div th:replace="navigation :: footer_menu"></div>
@@ -166,6 +188,8 @@
 	</div>
 	
 	<script th:src="@{/js/product_rating.js}"></script>
+	<script th:src="@{/js/product_rating_common.js}"></script>
+	
 	<script>
 		$(document).ready(function(){
 			$(".image-thumbnail").mouseenter(function(){
@@ -178,6 +202,11 @@
 				$("#imageCarouselModal").modal("show");
 				imageIndex = parseInt($("#mainImage").attr("index"));
 				$("#imageCarouselModal").carousel(imageIndex);
+			});
+			
+			$("#viewAllReviewsBtn").on("click", function(e){
+				e.preventDefault();
+				$("#viewAllReviewsModal").modal("show");
 			});
 			
 		});
@@ -221,5 +250,6 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
 		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
 		crossorigin="anonymous"></script>
+		
 </body>
 </html>

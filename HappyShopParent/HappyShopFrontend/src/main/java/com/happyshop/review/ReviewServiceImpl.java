@@ -53,13 +53,14 @@ public class ReviewServiceImpl implements ReviewService {
         return recentReviews;
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
+    public List<Review> findByProduct(Product product) {
+        return repo.findByProduct(product);
+    }
+
+    public Page<Review> findByProduct(Product product, Pageable pageable) {
+        return repo.findByProduct(product, pageable);
+    }
+
+ 
     
 }
