@@ -48,5 +48,7 @@ public interface ProductService {
     String updateEnabledStatus(Product product);
     
     void saveProductPriceAndQuantity(Product productInForm);
+    
+    public void setAvarageRatingAndReviewCount(Product product);
 
 }

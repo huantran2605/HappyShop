@@ -9,6 +9,12 @@
 			<img th:src="@{${product.getProductMainImagePath}}" width="150" class="img-fluid" /> <br />
 			<b>[[${product.shortName}]]</b>
 		</a> <br />
+		<div class="product_rating" th:productId="${product.id}">
+			<input type="hidden" th:value="${product.average_rating}" th:id="avr_rating +  ${product.id}" />
+			<input type="hidden" th:value="${product.review_count}" th:id="review_count +  ${product.id}"/>
+			<div th:id="star_rating +${product.id}"></div>			
+		</div>
+		
 		
 		<div th:replace="product/product_fragment :: showProductPrice">			
 		</div>

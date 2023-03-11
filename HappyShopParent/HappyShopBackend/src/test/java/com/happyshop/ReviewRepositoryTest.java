@@ -3,6 +3,7 @@ package com.happyshop;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,17 @@ public class ReviewRepositoryTest {
         
         reviewRepo.save(r);
     }
+    
+    @Test
+    public  void testGetReviewByProduct() {
+        List<Review> list = reviewRepo.findByProduct(new Product(2));
+        assertThat(list.size()).isGreaterThan(0);
+        
+        for (Review review : list) {
+            System.out.println(review.getHeadline()+"  "+review.getComment()+"  "+review.getRating());
+        }
+    }
+    
     
     
 }

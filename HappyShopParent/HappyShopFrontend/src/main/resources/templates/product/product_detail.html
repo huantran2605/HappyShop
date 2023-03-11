@@ -38,7 +38,16 @@
 				<div style="font-size: 20px;">
 					<p><b>Brand:</b> [[${product.brand.name}]]</p>
 				</div>
-				
+
+				<div class="product_rating"
+					th:productId="${product.id}">
+					<input type="hidden" th:value="${product.average_rating}"
+						th:id="avr_rating +  ${product.id}" /> <input type="hidden"
+						th:value="${product.review_count}"
+						th:id="review_count +  ${product.id}" /> 
+					<div th:id="star_rating +${product.id}"></div>
+				</div>
+
 				<div class="d-flex flex-row" style="font-size: 20px;">
 					<b class="me-2">Price: </b>
 					<span th:replace="product/product_fragment :: showProductPrice"></span>
@@ -120,15 +129,43 @@
 				</th:block>
 			</div>
 		</div>
+		
+		<div class="row">
+			<div class="col-12">
+				<div>
+					<hr />
+				</div>
+			</div>
+			<div class="col-12">
+				<h3>Customer Reviews</h3>
+			</div>
+			<div class="col-12">
+				<div th:id="customer_review + ${product.id}">
+				</div>				
+				<a href=""><small>View all reviews</small></a>				
+			</div>
+		</div>
+		
+		<div class="mt-2">
+			<p>Most recent reviews</p>
+			<th:block th:each="review : ${recentReviews}">
+				<strong>[[${review.headline}]]</strong>
+				<p>[[${review.comment}]]</p>
+				
+				
+			</th:block>
+			
+		
+		</div>
+		
 
-		<div th:replace="fragments :: countElement('Product')"></div>
-		<div th:replace="fragments :: pagination()"></div>
 
 		<div th:replace="product/image_carousel :: content"></div>
 		<div th:replace="navigation :: footer_menu"></div>
 		<div th:replace="fragments :: footer"></div>
 	</div>
-
+	
+	<script th:src="@{/js/product_rating.js}"></script>
 	<script>
 		$(document).ready(function(){
 			$(".image-thumbnail").mouseenter(function(){

@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.product.Product;
 import com.happyshop.review.ReviewRepository;
 
 @DataJpaTest
@@ -32,5 +33,15 @@ public class ReviewRepositoryTests {
 //        for (Review review : r) {
 //            System.out.println(review.getHeadline() +"  "+review.getComment()+"  "+review.getRating());
 //        }
+    }
+    
+    @Test
+    public void getReviewsByProductTest() {
+        List<Review> list = repo.findByProduct(new Product(2));
+        
+        assertThat(list.size()).isGreaterThan(0);
+        for (Review review : list) {
+          System.out.println(review.getReviewTime()+"   "+ review.getHeadline() +"  "+review.getComment()+"  "+review.getRating());
+        }
     }
 }

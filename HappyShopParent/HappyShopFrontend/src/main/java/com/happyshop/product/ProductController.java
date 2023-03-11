@@ -36,14 +36,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.category.CategoryService;
 import com.happyshop.common.entity.Category;
+import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.entity.product.ProductImage;
+import com.happyshop.review.ReviewRepository;
+import com.happyshop.review.ReviewService;
 
 
 @Controller
 public class ProductController {
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    ReviewService reviewService;
+    
     
     @Autowired
     ProductService productService;
@@ -101,6 +107,9 @@ public class ProductController {
         model.addAttribute("listParentCategory", listParentCategory);
         model.addAttribute("product", product);
         model.addAttribute("titlePage", product.shortName());
+        
+        List<Review> recentReviews = reviewService.getMostRecentReviewOfProduct(product);
+        model.addAttribute("recentReviews", recentReviews);
         
         return "product/product_detail";
     }

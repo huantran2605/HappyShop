@@ -26,6 +26,7 @@ import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.ReviewNotFoundException;
 import com.happyshop.product.ProductSaveHelper;
+import com.happyshop.product.ProductService;
 import com.happyshop.review.ReviewService;
 import com.happyshop.security.UserDetailsClass;
 
@@ -34,6 +35,8 @@ import com.happyshop.security.UserDetailsClass;
 public class ReviewController {
     @Autowired 
     ReviewService reviewService;
+    @Autowired
+    ProductService productService;
     
     String defaultUrl = "redirect:/review/page/1?sortField=reviewTime&sortDir=des&keyWord=";
     @GetMapping("/listReview")
@@ -140,6 +143,9 @@ public class ReviewController {
             Review reviewInDb = reviewService.findById(review.getId());
             reviewInDb.setComment(review.getComment());
             reviewInDb.setHeadline(review.getHeadline());
+            
+            Product product = reviewInDb.getProduct();
+            productService.setAvarageRatingAndReviewCount(product);
             
             reviewService.save(reviewInDb);
             re.addFlashAttribute("message", "Updated review successfully!");

@@ -1,5 +1,7 @@
 package com.happyshop.review;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.ReviewNotFoundException;
 
 @Service
@@ -31,6 +34,26 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    public List<Review> getMostRecentReviewOfProduct(Product product) {
+        List<Review> reviews = repo.findByProduct(product);
+        
+        List<Review> recentReviews = new ArrayList<>();
+        
+        int size = reviews.size();
+        int index = 0;
+        while(size > 0) {
+            recentReviews.add(reviews.get(index));
+            index++;
+            if(index == 3) {
+                break;
+            }
+            size--;
+        }
+        
+        return recentReviews;
+    }
+
+    
     
     
     

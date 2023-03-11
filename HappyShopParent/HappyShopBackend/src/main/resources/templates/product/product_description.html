@@ -6,14 +6,14 @@
 <div th:fragment="description" class="container">
 		<div class="m-2">
 			<label>Short Description:</label>
-			<textarea class="form-control" th:field="*{shortDescription}"
+			<textarea class="form-control" th:field="*{shortDescription}" maxlength="500"
 				rows="5" required></textarea>
 		</div>
 		
 		
 		<div class="m-2">
 			<label>Full Description:</label>
-			<textarea class="form-control" th:field="*{fullDescription}"
+			<textarea class="form-control" th:field="*{fullDescription}" maxlength="5000"
 				rows="10" required></textarea>
 		</div>
 </div>

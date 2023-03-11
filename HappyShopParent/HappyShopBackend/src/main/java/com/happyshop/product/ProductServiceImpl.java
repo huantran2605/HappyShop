@@ -15,21 +15,27 @@ import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Brand;
 import com.happyshop.common.entity.Category;
+import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.review.ReviewRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService{
     
     @Autowired
     ProductRepository productRepo;
+    
+    @Autowired
+    ReviewRepository reviewRepo;
 
     @Override
     public <S extends Product> S save(S entity) {
+        Product productInDb = new Product();
         if(entity.getId() == null) {
             entity.setCreatedTime(new Date());
         }
         else {
-            Product productInDb = productRepo.findById(entity.getId()).get();
+            productInDb = productRepo.findById(entity.getId()).get();
             entity.setCreatedTime(productInDb.getCreatedTime());
         }
         if(entity.getAlias() == null || entity.getAlias().isEmpty()) {
@@ -45,6 +51,10 @@ public class ProductServiceImpl implements ProductService{
         else {
             entity.setInStock(true);
         }
+        
+        entity.setAverage_rating(productInDb.getAverage_rating());
+        entity.setReview_count(productInDb.getReview_count());
+        
         
         return productRepo.save(entity);
     }
@@ -174,5 +184,22 @@ public class ProductServiceImpl implements ProductService{
             productInDB.setInStock(true);
         }
         productRepo.save(productInDB);
+    }
+    
+    
+    public void setAvarageRatingAndReviewCount(Product product) {
+        List<Review> listReview = reviewRepo.findByProduct(product);
+        
+        int count = listReview.size();
+        product.setReview_count(count);
+        
+        float totalRating = 0;
+        for (Review review : listReview) {
+            totalRating += review.getRating();
+        }
+        float avr_rating = (float) Math.round(totalRating / count * 100) / 100; 
+        product.setAverage_rating(avr_rating);
+        
+        productRepo.save(product);        
     }
 }

@@ -170,8 +170,8 @@ public class ProductController {
             
             productService.save(product);
       
-            String nameSerach = product.getName();
-            return "redirect:/product/page/1?sortField=id&sortDir=asc&categoryID=0&keyWord=" + nameSerach;
+            String nameSearch = product.getName(); 
+            return "redirect:/product/page/1?sortField=id&sortDir=asc&categoryID=0&keyWord=" + nameSearch;
     }
     
     private void setMainImageName(MultipartFile mainImageMultipartFile, Product product) {
