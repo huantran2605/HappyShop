@@ -44,4 +44,13 @@ public class ReviewRepositoryTests {
           System.out.println(review.getReviewTime()+"   "+ review.getHeadline() +"  "+review.getComment()+"  "+review.getRating());
         }
     }
+    
+    @Test
+    public void getReviewsByProductAndCustomerTest() {
+//        Review r =  repo.findByProductAndCustomer(new Customer(37), new Product(22));
+//        assertThat(r).isNotNull();
+//        System.out.println(r.getComment());
+    }
+    
+    
 }

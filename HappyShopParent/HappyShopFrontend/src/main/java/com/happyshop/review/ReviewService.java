@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.ReviewNotFoundException;
 
@@ -22,5 +23,10 @@ public interface ReviewService {
     public List<Review> findByProduct(Product product);
     
     public Page<Review> findByProduct(Product product, Pageable pageable);
+    
+    public <S extends Review> S save(S entity);
+    
+    public int checkCustomerHasReviewForProduct(Customer customer, Product product);
+    
     
 }

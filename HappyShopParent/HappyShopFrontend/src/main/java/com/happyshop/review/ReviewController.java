@@ -1,5 +1,6 @@
 package com.happyshop.review;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,16 +16,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.ProductNotFoundException;
 import com.happyshop.common.exception.ReviewNotFoundException;
 import com.happyshop.customer.CustomerService;
+import com.happyshop.order.OrderService;
 import com.happyshop.product.ProductService;
 
 @Controller
@@ -36,6 +41,8 @@ public class ReviewController {
     CustomerService customerService;
     @Autowired
     ProductService productService;
+    @Autowired
+    OrderService orderService;
     
     String defaultUrl = "redirect:/review/page/1?sortField=reviewTime&sortDir=des&keyWord=";
     @GetMapping("/listReview")
@@ -159,6 +166,43 @@ public class ReviewController {
         model.addAttribute("productId", productId);
                
         return "review/all_reviews_of_product";
+    }
+    
+    @GetMapping("/write_review/{productId}")
+    private String writeReview(@PathVariable("productId") Integer productId,
+            Model model,Review review,HttpServletRequest request) {
+        
+        Product product = productService.findById(productId).get();
+        Customer customer = getAuthenticationCustomer(request);
+        
+        model.addAttribute("product", product);
+        model.addAttribute("review", review);
+        
+        //check customer had reviewed for this product yet.
+        int reviewId = reviewService.checkCustomerHasReviewForProduct(customer, product);
+        if(reviewId != -1) {
+            return "redirect:/review/page/1?sortField=reviewTime&sortDir=des&keyWord=id" + reviewId;
+        }
+               
+        return "review/review_form";        
+    }
+    
+    @PostMapping("/save")
+    private String saveReview(Review review,RedirectAttributes re,
+            HttpServletRequest request,@RequestParam("productId") Integer productId) {
+        
+        Customer customer = getAuthenticationCustomer(request);
+        Product product = productService.findById(productId).get();
+        review.setReviewTime(new Date());
+        review.setCustomer(customer);
+        review.setProduct(product);        
+        reviewService.save(review);  
+        
+        //upate average_rating and review count of product.
+        productService.setAvarageRatingAndReviewCount(product);
+        
+        re.addFlashAttribute("message", "Write review successfully!");
+        return "redirect:/order";
     }
             
     

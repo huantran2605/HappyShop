@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.ReviewNotFoundException;
 
@@ -61,6 +62,19 @@ public class ReviewServiceImpl implements ReviewService {
         return repo.findByProduct(product, pageable);
     }
 
- 
+    public <S extends Review> S save(S entity) {
+        return repo.save(entity);
+    }
+
+    public int checkCustomerHasReviewForProduct(Customer customer, Product product) {
+        Review r = repo.findByProductAndCustomer(customer, product);
+        if(r != null) {
+            return r.getId();
+        }
+        return -1;
+    }
+
+
+    
     
 }

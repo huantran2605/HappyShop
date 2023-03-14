@@ -81,7 +81,6 @@
 	</div>
 
 	<!-- modal -->
-	<div th:replace="modal_fragments :: detailModal('detailModalProduct')"></div>
 	<div th:replace="modal_fragments :: detailModal('detailModalReview')"></div>
 
 
@@ -95,7 +94,6 @@
 	<script>
 		$(document).ready(function(){
 			
-			handleShowDetailModal('link-detail-product', 'detailModalProduct');
 			handleShowDetailModal('link-detail-review' , 'detailModalReview');
 				
 		});

@@ -7,9 +7,12 @@
 
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
+
+		<h2 class="text-center">My Orders</h2>
 		
-		<h2 class="text-center"> My Orders		
-		</h2>
+		<div class="alert alert-primary" th:if="${message != null}"
+			role="alert" th:text="${message}">
+		</div>
 		
 		<div class="row">
 			<div class="col-6 d-flex justify-content-start ">
@@ -23,15 +26,14 @@
 					<button class="btn btn-outline-success m-3 ms-0" type="submit">
 						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
 					</button>
-					<a th:href="@{${moduleURL}}"
-						class="btn btn-outline-success m-3 "> <i
-						class="fa-sharp fa-solid fa-eraser"></i>
+					<a th:href="@{${moduleURL}}" class="btn btn-outline-success m-3 ">
+						<i class="fa-sharp fa-solid fa-eraser"></i>
 					</a>
 
 				</form>
 			</div>
 		</div>
-		
+
 		<div class="full-details" th:if="${totalElement > 0}">
 			<table
 				class="table table-active table-striped table-inverse
@@ -39,7 +41,8 @@
 				<thead class="thead-inverse ">
 					<tr>
 						<th th:replace="fragments :: column_link('id', 'ID')"></th>
-						<th th:replace="fragments :: column_link('orderTime', 'Order Time')"></th>
+						<th
+							th:replace="fragments :: column_link('orderTime', 'Order Time')"></th>
 						<th>Products</th>
 						<th th:replace="fragments :: column_link('total', 'Total')"></th>
 						<th th:replace="fragments :: column_link('status', 'Status')"></th>
@@ -48,19 +51,17 @@
 				</thead>
 				<tbody>
 					<tr th:each=" order: ${orders}">
-						<td scope="row" th:text="${order.id}"></td>						
-						<td>	
-							<div th:replace="fragments :: format_time(${order.orderTime})"></div>						
+						<td scope="row" th:text="${order.id}"></td>
+						<td>
+							<div th:replace="fragments :: format_time(${order.orderTime})"></div>
 						</td>
 
 						<td>
 							<ul>
 								<th:block th:each=" oD: ${order.orderDetails}">
-									<li>
-										<a th:href="@{'/p/' + ${oD.product.alias}}" th:title="${oD.product.name}">
-										[[${oD.product.shortName}]]
-										</a>
-									</li>
+									<li><a th:href="@{'/p/' + ${oD.product.alias}}"
+										th:title="${oD.product.name}"> [[${oD.product.shortName}]]
+									</a></li>
 								</th:block>
 							</ul>
 						</td>
@@ -68,45 +69,50 @@
 						<td>
 							<div th:replace="fragments :: format_currency(${order.total})"></div>
 						</td>
-						<td th:text="${order.status}" th:id="'linkUpdateStatusReturnOrder' + ${order.id}"></td>
+						<td th:text="${order.status}"
+							th:id="'linkUpdateStatusReturnOrder' + ${order.id}"></td>
 						<td>
 							<div class="float-start">
 								<a th:href="@{'/order/detail/' + ${order.id}}"
-									title="Detail order" class="me-3 link-detail-order_customer"> <i
-									class="fa-sharp fa-solid fa-circle-info fa-2x"></i>
+									title="Detail order" class="me-3 link-detail-order_customer">
+									<i class="fa-sharp fa-solid fa-circle-info fa-2x"></i>
 								</a>
-								<th:block th:if="${order.isReturnRequested == false && order.isDelivered == true 
+								<th:block
+									th:if="${order.isReturnRequested == false && order.isDelivered == true 
 									&& order.isReturned == false}">
-									<a href="" class="fa-sharp fa-solid fa-arrow-rotate-left fa-2x linkReturnOrder"
-										th:orderId = "${order.id}" th:id="'orderReturnIcon' + ${order.id}"
-									 title="Return"></a>
-								</th:block>  
-							</div> 
+									<a href=""
+										class="fa-sharp fa-solid fa-arrow-rotate-left fa-2x linkReturnOrder"
+										th:orderId="${order.id}"
+										th:id="'orderReturnIcon' + ${order.id}" title="Return"></a>
+								</th:block>
+							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		
+
 		<div class="less-details">
-			
-				<div th:each=" order: ${orders}" class="row">
+
+			<div th:each=" order: ${orders}" class="row">
 				<div class="card border-dark mb-3 col">
 					<div class="card-header row">
 						<div class="col">
-							<p>Order Id #[[${order.id}]]</p>  
+							<p>Order Id #[[${order.id}]]</p>
 						</div>
 						<div class="col d-flex justify-content-end">
 							<a th:href="@{'/order/detail/' + ${order.id}}"
-									title="Detail order" class="me-3 link-detail-order_customer"> <i
-									class="fa-sharp fa-solid fa-circle-info fa-2x"></i>
+								title="Detail order" class="me-3 link-detail-order_customer">
+								<i class="fa-sharp fa-solid fa-circle-info fa-2x"></i>
 							</a>
-							<th:block th:if="${order.isReturnRequested == false && order.isDelivered == true 
+							<th:block
+								th:if="${order.isReturnRequested == false && order.isDelivered == true 
 									&& order.isReturned == false}">
-								<a href="" class="fa-sharp fa-solid fa-arrow-rotate-left fa-2x linkReturnOrder"
-									th:orderId = "${order.id}" th:id="'orderReturnIcon' + ${order.id}"
-								 title="Return"></a>
-							</th:block>  
+								<a href=""
+									class="fa-sharp fa-solid fa-arrow-rotate-left fa-2x linkReturnOrder"
+									th:orderId="${order.id}"
+									th:id="'orderReturnIcon' + ${order.id}" title="Return"></a>
+							</th:block>
 						</div>
 					</div>
 					<div class="card-body">
@@ -121,21 +127,15 @@
 							<div class="col">
 								<div th:replace="fragments :: format_currency(${order.total})"></div>
 							</div>
-							<div class="col" th:id="'linkUpdateStatusReturnOrder' + ${order.id}">
-								[[${order.status}]]
-							</div>
+							<div class="col"
+								th:id="'linkUpdateStatusReturnOrder' + ${order.id}">
+								[[${order.status}]]</div>
 						</div>
 						<div th:replace="fragments :: format_time(${order.orderTime})"></div>
 					</div>
 				</div>
 			</div>
-			
-		</div>
 
-		<div class="modal fade" id="detailModalOrder_customer">
-			<div class="modal-dialog modal-xl">
-				<div class="modal-content"></div>
-			</div>
 		</div>
 
 		<div th:replace="fragments :: countElement('Order')"></div>
@@ -145,7 +145,13 @@
 		<div th:replace="navigation :: footer_menu"></div>
 		<div th:replace="fragments :: footer"></div>
 		<div th:replace="order/order_return_fragment :: orderReturnModal"></div>
-			
+
+	</div>
+
+	<div class="modal fade" id="detailModalOrder_customer">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content"></div>
+		</div>
 	</div>
 	
 	<script th:src="@{/js/order_return.js}"></script>
@@ -154,17 +160,18 @@
 		csrfValue = "[[${_csrf.token}]]";
 		contextPath = "[[@{/}]]"
 	
-		$(document).ready(
-				function() {
-					$(".link-detail-order_customer").on("click", function(e) { 
-						e.preventDefault();
-						linkDetailUrl = $(this).attr("href"); 
-						$("#detailModalOrder_customer").modal("show").find(    
-								".modal-content").load(linkDetailUrl);
-				});
+		$(document).ready( function() {
+			$(".link-detail-order_customer").on("click", function(e) { 
+				e.preventDefault();
+				linkDetailUrl = $(this).attr("href");
+				$("#detailModalOrder_customer").modal("show").find(    
+						".modal-content").load(linkDetailUrl);
+			});		
+			
 		});
+		
 	</script>
-	
+
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
 		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"

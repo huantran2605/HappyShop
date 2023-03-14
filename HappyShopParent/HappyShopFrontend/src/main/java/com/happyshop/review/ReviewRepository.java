@@ -12,13 +12,14 @@ import org.springframework.stereotype.Repository;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
    
     @Query("SELECT r FROM Review r WHERE r.customer = ?2 AND"
-            + " CONCAT(r.headline,' ',r.comment,' ', r.product.name) LIKE %?1% ")          
+            + " CONCAT(r.headline,' ',r.comment,' ', r.product.name,' ', 'id', r.id) LIKE %?1% ")          
     public Page<Review> findAll(String keyword, Customer customer, Pageable pageable);
     
     @Query("SELECT r FROM Review r WHERE r.customer = ?1 ")          
@@ -29,4 +30,9 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     
     @Query("SELECT r FROM Review r WHERE r.product = ?1  ORDER BY r.reviewTime DESC")
     public Page<Review> findByProduct(Product product, Pageable pageable);
+    
+    @Query("SELECT r FROM Review r WHERE r.customer = ?1 AND r.product = ?2")
+    public Review findByProductAndCustomer(Customer customer, Product product);
+    
+    
 }

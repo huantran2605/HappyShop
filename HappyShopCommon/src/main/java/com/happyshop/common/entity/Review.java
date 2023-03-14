@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
 
 import lombok.AllArgsConstructor;

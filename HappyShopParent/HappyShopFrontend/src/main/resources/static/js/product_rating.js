@@ -5,7 +5,9 @@ $(document).ready(function(){
 		review_count = $("#review_count" + productId).val();
 		if(avr_rating != 0){
 			setStartRatingForProduct(avr_rating, review_count, productId, 'star_rating');			
-			setStartRatingForProduct(avr_rating, review_count, productId, 'customer_reviews');		
+			setStartRatingForProduct(avr_rating, review_count, productId, 'customer_reviews');	
+			$(".product_details").find(".review_count").hide();
+			$(".product_details #star_rating" + productId).append('<a href=\'#customer_reviews_div\' class="ms-1"> (' + review_count +') </a>');
 		}
 		else{
 			setStarRating0(productId, 'star_rating');

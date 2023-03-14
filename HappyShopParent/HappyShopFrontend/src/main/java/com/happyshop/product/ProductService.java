@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 
 import com.happyshop.common.entity.Category;
+import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.product.Product;
 
 public interface ProductService {
@@ -27,4 +28,8 @@ public interface ProductService {
     void updateQuantity(Integer newQuantity, Integer productId);
     
     Optional<Product> findById(Integer id);
+    
+    public void setAvarageRatingAndReviewCount(Product product);
+    
+    public boolean checkProductNeedReview(Customer customer, Integer productId);
 }

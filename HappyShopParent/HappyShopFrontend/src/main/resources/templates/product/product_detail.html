@@ -30,7 +30,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm">
+			<div class="col-sm product_details">
 				<div>
 					<h4 class="fw-bold">[[${product.name}]]</h4>
 				</div>
@@ -136,16 +136,25 @@
 					<hr />
 				</div>
 			</div>
-			<div class="col-12">
+			<div class="col-12" id="customer_reviews_div">
 				<h3>Customer Reviews</h3>
 			</div>
 			<div class="col-12">
-				<div th:id="customer_reviews + ${product.id}">
+				<div th:id="customer_reviews + ${product.id}">  
 				</div>				
 				<a href="" id="viewAllReviewsBtn" th:if="${product.review_count} != 0"><small>View all reviews</small></a>				
 			</div>
 		</div>
 		
+		<div th:if="${customerHadReviewed}">
+			<a th:href="@{'/review/page/1?sortField=reviewTime&sortDir=des&keyWord=id' + ${reviewId}}" 
+				class="text-info">View my review</a>
+		</div>
+		<div th:if="${productNeedReview}">
+			<p>You had bought this product.<a th:href="@{'/review/write_review/' + ${product.id}}"
+				 class="text-info">Go to write review now </a> </p>
+		</div>
+				
 		<div class="mt-2 row">
 			<h5>Most recent reviews</h5>
 			<th:block th:each="review : ${recentReviews}">
@@ -189,56 +198,14 @@
 	
 	<script th:src="@{/js/product_rating.js}"></script>
 	<script th:src="@{/js/product_rating_common.js}"></script>
-	
-	<script>
-		$(document).ready(function(){
-			$(".image-thumbnail").mouseenter(function(){
-				currentIndexImage = $(this).attr("index");
-				urlImageThumnail = $(this).attr("src");
-				$("#mainImage").attr("src",urlImageThumnail);
-				$("#mainImage").attr("index",currentIndexImage);
-			});
-			$("#mainImage").on("click", function(){
-				$("#imageCarouselModal").modal("show");
-				imageIndex = parseInt($("#mainImage").attr("index"));
-				$("#imageCarouselModal").carousel(imageIndex);
-			});
-			
-			$("#viewAllReviewsBtn").on("click", function(e){
-				e.preventDefault();
-				$("#viewAllReviewsModal").modal("show");
-			});
-			
-		});
+	<script th:src="@{/js/product_detail.js}"></script>
 		
+	<script>
 		contextPath = "[[@{/}]]";
 		loginURL = "[[@{/login}]]";
 		csrfHeaderName = "[[${_csrf.headerName}]]";
 		csrfValue = "[[${_csrf.token}]]";
-		
-		$(".addToCart").on("click", function(){
-			productIdString = $(this).attr("addToCartId");
-			productId = parseInt(productIdString.substring(1, productIdString.length));
-			quantity = parseInt($("#p" + productId).val());
-			url = contextPath + "cart/add_to_cart/" + productId + "/"+ quantity;
-			
-			$.ajax({
-				type: 'POST',
-				url: url,
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader(csrfHeaderName, csrfValue);
-				},
-			}).done(function(data) {
-				if(data == "added the cart"){					
-					$("#addToCartToast").toast('show');
-				}
-				else{
-					location.replace(loginURL);
-				}
-			}).fail(function() {
-				alert("fail");
-			});
-		});	
+	
 	</script>
 	<script th:src="@{/js/cart_quantity_control.js}"></script>
 	<script

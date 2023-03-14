@@ -24,7 +24,7 @@ function setStartRatingForProduct(avr_rating, review_count, productId, showDiv){
 	}
 	
 	star_rating_div.append('<small class="ms-1">' + avr_r +'</small>');
-	star_rating_div.append('<small class="ms-1"> (' + review_count +') </small>');
+	star_rating_div.append('<small class="ms-1 review_count"> (' + review_count +') </small>');
 }
 
 function setStarRating0(productId, showDiv){

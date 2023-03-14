@@ -2,6 +2,7 @@ package com.happyshop.order;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,5 +121,10 @@ public class OrderServiceImpl implements OrderService {
         
         repo.save(order);
     }
+
+    public Optional<Order> findById(Integer id) {
+        return repo.findById(id);
+    }
+    
     
 }
