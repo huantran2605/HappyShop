@@ -11,6 +11,7 @@
 	<div th:replace="navigation :: header_menu"></div>
 	<div class="login-form">
 		<form th:action="@{/login}" method="post">
+			<input type="hidden" name="redirect" th:value="${param.redirect}"/>
 			<h2 class="text-center">Sign in</h2>
 			<div class="text-center social-btn">
 				<a th:href="@{/oauth2/authorization/facebook}" class="btn btn-primary btn-block"><i

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
@@ -33,7 +34,6 @@ import com.happyshop.order.OrderService;
 import com.happyshop.product.ProductService;
 
 @Controller
-@RequestMapping("/review")
 public class ReviewController {
     @Autowired 
     ReviewService reviewService;
@@ -43,15 +43,17 @@ public class ReviewController {
     ProductService productService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     String defaultUrl = "redirect:/review/page/1?sortField=reviewTime&sortDir=des&keyWord=";
-    @GetMapping("/listReview")
+    @GetMapping("/review/listReview")
     public String viewFirstReviewPage() {
        
         return defaultUrl;
     }
     
-    @GetMapping("/page/{pageNum}")
+    @GetMapping("/review/page/{pageNum}")
     private String reviewPage (@PathVariable ("pageNum") Integer pageNum,
             @Param("sortField") String sortField,
             @Param("sortDir") String sortDir,
@@ -59,12 +61,8 @@ public class ReviewController {
             @Param("productId") Integer productId,
             HttpServletRequest request,
             Model model) {
-        if(productId != null) {
-            String redirectUrl = "redirect:/review/all_reviews/page/" +pageNum+"?productId=" +productId;
-            return redirectUrl;
-        }
         
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         
         //sort
         Sort sort = Sort.by(sortField);
@@ -106,16 +104,8 @@ public class ReviewController {
         return"review/listReview";
     }
     
-    public Customer getAuthenticationCustomer(HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
-            return null;
-        }
-        Customer customer = customerService.findByEmail(email);
-        return customer;
-    }
     
-    @GetMapping("detail/{id}")
+    @GetMapping("/review/detail/{id}")
     private String detailReview(@PathVariable("id") Integer  id,  
             RedirectAttributes re,
             Model model) {
@@ -131,6 +121,7 @@ public class ReviewController {
     }
     @GetMapping("/all_reviews/page/{pageNum}")
     private String viewAllReviewsOfProduct(@Param("productId") Integer  productId,
+            @Param("sortField") String sortField,
             RedirectAttributes re, Model model,
             @PathVariable ("pageNum") Integer pageNum            
             ) throws ProductNotFoundException {
@@ -139,9 +130,9 @@ public class ReviewController {
             re.addFlashAttribute("message", "Product is not existed!");
             return defaultUrl;            
         }
-                
+        Sort sort = Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNum - 1,  
-                ReviewService.SIZE_PAGE_PRODUCT);
+                ReviewService.SIZE_PAGE_PRODUCT, sort);
         
         Page<Review> pageReview = reviewService.findByProduct(product.get(), pageable); 
         List<Review> listReview = pageReview.getContent();
@@ -160,20 +151,23 @@ public class ReviewController {
         model.addAttribute("totalElement", pageReview.getTotalElements());       
         model.addAttribute("elementsCurrentPerPage", pageReview.getNumberOfElements());
         model.addAttribute("elementsPerPage", ReviewService.SIZE_PAGE_PRODUCT);
-        model.addAttribute("moduleURL", "/review");
+        model.addAttribute("moduleURL", "/all_reviews");
         
         model.addAttribute("product", product.get());
         model.addAttribute("productId", productId);
+        model.addAttribute("sortField", sortField);
+        
+        
                
         return "review/all_reviews_of_product";
     }
     
-    @GetMapping("/write_review/{productId}")
+    @GetMapping("/review/write_review/{productId}")
     private String writeReview(@PathVariable("productId") Integer productId,
             Model model,Review review,HttpServletRequest request) {
         
         Product product = productService.findById(productId).get();
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         
         model.addAttribute("product", product);
         model.addAttribute("review", review);
@@ -187,11 +181,11 @@ public class ReviewController {
         return "review/review_form";        
     }
     
-    @PostMapping("/save")
+    @PostMapping("/review/save")
     private String saveReview(Review review,RedirectAttributes re,
             HttpServletRequest request,@RequestParam("productId") Integer productId) {
         
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         Product product = productService.findById(productId).get();
         review.setReviewTime(new Date());
         review.setCustomer(customer);

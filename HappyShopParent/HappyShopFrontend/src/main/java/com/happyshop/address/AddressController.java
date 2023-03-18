@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Address;
 import com.happyshop.common.entity.Customer;
@@ -32,11 +33,13 @@ public class AddressController {
     CountryService countryService;
     @Autowired
     CustomerService customerService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     
     @GetMapping("")
     public String showAllAddressBooks(HttpServletRequest request, Model model) {
-        Customer customer = addressService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         List<Address> listAddress = addressService.findByCustomer(customer);
         boolean usePrimaryAddressAsDefault = true;
         for (Address address : listAddress) {
@@ -66,7 +69,7 @@ public class AddressController {
     @PostMapping("/saveOrUpdate")
     public String saveOrUpdate(Address address
             ,HttpServletRequest request,RedirectAttributes ra) {
-        Customer customer = customerService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         address.setCustomer(customer);
         if(address.getId() == null) {
             ra.addFlashAttribute("message","Added new address successfully!");            
@@ -93,7 +96,7 @@ public class AddressController {
     @GetMapping("/update/{idAddress}")
     public String addressAddNewForm(@PathVariable("idAddress") Integer idAddress,
             HttpServletRequest request, Model model) {
-        Customer customer = customerService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         List<Country> listCountry = countryService.findAllByOrderByNameAsc();
         model.addAttribute("listCountry", listCountry);      
         
@@ -107,7 +110,7 @@ public class AddressController {
     @GetMapping("/delete/{idAddress}")
     public String addressAddNewForm(@PathVariable("idAddress") Integer idAddress,
             HttpServletRequest request, Model model, RedirectAttributes ra) {
-        Customer customer = customerService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         addressService.deleteByIdAndCustomer(idAddress, customer.getId());
         
         ra.addFlashAttribute("message", "Deleted address successfully!");
@@ -117,7 +120,7 @@ public class AddressController {
     @GetMapping("/update_default_address/{idAddress}")
     public String updateDefaultAddress(@PathVariable("idAddress") Integer idAddress,
             HttpServletRequest request,RedirectAttributes ra) {
-        Customer customer = addressService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         addressService.setDefaultAddress(idAddress, customer.getId());     
         
         String redirectOption =  request.getParameter("redirect");

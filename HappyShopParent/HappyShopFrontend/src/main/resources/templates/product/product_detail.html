@@ -155,13 +155,24 @@
 				 class="text-info">Go to write review now </a> </p>
 		</div>
 				
-		<div class="mt-2 row">
+		<div class="mt-2 row" th:if="${not #lists.isEmpty(recentReviews)}">
 			<h5>Most recent reviews</h5>
 			<th:block th:each="review : ${recentReviews}">
 				<div class="col-6"><hr /></div>			
 				<div class="">
-					<div th:id="review_star_by_customer + ${review.id}" th:reviewId="${review.id}" 
-						class="customer_review" th:rating="${review.rating}"></div>
+					<div class="d-flex justify-content-start">
+						<div th:id="review_star_by_customer + ${review.id}" th:reviewId="${review.id}" 
+							class="customer_review me-5" th:rating="${review.rating}"></div>
+						<div class="d-flex justify-content-start align-items-start">
+							<a href="#" class="btn_like_review" th:reviewId=${review.id} 
+								 likeStatus="0">
+								<i class="fa-sharp fa-regular fa-thumbs-up me-2"
+									 th:id="like_icon_review + ${review.id}" ></i>
+							</a>
+							<p th:id="like_text_review + ${review.id}">
+								Helpful (<span th:id="like_count_review + ${review.id}">[[${review.likes}]]</span>)</p>
+						</div>
+					</div>
 					<h6><strong>[[${review.headline}]]</strong></h6>
 					<p>[[${review.comment}]]</p>
 					<small>[[${review.customer.FullName}]]</small>
@@ -180,7 +191,8 @@
 					</div>
 					<div class="modal-body" id="modal-body">
 						<div class="ratio ratio-4x3">
-							<iframe th:src="@{'/review/all_reviews/page/1?productId=' + ${product.id}}" allowfullscreen></iframe>
+							<iframe th:src="@{'/all_reviews/page/1?productId=' + ${product.id} + '&sortField=reviewTime'}"
+							 allowfullscreen></iframe>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -204,8 +216,9 @@
 		contextPath = "[[@{/}]]";
 		loginURL = "[[@{/login}]]";
 		csrfHeaderName = "[[${_csrf.headerName}]]";
-		csrfValue = "[[${_csrf.token}]]";
-	
+		csrfValue = "[[${_csrf.token}]]";		
+		
+		
 	</script>
 	<script th:src="@{/js/cart_quantity_control.js}"></script>
 	<script

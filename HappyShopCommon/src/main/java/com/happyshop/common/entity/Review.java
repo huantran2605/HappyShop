@@ -37,6 +37,9 @@ public class Review {
     @Column(nullable = false)
     private Date reviewTime;
     
+    @Column(nullable = false)
+    private int likes;
+    
     
     @ManyToOne
     @JoinColumn(name ="customer_id")
@@ -54,6 +57,19 @@ public class Review {
         this.product = product;
     }
     
+    
+    
+    public void increaseLikeCount() {
+        this.likes += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likes -= 1;
+    }
+
+    public Review(Integer id) {
+        this.id = id;
+    }
     
     
 }

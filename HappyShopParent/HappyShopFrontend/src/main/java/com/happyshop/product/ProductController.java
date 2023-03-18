@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.category.CategoryService;
 import com.happyshop.common.entity.Category;
@@ -54,6 +55,8 @@ public class ProductController {
     ReviewService reviewService;
     @Autowired
     CustomerService customerService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     
     @Autowired
@@ -116,7 +119,7 @@ public class ProductController {
         List<Review> recentReviews = reviewService.getMostRecentReviewOfProduct(product);
         model.addAttribute("recentReviews", recentReviews);
         
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         
         int reviewId = reviewService.checkCustomerHasReviewForProduct(customer, product);
         if(reviewId == -1) {
@@ -167,14 +170,6 @@ public class ProductController {
         return "product/search_result";
     }
     
-    public Customer getAuthenticationCustomer(HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
-            return null;
-        }
-        Customer customer = customerService.findByEmail(email);
-        return customer;
-    }
     
    
     

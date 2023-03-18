@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.address.AddressService;
 import com.happyshop.checkout.paypal.PayPalApiException;
@@ -64,11 +65,13 @@ public class CheckoutController {
     ProductService productService;
     @Autowired
     PaypalService paypalService;
+    @Autowired
+    CustomerUtility customerUtility;
       
     @RequestMapping("")
     public String viewCheckoutPage(@Param("selectedProduct") String selectedProduct,
             HttpServletRequest request, Model model) {
-        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
       
         String[] selectedProductId = selectedProduct.split("-");
         List<CartItem> selectedCartItems = new ArrayList<>();
@@ -120,7 +123,7 @@ public class CheckoutController {
     @PostMapping("/place_order")
     public String placeOrder(HttpServletRequest request,
             @Param("selectedProduct") String selectedProduct) throws UnsupportedEncodingException, MessagingException {
-        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         
         List<CartItem> selectedCartItems = new ArrayList<>();
         String[] selectedProductId = selectedProduct.split("-");

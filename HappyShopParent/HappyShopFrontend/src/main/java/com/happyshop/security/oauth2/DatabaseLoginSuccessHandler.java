@@ -24,22 +24,27 @@ import com.happyshop.setting.country.CountryService;
 
 @Component
 public class DatabaseLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-    
-    @Autowired private CustomerService customerService;
-    
-    
+
+    @Autowired
+    private CustomerService customerService;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws ServletException, IOException {
-        
+
         CustomerDetailsClass customerDetail = (CustomerDetailsClass) authentication.getPrincipal();
-        Customer customer =  customerDetail.getCustomer();
-        customerService.updateAuthenticationType(customer, AuthenticationType.DATABASE);   
-        
-        
+        Customer customer = customerDetail.getCustomer();
+        customerService.updateAuthenticationType(customer, AuthenticationType.DATABASE);
+
+        String redirectUrl = request.getParameter("redirect");
+        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+            setDefaultTargetUrl(redirectUrl); // Set the default redirect URL to the value of the "redirect" parameter
+        } else {
+            setDefaultTargetUrl("/"); // Set the default redirect URL to "/"
+        }
+
         super.onAuthenticationSuccess(request, response, authentication);
-        
-     
+
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.customer.CustomerService;
@@ -22,12 +23,14 @@ public class ShoppingCartRestController {
     CustomerService customerService;
     @Autowired
     CartItemService cartItemService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     @PostMapping("/cart/add_to_cart/{productId}/{quantity}")
     public String addToCart(@PathVariable("productId") Integer productId,
             @PathVariable("quantity") Integer quantity,
            HttpServletRequest request) {             
-        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         if(customer == null) {
             return "must login";
         }       
@@ -39,7 +42,7 @@ public class ShoppingCartRestController {
     public String updateQuantity(@PathVariable("productId") Integer productId,
             @PathVariable("quantity") Integer quantity,
            HttpServletRequest request) {
-        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         if(customer == null) {
             return "must login";
         }    
@@ -50,7 +53,7 @@ public class ShoppingCartRestController {
     @DeleteMapping("/cart/delete_item/{productId}")
     public String DeleteItems(@PathVariable("productId") Integer productId,
             HttpServletRequest request) {
-        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         if(customer == null) {
             return "must login";
         }        

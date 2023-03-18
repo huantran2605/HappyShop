@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Address;
 import com.happyshop.common.entity.Customer;
@@ -19,19 +20,11 @@ public class AddressServiceImpl implements AddressService {
     
     @Autowired
     CustomerService customerService;
-        
+            
     public List<Address> findByCustomer(Customer customer) {
         return repo.findByCustomer(customer);
     }
     
-    public Customer getAuthenticationCustomer(HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
-            return null;
-        }
-        Customer customer = customerService.findByEmail(email);
-        return customer;
-    }
 
     public <S extends Address> S save(S entity) {
         return repo.save(entity);

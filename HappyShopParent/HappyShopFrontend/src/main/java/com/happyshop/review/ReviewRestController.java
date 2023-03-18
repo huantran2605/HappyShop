@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.order.Order;
@@ -27,6 +28,8 @@ public class ReviewRestController {
     CustomerService customerService;
     @Autowired
     ProductService productService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     
     
@@ -34,21 +37,13 @@ public class ReviewRestController {
     private int checkReviewExisted(@RequestParam("productId") Integer productId,
             HttpServletRequest request) {
         
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         Product product = productService.findById(productId).get();
         int reviewId = reviewService.checkCustomerHasReviewForProduct(customer, product);
               
         return reviewId;
     }
     
-    public Customer getAuthenticationCustomer(HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
-            return null;
-        }
-        Customer customer = customerService.findByEmail(email);
-        return customer;
-    }
     
     
 }

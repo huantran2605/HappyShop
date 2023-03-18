@@ -59,14 +59,6 @@ public class CartItemServiceImpl implements CartItemService{
         cartItemRepo.deleteByCustomerAndProduct(cutomer, productId);
     }
     
-    public Customer getAuthenticationCustomer(HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
-            return null;
-        }
-        Customer customer = customerService.findByEmail(email);
-        return customer;
-    }
 
     public CartItem findByCustomerAndProduct(Customer customer, Integer productId) {
         return cartItemRepo.findByCustomerAndProduct(customer, productId);

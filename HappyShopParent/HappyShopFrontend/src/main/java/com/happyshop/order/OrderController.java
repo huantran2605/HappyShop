@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.order.Order;
@@ -33,6 +34,8 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     CustomerService customerService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     private String defaultRedirectURL = "redirect:/order/page/1?sortField=orderTime&sortDir=des&keyWord=";
     
@@ -48,7 +51,7 @@ public class OrderController {
             @Param("keyWord") String keyWord,          
             Model model, HttpServletRequest request) {
         
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer = customerUtility.getAuthenticationCustomer(request);
         Integer customerId = customer.getId();
         //sort
         Sort sort = Sort.by(sortField);           
@@ -93,20 +96,11 @@ public class OrderController {
       
         return"order/order_customer";
     }
-    
-    public Customer getAuthenticationCustomer(HttpServletRequest request) {
-        String email = Utility.getEmailAuthenticationCustomer(request);
-        if(email == null) {
-            return null;
-        }
-        Customer customer = customerService.findByEmail(email);
-        return customer;
-    }
-    
+ 
     @GetMapping("detail/{id}")
     private String detailOrder(@PathVariable("id") Integer orderId,
             Model model, RedirectAttributes re, HttpServletRequest request) {
-        Customer customer = getAuthenticationCustomer(request);
+        Customer customer = customerUtility.getAuthenticationCustomer(request);
         Order order = orderService.findByOrderIdAndCustomer(orderId, customer.getId());
 
         model.addAttribute("order", order);

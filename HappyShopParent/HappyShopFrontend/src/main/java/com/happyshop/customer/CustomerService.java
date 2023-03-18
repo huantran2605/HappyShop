@@ -46,5 +46,4 @@ public interface CustomerService {
 
     void resetPasswordCustomer(String token, String password) throws CustomerNotFoundException;
     
-    Customer getAuthenticationCustomer(HttpServletRequest request);
 }

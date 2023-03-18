@@ -28,7 +28,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @Query("SELECT r FROM Review r WHERE r.product = ?1  ORDER BY r.reviewTime DESC")
     public List<Review> findByProduct(Product product);
     
-    @Query("SELECT r FROM Review r WHERE r.product = ?1  ORDER BY r.reviewTime DESC")
+    @Query("SELECT r FROM Review r WHERE r.product = ?1  ")
     public Page<Review> findByProduct(Product product, Pageable pageable);
     
     @Query("SELECT r FROM Review r WHERE r.customer = ?1 AND r.product = ?2")

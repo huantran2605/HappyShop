@@ -8,10 +8,7 @@ import com.happyshop.common.entity.Address;
 import com.happyshop.common.entity.Customer;
 
 public interface AddressService {
-    List<Address> findByCustomer(Customer customer);
-    
-    Customer getAuthenticationCustomer(HttpServletRequest request);
-    
+    List<Address> findByCustomer(Customer customer);    
     
     <S extends Address> S save(S entity);
     

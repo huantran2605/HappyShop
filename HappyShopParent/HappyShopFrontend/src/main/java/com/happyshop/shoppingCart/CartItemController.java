@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.happyshop.CustomerUtility;
 import com.happyshop.Utility;
 import com.happyshop.address.AddressService;
 import com.happyshop.common.entity.Address;
@@ -28,10 +29,12 @@ public class CartItemController {
     ShippingRateService shippingService;
     @Autowired
     AddressService addressService;
+    @Autowired
+    CustomerUtility customerUtility;
     
     @GetMapping("/cart")
     public String showCart(HttpServletRequest request, Model model) {
-        Customer customer = cartItemService.getAuthenticationCustomer(request);
+        Customer customer =  customerUtility.getAuthenticationCustomer(request);
         List<CartItem> list = cartItemService.findByCustomer(customer);
         float total = 0;
         for (CartItem cartItem : list) {

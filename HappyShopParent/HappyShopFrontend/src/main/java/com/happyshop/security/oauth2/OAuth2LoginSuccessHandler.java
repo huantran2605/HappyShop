@@ -26,7 +26,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     
     @Autowired private CustomerService customerService;
         
-    @Override
+    @Override 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws ServletException, IOException {
         
@@ -45,7 +45,14 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             oauth2User.setFullName(customer.getFullName());
         }     
         
-       
+        String redirectUrl = request.getParameter("redirect");
+        System.out.println(redirectUrl);
+        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+            setDefaultTargetUrl(redirectUrl); // Set the default redirect URL to the value of the "redirect" parameter
+        } else {
+            setDefaultTargetUrl("/"); // Set the default redirect URL to "/"
+        }
+     
         super.onAuthenticationSuccess(request, response, authentication);
         
         

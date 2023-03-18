@@ -16,9 +16,7 @@ public interface CartItemService {
     float updateQuantity(Integer quantity, Customer customer, Integer productId);
     
     void deleteByCustomerAndProduct(Customer cutomer, Integer productId) ;
-    
-    Customer getAuthenticationCustomer(HttpServletRequest request);
-    
+        
     CartItem findByCustomerAndProduct(Customer customer, Integer productId);
     
 }
