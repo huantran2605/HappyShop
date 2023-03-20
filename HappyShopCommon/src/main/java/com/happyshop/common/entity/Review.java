@@ -37,7 +37,7 @@ public class Review {
     @Column(nullable = false)
     private Date reviewTime;
     
-    @Column(nullable = false)
+    @Column(nullable = false)  
     private int likes;
     
     

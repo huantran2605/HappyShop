@@ -39,10 +39,12 @@ import com.happyshop.Utility;
 import com.happyshop.category.CategoryService;
 import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.Question;
 import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.entity.product.ProductImage;
 import com.happyshop.customer.CustomerService;
+import com.happyshop.question.QuestionService;
 import com.happyshop.review.ReviewRepository;
 import com.happyshop.review.ReviewService;
 
@@ -53,6 +55,8 @@ public class ProductController {
     CategoryService categoryService;
     @Autowired
     ReviewService reviewService;
+    @Autowired
+    QuestionService questionService;
     @Autowired
     CustomerService customerService;
     @Autowired
@@ -119,7 +123,19 @@ public class ProductController {
         List<Review> recentReviews = reviewService.getMostRecentReviewOfProduct(product);
         model.addAttribute("recentReviews", recentReviews);
         
+        List<Question> recentQuestions = questionService.getMostRecentQuestionOfProduct(product);
+        model.addAttribute("recentQuestions", recentQuestions);
+        
         Customer customer =  customerUtility.getAuthenticationCustomer(request);
+               
+        if(customer == null) {
+            model.addAttribute("customerAuthentication", false);           
+        }
+        else {
+            model.addAttribute("customerAuthentication", true);
+            model.addAttribute("customer", customer);             
+        }
+               
         
         int reviewId = reviewService.checkCustomerHasReviewForProduct(customer, product);
         if(reviewId == -1) {

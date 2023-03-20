@@ -81,7 +81,7 @@
 							</div>
 
 							<div class="toast ms-3" id="addToCartToast" role="alert"
-								aria-live="assertive" aria-atomic="true">
+								aria-live="assertive" aria-atomic="true" >
 								<div class="toast-body text-success">
 									<b> The items added to your cart. </b>
 									<div class="mt-2 pt-2 border-top">
@@ -155,11 +155,10 @@
 				 class="text-info">Go to write review now </a> </p>
 		</div>
 				
-		<div class="mt-2 row" th:if="${not #lists.isEmpty(recentReviews)}">
+		<div class="mt-3 p-2" th:if="${not #lists.isEmpty(recentReviews)}">
 			<h5>Most recent reviews</h5>
 			<th:block th:each="review : ${recentReviews}">
-				<div class="col-6"><hr /></div>			
-				<div class="">
+				<div class="row mt-5">
 					<div class="d-flex justify-content-start">
 						<div th:id="review_star_by_customer + ${review.id}" th:reviewId="${review.id}" 
 							class="customer_review me-5" th:rating="${review.rating}"></div>
@@ -175,10 +174,112 @@
 					</div>
 					<h6><strong>[[${review.headline}]]</strong></h6>
 					<p>[[${review.comment}]]</p>
-					<small>[[${review.customer.FullName}]]</small>
-					<small class="ms-3" th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd')}"> </small>
+					<div class="d-flex justify-content-start">
+						<small>[[${review.customer.FullName}]]</small>
+						<small class="ms-3" th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd')}"> </small>
+					</div>
 				</div>	
 			</th:block>		
+		</div>
+
+		<div class="mt-3">
+			<hr />
+			<h3>Questions & Answers</h3>
+			<div class="row p-2">
+				<div class="border border-secondary  col-sm-6 p-3 ">
+					<form id="question_form">
+						<div class="form-floating mb-2">
+							<textarea class="form-control" placeholder="Leave a comment here"
+								id="question_input_text" maxlength="200" required
+								style="height: 100px"></textarea>
+							<label for="floatingTextarea2">Leave Comments Or
+								Questions Here</label>
+						</div>
+						<div class="float-end" th:if="${customerAuthentication}">
+							<button class="btn btn-primary " type="submit">Send</button>
+						</div>
+						<div class="row question_inputField" style="display: none"
+							th:unless="${customerAuthentication}">
+							<div class="col-sm mb-2">
+								<div class="form-floating">
+									<input type="text" class="form-control" id="fullName"
+										name="fullName" placeholder="Full Name" maxlength="30"
+										required> <label for="fullName">Full Name* </label>
+								</div>
+							</div>
+							<div class="col-sm mb-2">
+								<div class="form-floating">
+									<input type="tel" class="form-control" id="phoneNumber"
+										name="phoneNumber" placeholder="Phone Number"> <label
+										for="phoneNumber">Phone Number </label>
+								</div>
+							</div>
+						</div>
+						<div class="row question_inputField"
+							th:unless="${customerAuthentication}" style="display: none">
+							<div class="col-sm">
+								<div class="form-floating">
+									<input type="email" class="form-control" id="email"
+										name="email" placeholder="email"> <label for="email">Email
+									</label>
+								</div>
+							</div>
+							<div class="col-sm d-grid ">
+								<button class="btn btn-primary " type="submit">Send</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="toast align-items-center text-bg-primary border-0"
+				role="alert" aria-live="assertiveee" id="question_save_toast"
+				data-bs-delay="5000" data-bs-autohide="true" aria-atomic="true">
+				<div class="d-flex">
+					<div class="toast-body">
+						Thanks for leaving your comment/question, <strong>HappyShop</strong>
+						will reply soon!
+					</div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto"
+						data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+			</div>
+
+			<a href="#" class="mt-3">View all questions </a>
+			<div class="mt-3 p-2" th:if="${not #lists.isEmpty(recentQuestions)}">
+				<h5>Most recent questions</h5>
+				<div id="new_quesion_div"></div>
+				<th:block th:each="question : ${recentQuestions}">
+					<div class="row mt-5 question_div"
+						 th:questionId = ${question.id}
+						 th:question_likes = "${question.likes}">
+						<strong th:if="${question.customer != null}">[[${question.customer.FullName}]]</strong>
+						<strong th:unless="${question.customer != null}">[[${question.asker.fullName}]]</strong>						
+						<p class="mt-2">[[${question.question_content}]]</p>
+						<div class="d-flex justify-content-start align-items-center " style="font-size: 14px;">
+							<a href="#">Reply</a>
+							
+							<a href="#" class="btn_like_question" th:questionId=${question.id}
+								likeStatus="0"> <i
+								class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"
+								th:id="like_icon_question + ${question.id}"></i>
+							</a>
+							<small th:id="like_text_question + ${question.id}">
+								Like (<span th:id="like_count_question + ${question.id}">[[${question.likes}]]</span>)
+							</small>
+							
+							<small class="ms-3"
+								th:text="${#dates.format(question.askTime, 'yyyy-MM-dd')}">
+							</small>
+						</div>
+						<div class="ms-5  ps-3 border-start border-primary border-5" th:id="reply_div + ${question.id}">
+													
+						</div>
+					</div>
+
+				</th:block>
+
+			</div>
 		</div>
 
 		<div class="modal" id="viewAllReviewsModal">
@@ -216,7 +317,10 @@
 		contextPath = "[[@{/}]]";
 		loginURL = "[[@{/login}]]";
 		csrfHeaderName = "[[${_csrf.headerName}]]";
-		csrfValue = "[[${_csrf.token}]]";		
+		csrfValue = "[[${_csrf.token}]]";	
+		
+		customerFullName = "[[${customer.FullName}]]";
+		
 		
 		
 	</script>

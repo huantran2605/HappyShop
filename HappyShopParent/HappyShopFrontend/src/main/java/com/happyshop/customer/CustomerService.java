@@ -46,4 +46,6 @@ public interface CustomerService {
 
     void resetPasswordCustomer(String token, String password) throws CustomerNotFoundException;
     
+    Optional<Customer> findById(Integer id);
+    
 }

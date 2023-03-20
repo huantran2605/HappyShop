@@ -46,5 +46,6 @@ public class StateRestController {
     public void deleteCountry(@PathVariable("id") Integer id){
         stateService.deleteById(id);
     }
+
     
 }

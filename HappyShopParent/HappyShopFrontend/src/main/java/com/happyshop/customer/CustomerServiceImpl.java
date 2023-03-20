@@ -184,6 +184,12 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerNotFoundException("Could not find the user.");
         }
     }
+
+    public Optional<Customer> findById(Integer id) {
+        return customerRepository.findById(id);
+    }
+    
+    
     
     
 }

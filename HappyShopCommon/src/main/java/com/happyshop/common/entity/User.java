@@ -59,6 +59,8 @@ public class User {
 		this.lastName = lastName;
 		this.roles = roles;
 	}
+	
+	
 	@Transient
 	public String getUserPhotoPath () {
 		return Constants.S3_BASE_URI+ "/users-photo/"+ this.id+"/" + this.photo ;   
@@ -81,6 +83,10 @@ public class User {
         }
         
         return false;
+    }
+
+    public User(Long id) {        
+        this.id = id;
     }
 		
 	

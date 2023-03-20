@@ -22,7 +22,7 @@ public class ReviewServiceImpl implements ReviewService {
         return repo.findAll(pageable);
     }
 
-    public Review findById(Integer id) throws ReviewNotFoundException {
+    public Review findById(Integer id) throws ReviewNotFoundException {  
         try {
             return repo.findById(id).get();                       
         } catch (Exception e) {
