@@ -36,7 +36,7 @@ public class Question {
     @JoinColumn(name = "customer_id")
     private Customer customer;
     
-    @Column(nullable = false,length = 200)
+    @Column(nullable = false,length = 300)
     private String question_content;
     
     @Column(name = "aks_time", nullable = false)
@@ -52,6 +52,9 @@ public class Question {
     @ManyToOne
     @JoinColumn(name = "asker_id")
     private Question_Asker asker;
+    
+    @Column(name = "approval_status", nullable = false)
+    private boolean approvalStatus;
         
     @Column
     private int likes;

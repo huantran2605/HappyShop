@@ -51,6 +51,7 @@ public class QuestionRestController {
         q.setAskTime(new Date());
         q.setAnswerStatus(false);
         q.setLikes(0);
+        q.setApprovalStatus(false);
         
         if(customer == null) {
             Question_Asker asker = new Question_Asker(fullName, phoneNumber, email);     

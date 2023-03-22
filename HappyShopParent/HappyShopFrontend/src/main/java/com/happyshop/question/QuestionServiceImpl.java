@@ -18,7 +18,7 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionRepository repo;
     
     public List<Question> getMostRecentQuestionOfProduct(Product product) {
-        List<Question> questions = repo.findByProduct(product);
+        List<Question> questions = repo.findByProductAndApprovalStatus(product);
         
         List<Question> recentQuestions = new ArrayList<>();
         

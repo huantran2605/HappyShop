@@ -1,4 +1,4 @@
-package com.happyshop.question;
+package com.happyshop.question.reply;
 
 import java.util.List;
 
@@ -8,13 +8,12 @@ import org.springframework.stereotype.Repository;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Question;
+import com.happyshop.common.entity.Question_Asker;
+import com.happyshop.common.entity.Reply_Person;
 import com.happyshop.common.entity.product.Product;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Integer> {
+public interface Reply_PersonRepository extends JpaRepository<Reply_Person, Integer> {
     
-    @Query("SELECT q FROM Question q WHERE q.product = ?1 AND q.approvalStatus = 1 ORDER BY q.askTime DESC")
-    public List<Question> findByProductAndApprovalStatus(Product product);     
-        
-    
+   
 }

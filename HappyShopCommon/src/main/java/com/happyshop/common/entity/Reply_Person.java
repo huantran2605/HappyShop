@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Table(name= "question_askers")
-public class Question_Asker {
+@Table(name="reply_persons")
+public class Reply_Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -30,7 +30,7 @@ public class Question_Asker {
     @Column
     private String email;
 
-    public Question_Asker(String fullName, String phoneNumber, String email) {
+    public Reply_Person(String fullName, String phoneNumber, String email) {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;

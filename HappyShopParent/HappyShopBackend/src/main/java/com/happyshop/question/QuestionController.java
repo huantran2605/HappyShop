@@ -124,21 +124,21 @@ public class QuestionController {
 
     }
     
-    @PostMapping("/save")
-    private String saveReview(Reply reply, Review review,
-            RedirectAttributes re, HttpServletRequest request,
-            @RequestParam("questionId") Integer questionId) {        
-        
-        User user = userUtility.getAuthenticationUser(request);
-        reply.setReplyTime(new Date());
-        reply.setUser(user);
-        reply.setQuestion(new Question(questionId));
-        
-        System.out.println();
-        
-        
-                 
-        return defaultUrl;
-    }
+//    @PostMapping("/save")
+//    private String saveReply(Reply reply, Review review,
+//            RedirectAttributes re, HttpServletRequest request,
+//            @RequestParam("questionId") Integer questionId) {        
+//        
+//        User user = userUtility.getAuthenticationUser(request);
+//        reply.setReplyTime(new Date());
+//        reply.setAdmin(user);
+//        reply.setQuestion(new Question(questionId));
+//        
+//        System.out.println();
+//        
+//        
+//                 
+//        return defaultUrl;
+//    }
         
 }

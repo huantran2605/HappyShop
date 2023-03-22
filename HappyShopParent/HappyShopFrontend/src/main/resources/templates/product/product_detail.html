@@ -181,22 +181,19 @@
 				</div>	
 			</th:block>		
 		</div>
-
-		<div class="mt-3">
-			<hr />
-			<h3>Questions & Answers</h3>
-			<div class="row p-2">
-				<div class="border border-secondary  col-sm-6 p-3 ">
-					<form id="question_form">
+		
+		<div class="row">		
+			<div class="mt-3 col-sm-6 p-2">
+				<hr />
+				<h3>Questions & Answers</h3>
+				<div id="question_form" class="border border-secondary rounded  p-3">    
+					<form >
 						<div class="form-floating mb-2">
 							<textarea class="form-control" placeholder="Leave a comment here"
-								id="question_input_text" maxlength="200" required
+								id="question_input_text" maxlength="300" required
 								style="height: 100px"></textarea>
-							<label for="floatingTextarea2">Leave Comments Or
+							<label for="question_input_text">Leave Comments Or
 								Questions Here</label>
-						</div>
-						<div class="float-end" th:if="${customerAuthentication}">
-							<button class="btn btn-primary " type="submit">Send</button>
 						</div>
 						<div class="row question_inputField" style="display: none"
 							th:unless="${customerAuthentication}">
@@ -228,57 +225,51 @@
 								<button class="btn btn-primary " type="submit">Send</button>
 							</div>
 						</div>
+						<div class="d-flex justify-content-end" th:if="${customerAuthentication}">
+							<button class="btn btn-primary " type="submit">Send</button>
+						</div>
 					</form>
 				</div>
-			</div>
-
-			<div class="toast align-items-center text-bg-primary border-0"
-				role="alert" aria-live="assertiveee" id="question_save_toast"
-				data-bs-delay="5000" data-bs-autohide="true" aria-atomic="true">
-				<div class="d-flex">
-					<div class="toast-body">
-						Thanks for leaving your comment/question, <strong>HappyShop</strong>
-						will reply soon!
-					</div>
-					<button type="button" class="btn-close btn-close-white me-2 m-auto"
-						data-bs-dismiss="toast" aria-label="Close"></button>
+	
+				<a href="#" class="mt-3">View all questions </a>
+				<div class="mt-3 p-2" th:if="${not #lists.isEmpty(recentQuestions)}">
+					<h5>Most recent questions</h5>
+					<div id="new_quesion_div"></div>
+					<th:block th:each="question : ${recentQuestions}">
+						
+						<div class="mt-5 question_div"
+							 th:questionId = ${question.id}
+							 th:question_likes = "${question.likes}">
+							 <div th:id="question_personName + ${question.id}">
+								<strong th:if="${question.customer != null}" th:id="test + ${question.id}">
+									[[${question.customer.FullName}]]</strong>
+								<strong th:unless="${question.customer != null}">[[${question.asker.fullName}]]</strong>						
+							 </div>
+							<p class="mt-2">[[${question.question_content}]]</p>
+							<div class="d-flex justify-content-start align-items-center " style="font-size: 14px;">
+								<a href="#" class="question_reply_btn" th:questionId="${question.id}">Reply</a>
+								
+								<a href="#" class="btn_like_question" th:questionId=${question.id}
+									likeStatus="0"> <i
+									class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"
+									th:id="like_icon_question + ${question.id}"></i>
+								</a>
+								<small th:id="like_text_question + ${question.id}">
+									Like (<span th:id="like_count_question + ${question.id}">[[${question.likes}]]</span>)
+								</small>
+								
+								<small class="ms-3"
+									th:text="${#dates.format(question.askTime, 'yyyy-MM-dd')}">
+								</small>
+							</div>
+							<div class="ms-5  ps-3 border-start border-primary border-5" th:id="reply_div + ${question.id}">
+														
+							</div>
+						</div>
+						
+					</th:block>
+	
 				</div>
-			</div>
-
-			<a href="#" class="mt-3">View all questions </a>
-			<div class="mt-3 p-2" th:if="${not #lists.isEmpty(recentQuestions)}">
-				<h5>Most recent questions</h5>
-				<div id="new_quesion_div"></div>
-				<th:block th:each="question : ${recentQuestions}">
-					<div class="row mt-5 question_div"
-						 th:questionId = ${question.id}
-						 th:question_likes = "${question.likes}">
-						<strong th:if="${question.customer != null}">[[${question.customer.FullName}]]</strong>
-						<strong th:unless="${question.customer != null}">[[${question.asker.fullName}]]</strong>						
-						<p class="mt-2">[[${question.question_content}]]</p>
-						<div class="d-flex justify-content-start align-items-center " style="font-size: 14px;">
-							<a href="#">Reply</a>
-							
-							<a href="#" class="btn_like_question" th:questionId=${question.id}
-								likeStatus="0"> <i
-								class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"
-								th:id="like_icon_question + ${question.id}"></i>
-							</a>
-							<small th:id="like_text_question + ${question.id}">
-								Like (<span th:id="like_count_question + ${question.id}">[[${question.likes}]]</span>)
-							</small>
-							
-							<small class="ms-3"
-								th:text="${#dates.format(question.askTime, 'yyyy-MM-dd')}">
-							</small>
-						</div>
-						<div class="ms-5  ps-3 border-start border-primary border-5" th:id="reply_div + ${question.id}">
-													
-						</div>
-					</div>
-
-				</th:block>
-
 			</div>
 		</div>
 
@@ -319,8 +310,8 @@
 		csrfHeaderName = "[[${_csrf.headerName}]]";
 		csrfValue = "[[${_csrf.token}]]";	
 		
-		customerFullName = "[[${customer.FullName}]]";
-		
+		customerFullName = "[[${customer != null ? customer.FullName : null}]]";
+		customerAuthentication = "[[${customerAuthentication}]]";
 		
 		
 	</script>

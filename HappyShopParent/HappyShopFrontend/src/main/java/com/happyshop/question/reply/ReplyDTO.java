@@ -1,4 +1,4 @@
-package com.happyshop.question;
+package com.happyshop.question.reply;
 
 import java.util.Date;
 
@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReplyDTO {
+    private Integer id;
     private String customerName;
     private String reply_content;
-    private String userName;
+    private String adminName;
     private Date replyTime;
       
 }

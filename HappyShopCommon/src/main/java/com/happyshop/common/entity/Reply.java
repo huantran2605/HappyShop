@@ -28,7 +28,7 @@ public class Reply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(length = 500, nullable = false)
+    @Column(length = 300, nullable = false)
     private String reply_content;
     
     @ManyToOne
@@ -36,11 +36,18 @@ public class Reply {
     private Customer customer;  
     
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "admin_id")
+    private User admin;
+    
+    @ManyToOne
+    @JoinColumn(name = "person_reply_id")
+    private Reply_Person personReply;
     
     @Column(name = "reply_time", nullable = false)
     private Date replyTime;
+    
+    @Column(name = "approval_status", nullable = false)
+    private boolean approvalStatus;
     
     @ManyToOne
     @JoinColumn(name = "question_id")  

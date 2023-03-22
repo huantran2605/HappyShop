@@ -45,27 +45,27 @@ $(document).ready(function() {
 		
 	});
 	
+	
 	$("#question_input_text").on("click", function() {
 		$(".question_inputField").each(function(){
 			$(this).css('display','');
-		});
-		
+		});		
 	});
+	
 		
 	$("#question_form").submit(function(event) {
 	    event.preventDefault();	
 	    question_content = $("#question_input_text").val();
-	    if( $('input[name="fullName"]').length){
-		    fullName= $('input[name="fullName"]').val();		
+	    if( $(this).find('input[name="fullName"]').length){
+		    fullName= $(this).find('input[name="fullName"]').val();		
 		}
-		if($('input[name="phoneNumber"]').length){
-		    phoneNumber= $('input[name="phoneNumber"]').val();
-			
+		if($(this).find('input[name="phoneNumber"]').length){
+		    phoneNumber= $(this).find('input[name="phoneNumber"]').val();			
 		}
-		if($('input[name="email"]').length){
-		    email= $('input[name="email"]').val();			
+		if($(this).find('input[name="email"]').length){
+		    email= $(this).find('input[name="email"]').val();			
 		}
-		if($('input[name="fullName"]').length){
+		if($(this).find('input[name="fullName"]').length){
 			saveQuestion(productId, question_content, fullName, phoneNumber, email);			
 		}else{
 			saveQuestion(productId, question_content);
@@ -73,9 +73,167 @@ $(document).ready(function() {
 		
 	});
 	
+	$(".question_reply_btn").on("click",function(e){
+		e.preventDefault();
+		questionId =  $(this).attr("questionId");
+		
+		personName = $("#question_personName" + questionId).text().trim();
+		
+		showReplyFormAndSaveReply(questionId, false, personName);
+		
+
+			
+		
+	});
+	
+	$(document).on("click",".reply_reply_btn",function(e){
+		e.preventDefault();
+		questionId =  $(this).attr("questionId");
+		replyId = $(this).attr("replyId");
+		personName = $("#reply_person" + replyId).text().trim();
+		person = $(this).attr("person");
+		adminReplyRequired = false;
+		if(person == "admin"){
+			adminReplyRequired = true;
+		}
+		
+		showReplyFormAndSaveReply(questionId, customerAuthentication, personName);
+				
+	});
+	
 	
 	
 });
+
+function showReplyFormAndSaveReply(questionId, customerAuthentication, personName){
+	if(!$("#reply_form" + questionId).length){
+			html = generateReplyForm(customerAuthentication, personName, questionId);
+			$("#reply_div" + questionId).prepend(html);
+			
+			//prevent user delete tag at textarea
+			tag = '@' + personName + ': ';
+			lengthTag = tag.length;
+			$("#reply_form" + questionId).find("textarea").on('keydown', function(event) {
+				if (this.value.length <= lengthTag && event.key === 'Backspace') {
+					event.preventDefault();
+				}
+			});
+		}
+		
+		$("#reply_form" + questionId).submit(function(e) {
+			e.preventDefault();
+			reply_content = $(this).find("#reply_input_text").val();
+			 if( $(this).find('input[name="fullName"]').length){
+		    	fullName= $(this).find('input[name="fullName"]').val();		
+			 }
+			if ($(this).find('input[name="phoneNumber"]').length) {
+				phoneNumber = $(this).find('input[name="phoneNumber"]').val();
+
+			}
+			if ($(this).find('input[name="email"]').length) {
+				email = $(this).find('input[name="email"]').val();
+			}
+			if($(this).find('input[name="fullName"]').length){
+				saveReply(questionId, reply_content, adminReplyRequired, fullName, phoneNumber, email);
+			}
+			else{
+				saveReply(questionId, reply_content, adminReplyRequired);
+			}
+			 
+		});
+}
+
+function saveReply(questionId, reply_content, adminReplyRequired, fullName, phoneNumber, email){
+	$.ajax({
+		url: contextPath + 'reply/save',
+		type: 'POST',
+		data: {
+			questionId: questionId,
+			reply_content: reply_content,
+			adminReplyRequired: adminReplyRequired,
+			
+			fullName: fullName,
+			phoneNumber: phoneNumber,
+			email: email,						
+			_csrf: csrfValue
+		},
+		success: function(response) {
+			console.log(response);
+		},
+		error: function(xhr, status, error) {
+			alert("fail to save reply of question id" + questionId);
+		}
+	});
+}
+
+
+function generateReplyForm(customerAuthentication, personName, questionId){
+	reply_form = "reply_form" + questionId;
+	html = ``;
+	if(customerAuthentication == "true"){
+		html += `
+			<div id= ${reply_form} class="border border-secondary border-1 rounded  p-3">
+				<form >
+					<div class="form-floating mb-2">
+										<textarea class="form-control" id="reply_input_text" maxlength="300" required
+											style="height: 90px">@${personName}:</textarea>
+										<label for="reply_input_text">Write your reply</label>
+									</div>
+									
+					<div class="d-flex justify-content-end">
+									<button class="btn btn-primary " type="submit">Send</button>
+								</div>
+				</form>
+			</div>
+		`;
+	}
+	else{		
+		html += `
+			<div id= ${reply_form} class="border border-secondary border-1 rounded  p-3">
+				<form >
+					<div class="form-floating mb-2">
+										<textarea class="form-control" id="reply_input_text" maxlength="300" required
+											style="height: 90px" >@${personName}: </textarea>
+										<label for="reply_input_text">Write your reply</label>
+									</div>
+									
+					<div class="row reply_inputField">
+										<div class="col-sm mb-2">
+											<div class="form-floating">
+												<input type="text" class="form-control" id="fullName"
+													name="fullName" placeholder="Full Name" maxlength="30"
+													required> <label for="fullName">Full Name* </label>
+											</div>
+										</div>
+										<div class="col-sm mb-2">
+											<div class="form-floating">
+												<input type="tel" class="form-control" id="phoneNumber"
+													name="phoneNumber" placeholder="Phone Number"> <label
+													for="phoneNumber">Phone Number </label>
+											</div>
+										</div>
+									</div>
+									
+						<div class="row reply_inputField" >
+										<div class="col-sm">
+											<div class="form-floating">
+												<input type="email" class="form-control" id="email"
+													name="email" placeholder="email"> <label for="email">Email
+												</label>
+											</div>
+										</div>
+										<div class="col-sm d-grid ">
+											<button class="btn btn-primary " type="submit">Send</button>
+										</div>
+									</div>					
+					</form>
+				</div>
+		`;
+	}
+	
+	return html;
+	
+}
 
 function saveQuestion(productId, question_content, fullName, phoneNumber, email){
 	$.ajax({
@@ -91,11 +249,9 @@ function saveQuestion(productId, question_content, fullName, phoneNumber, email)
 			_csrf: csrfValue
 		},
 		success: function(response) {
-			$("#question_save_toast").toast('show');
-			//delete information at form of question
-			formInputs = $('#question_form').find('input, textarea');
-			formInputs.val("");
-			//add auto to 'most recent questions'
+			//hide form add question
+			$('#question_form').hide();
+			//add auto to 'most recent questions' wait to approve
 			askerName = fullName;
 			if(askerName == null && customerFullName != null){
 				askerName = customerFullName;
@@ -120,16 +276,19 @@ function getAllRepliesOfProduct(questionId, question_likes){
 				replier = "";
 				person = "";
 				if(r.customerName == null){
-					replier = r.userName;
-					person = "user";
+					replier = r.adminName;
+					person = "admin";
 				}
 				else{
 					replier = r.customerName;
 					person = "customer";
 				}
-				html = generateNewReplyDiv(replier, r.reply_content, r.replyTime,questionId, question_likes, person);
+				html = generateNewReplyDiv(replier, r.reply_content, r.replyTime,questionId, r.id, question_likes, person);
 				$("#reply_div" + questionId).append(html);
+				
+				
 			});
+			
 		},
 		error: function(xhr, status, error) {
 			alert("fail to load all replies of question id " + questionId);
@@ -137,16 +296,17 @@ function getAllRepliesOfProduct(questionId, question_likes){
 	});
 }
 
-function generateNewReplyDiv(replier, reply_content, replyTime, questionId, question_likes, person){
+function generateNewReplyDiv(replier, reply_content, replyTime, questionId, replyId, question_likes, person){
 	html = ``;
 	const date = replyTime.slice(0, 10);
+	person_reply = "reply_person" + replyId;
 	if(person == "customer"){
 		html += `
 			<div class="mt-3">
-				<strong>${replier}</strong>
+				<strong id = ${person_reply} >${replier}</strong>
 				<p class="mt-2">${reply_content}</p>
 				<div class="d-flex justify-content-start align-items-center" style="font-size: 14px;">
-					<a href="#">Reply</a>					
+					<a href="#" class="reply_reply_btn" questionId=${questionId} replyId = ${replyId}>Reply</a>					
 					<small class="ms-3">${date}</small>
 				</div>			
 			</div>
@@ -156,21 +316,22 @@ function generateNewReplyDiv(replier, reply_content, replyTime, questionId, ques
 		html += `
 			<div class="mt-3">
 				<div class="d-flex justify-content-start">
-					<strong class="me-3">${replier}</strong>
+					<strong class="me-3" id = ${person_reply} >${replier}</strong>
 					<i style="font-size: 13px;" class="fa-sharp fa-solid fa-circle-check d-flex align-items-center"></i>
 					<span class="d-flex align-items-start ms-2" style="font-size: 13px;">admin</span>
 				</div>
 				<p class="mt-2">${reply_content}</p>
 				<div class="d-flex justify-content-start align-items-center" style="font-size: 14px;">
-					<a href="#">Reply</a>
+					<a href="#" class="reply_reply_btn" questionId=${questionId} replyId = ${replyId}
+						person = "admin">Reply</a>
 					
-					<a href="#" class="btn_like_question" th:questionId=${questionId}
+					<a href="#" class="btn_like_question" questionId=${questionId}
 						likeStatus="0"> <i
 						class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"
-						th:id="like_icon_question + ${questionId}"></i>
+						id="like_icon_question + ${questionId}"></i>
 					</a>
-					<small th:id="like_text_question + ${questionId}">
-						Like (<span th:id="like_count_question + ${questionId}">${question_likes}</span>)
+					<small id="like_text_question + ${questionId}">
+						Like (<span id="like_count_question + ${questionId}">${question_likes}</span>)
 					</small>
 					
 					<small class="ms-3">${date}</small>
@@ -299,23 +460,14 @@ function generateNewQuestionDiv(fullName, question_content){
 	myDate = new Date(); // current date and time
 	date = myDate.toISOString().substr(0, 10);
 	html = `
-		<div class="row mt-5 question_div">
+		<div class="row mt-2">
 						<p style="font-size: 13px;" class="text-success">your new question</p>
-						<p style="font-weight: bold;">${fullName}</p>
+						<p style="font-weight: bold;">${fullName}</p>						
+						<p class="mt-2">${question_content}</p>													
+						<small>${date}</small>
 						
-						<p class="mt-2">${question_content}</p>
-						<div class="d-flex justify-content-start align-items-center " style="font-size: 14px;">
-							<a href="#">Reply</a>
-							
-							<a href="#" class="btn_like_question" likeStatus="0"> <i
-								class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"></i>
-							</a>
-							<small >
-								Like (0)
-							</small>
-							
-							<small class="ms-3">${date}</small>
-						</div>
+						<p class="bg-warning" style="max-width: 400px;">Thanks for leaving your comment/question, <br /> 
+							that will be approve and show on the page soon!</p>						
 					</div>
 	`;
 	return html;
