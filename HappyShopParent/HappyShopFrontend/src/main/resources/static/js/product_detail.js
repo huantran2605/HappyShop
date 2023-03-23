@@ -20,23 +20,60 @@ $(document).ready(function() {
 	
 	$(".btn_like_review").on("click", function(e) {
 		e.preventDefault();
-		reviewId=$(this).attr("reviewId");
-		likeStatus = $(this).attr("likeStatus");
-		if(likeStatus == "0"){
-			likeReview(reviewId, $(this));
+		if(customerAuthentication == "false"){
+			var currentUrl = window.location.href;
+			//redirect if user is not authenticated
+			redirectUrl = contextPath + 'login?redirect=' + currentUrl;
+			location.replace(redirectUrl);
 		}
 		else{
-			unlikeReview(reviewId, $(this));			
+			reviewId=$(this).attr("reviewId");
+			likeStatus = $(this).attr("likeStatus");
+			if(likeStatus == "0"){
+				likeAction(reviewId, $(this), "review", "#like_icon_review", 
+				"#like_text_review", "#like_count_review");
+			}
+			else{
+				unlikeAction(reviewId, $(this), "review", "#like_icon_review",
+				 "#like_text_review", "#like_count_review");			
+			}			
 		}
 				
 	});
 	
-	$(".btn_like_review").each(function(){
-		reviewId=$(this).attr("reviewId");
-		checkCustomerLikeReview(reviewId, $(this));		
+	$(".btn_like_review").each(function(index, element){
+		reviewId=$(element).attr("reviewId");
+		checkCustomerLikeObject(reviewId, $(element), "review", "#like_icon_review", "#like_text_review");		
 	});
 	
+	$(".btn_like_question").on("click", function(e) {
+		e.preventDefault();
+		if(customerAuthentication == "false"){
+			var currentUrl = window.location.href;
+			//redirect if user is not authenticated
+			redirectUrl = contextPath + 'login?redirect=' + currentUrl;
+			location.replace(redirectUrl);
+		}
+		else{
+			questionId=$(this).attr("questionId");
+			likeStatus = $(this).attr("likeStatus");
+			if(likeStatus == "0"){
+				likeAction(questionId, $(this), "question", "#like_icon_question",
+				 "#like_text_question", "#like_count_question");
+			}
+			else{
+				unlikeAction(questionId, $(this), "question", "#like_icon_question", 
+				"#like_text_question", "#like_count_question");			
+			}			
+		}
+		
+	});	
 	
+	$(".btn_like_question").each(function(index, element){
+		questionId=$(element).attr("questionId");
+		checkCustomerLikeObject(questionId, $(element), "question", "#like_icon_question", "#like_text_question");		
+	});
+		
 	$(".question_div").each(function(){
 		questionId = $(this).attr("questionId");
 		question_likes = $(this).attr("question_likes");
@@ -79,7 +116,7 @@ $(document).ready(function() {
 		
 		personName = $("#question_personName" + questionId).text().trim();
 		
-		showReplyFormAndSaveReply(questionId, false, personName);
+		showReplyFormAndSaveReply(questionId, customerAuthentication, false, personName);
 		
 
 			
@@ -97,7 +134,7 @@ $(document).ready(function() {
 			adminReplyRequired = true;
 		}
 		
-		showReplyFormAndSaveReply(questionId, customerAuthentication, personName);
+		showReplyFormAndSaveReply(questionId, customerAuthentication, adminReplyRequired, personName);
 				
 	});
 	
@@ -105,7 +142,7 @@ $(document).ready(function() {
 	
 });
 
-function showReplyFormAndSaveReply(questionId, customerAuthentication, personName){
+function showReplyFormAndSaveReply(questionId, customerAuthentication, adminReplyRequired, personName){
 	if(!$("#reply_form" + questionId).length){
 			html = generateReplyForm(customerAuthentication, personName, questionId);
 			$("#reply_div" + questionId).prepend(html);
@@ -158,7 +195,16 @@ function saveReply(questionId, reply_content, adminReplyRequired, fullName, phon
 			_csrf: csrfValue
 		},
 		success: function(response) {
-			console.log(response);
+			//hide reply form
+			$('#reply_form' + questionId).remove();
+			//add auto to 'reply_div' wait to approve
+			personName = fullName;
+			if(personName == null && customerFullName != null){
+				personName = customerFullName;
+			}			
+			html = generateNewReplyDivWaitToApprove(personName, reply_content);
+			$("#reply_div" + questionId).prepend(html);
+			
 		},
 		error: function(xhr, status, error) {
 			alert("fail to save reply of question id" + questionId);
@@ -325,15 +371,6 @@ function generateNewReplyDiv(replier, reply_content, replyTime, questionId, repl
 					<a href="#" class="reply_reply_btn" questionId=${questionId} replyId = ${replyId}
 						person = "admin">Reply</a>
 					
-					<a href="#" class="btn_like_question" questionId=${questionId}
-						likeStatus="0"> <i
-						class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"
-						id="like_icon_question + ${questionId}"></i>
-					</a>
-					<small id="like_text_question + ${questionId}">
-						Like (<span id="like_count_question + ${questionId}">${question_likes}</span>)
-					</small>
-					
 					<small class="ms-3">${date}</small>
 				</div>			
 			</div>
@@ -344,91 +381,83 @@ function generateNewReplyDiv(replier, reply_content, replyTime, questionId, repl
 	return html;
 }
 
-function checkCustomerLikeReview(reviewId, btn_like_review){
+function checkCustomerLikeObject(objectId, btn_like, object, typeLikeIconId, typeLikeTextId){
 	$.ajax({
-		url: contextPath + 'review/like_check',
+		url: contextPath + 'like_check/' + object,
 		type: 'POST',
 		data: {
-			reviewId: reviewId,
+			objectId: objectId,
 			_csrf: csrfValue
 		},
 		success: function(response) {
-			if(response == "liked"){
-				$("#like_icon_review" + reviewId).removeClass("fa-regular");
-				$("#like_icon_review" + reviewId).addClass("fa-solid");
-				btn_like_review.attr("likeStatus", "1");
-				$("#like_text_review" + reviewId).addClass("text-success");
+			console.log(response);
+			if(response == object + " " + objectId + " liked"){
+				$(typeLikeIconId + objectId).removeClass("fa-regular");
+				$(typeLikeIconId + objectId).addClass("fa-solid");
+				btn_like.attr("likeStatus", "1");
+				$(typeLikeTextId + objectId).addClass("text-success");
 			}
 		},
 		error: function(xhr, status, error) {
-			alert("fail");
+			console.log("Error status: " + xhr.status);
+        	console.log("Error message: " + xhr.responseText);
 		}
 	});
 }
 
-function likeReview(reviewId, btn_like_review) {
-	var currentUrl = window.location.href;
-	//redirect if user is not authenticated
-	redirectUrl = contextPath + 'login?redirect=' + currentUrl;
+function likeAction(objectId, btn_like, object, typeLikeIconId, typeLikeTextId, typeLikeCountId ) {
+	data = {objectId: objectId, _csrf: csrfValue};
 	$.ajax({
-		url: contextPath + 'review/like',
+		url: contextPath + 'like/' + object,
 		type: 'POST',
-		data: {
-			reviewId: reviewId,
-			_csrf: csrfValue
-		},
+		data: data,
 		success: function(response) {
-			if(response != 'ok' && response != 'the review is not existed!'){
-				location.replace(redirectUrl);
-			}
-			else if(response == 'ok'){
-				$("#like_icon_review" + reviewId).removeClass("fa-regular");
-				$("#like_icon_review" + reviewId).addClass("fa-solid");	
-				btn_like_review.attr("likeStatus", "1");
-				$("#like_text_review" + reviewId).addClass("text-success");
-				increaseLikeCount(reviewId);
-			}
+			$(typeLikeIconId + objectId).removeClass("fa-regular");
+			$(typeLikeIconId + objectId).addClass("fa-solid");	
+			btn_like.attr("likeStatus", "1");
+			$(typeLikeTextId + objectId).addClass("text-success");
+			increaseLikeCount(objectId, typeLikeCountId);
 		},
 		error: function(xhr, status, error) {
-			alert("fail");
+			console.log("Error status: " + xhr.status);
+        	console.log("Error message: " + xhr.responseText);
 		}
 	});
 }
 
 
-function unlikeReview(reviewId, btn_like_review){
+function unlikeAction(objectId, btn_like, object, typeLikeIconId, typeLikeTextId, typeLikeCountId){
 	$.ajax({
-		url: contextPath + 'review/unlike',
+		url: contextPath + 'unlike/' + object,
 		type: 'POST',
 		data: {
-			reviewId: reviewId,
+			objectId: objectId,
 			_csrf: csrfValue
 		},
 		success: function(response) {
-			if(response == 'ok'){
-				$("#like_icon_review" + reviewId).removeClass("fa-solid");
-				$("#like_icon_review" + reviewId).addClass("fa-regular");
-				btn_like_review.attr("likeStatus", "0");
-				$("#like_text_review" + reviewId).removeClass("text-success");
-				decreaseLikeCount(reviewId);				
-			}
+			$(typeLikeIconId + objectId).removeClass("fa-solid");
+			$(typeLikeIconId + objectId).addClass("fa-regular");
+			btn_like.attr("likeStatus", "0");
+			$(typeLikeTextId + objectId).removeClass("text-success");
+			decreaseLikeCount(objectId, typeLikeCountId);		
 		},
 		error: function(xhr, status, error) {
-			alert("fail");
+			console.log("Error status: " + xhr.status);
+        	console.log("Error message: " + xhr.responseText);
 		}
 	});
 }
-
-function increaseLikeCount(reviewId){
-	likeCount = parseInt( $("#like_count_review" + reviewId).text() );
+ 
+function increaseLikeCount(objectId, typeLikeCountId){
+	likeCount = parseInt( $(typeLikeCountId + objectId).text() );
 	likeCount += 1;
-	$("#like_count_review" + reviewId).text(likeCount);
+	$(typeLikeCountId + objectId).text(likeCount);
 }
 
-function decreaseLikeCount(reviewId){
-	likeCount = parseInt( $("#like_count_review" + reviewId).text() );
+function decreaseLikeCount(objectId, typeLikeCountId){
+	likeCount = parseInt( $(typeLikeCountId + objectId).text() );
 	likeCount -= 1;
-	$("#like_count_review" + reviewId).text(likeCount);
+	$(typeLikeCountId + objectId).text(likeCount);
 }
 
 
@@ -467,6 +496,23 @@ function generateNewQuestionDiv(fullName, question_content){
 						<small>${date}</small>
 						
 						<p class="bg-warning" style="max-width: 400px;">Thanks for leaving your comment/question, <br /> 
+							that will be approve and show on the page soon!</p>						
+					</div>
+	`;
+	return html;
+}
+
+function generateNewReplyDivWaitToApprove(fullName, reply_content){
+	myDate = new Date(); // current date and time
+	date = myDate.toISOString().substr(0, 10);
+	html = `
+		<div class="row mt-2">
+						<p style="font-size: 13px;" class="text-success">your new reply</p>
+						<p style="font-weight: bold;">${fullName}</p>						
+						<p class="mt-2">${reply_content}</p>													
+						<small>${date}</small>
+						
+						<p class="bg-warning" style="max-width: 400px;">Thanks for leaving your reply, <br /> 
 							that will be approve and show on the page soon!</p>						
 					</div>
 	`;

@@ -14,31 +14,31 @@ import org.springframework.test.annotation.Rollback;
 
 import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.Review;
-import com.happyshop.common.entity.Review_Like;
+import com.happyshop.common.entity.Like;
+import com.happyshop.like.LikeRepository;
+import com.happyshop.like.LikeService;
 import com.happyshop.review.ReviewRepository;
-import com.happyshop.review.review_like.ReviewLikeRepository;
-import com.happyshop.review.review_like.ReviewLikeService;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
-public class ReviewLikeRepositoryTests {
+public class LikeRepositoryTests {
     @Autowired
-    ReviewLikeRepository repo;
+    LikeRepository repo;
     
     @Autowired
-    private ReviewLikeService service;
+    private LikeService service;
     
     
     @Test
     public void addReviewLikeTest() {
-        Review_Like rL = new Review_Like(new Customer(1), new Review(1));
+        Like rL = new Like(new Customer(1), new Review(1));
         
         repo.save(rL);
     }
     @Test
     public void getReviewLikeByCustomerAndReviewTest() {
-        Review_Like rL = repo.findByCustomerAndReview(new Customer(1), new Review(1));
+        Like rL = repo.findByCustomerAndReview(new Customer(1), new Review(1));
         
         assertThat(rL).isNotNull();
     }

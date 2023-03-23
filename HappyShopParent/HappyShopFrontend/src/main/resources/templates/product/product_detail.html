@@ -155,7 +155,7 @@
 				 class="text-info">Go to write review now </a> </p>
 		</div>
 				
-		<div class="mt-3 p-2" th:if="${not #lists.isEmpty(recentReviews)}">
+		<div class="mt-3 p-2" th:if="${not #lists.isEmpty(recentReviews)}" >
 			<h5>Most recent reviews</h5>
 			<th:block th:each="review : ${recentReviews}">
 				<div class="row mt-5">

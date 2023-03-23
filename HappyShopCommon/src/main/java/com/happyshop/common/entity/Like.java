@@ -13,11 +13,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "review_likes")
+@Table(name = "likes")
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class Review_Like { 
+public class Like { 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,10 +29,19 @@ public class Review_Like {
     @ManyToOne
     @JoinColumn(name="review_id")
     private Review review;
+    
+    @ManyToOne
+    @JoinColumn(name="question_id")
+    private Question question;    
 
-    public Review_Like(Customer customer, Review review) {
+    public Like(Customer customer, Review review) {
         this.customer = customer;
         this.review = review;
+    }
+    
+    public Like(Customer customer, Question question) {
+        this.customer = customer;
+        this.question = question;
     }
     
     

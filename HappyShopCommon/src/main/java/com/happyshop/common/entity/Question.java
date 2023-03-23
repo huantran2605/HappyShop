@@ -66,6 +66,13 @@ public class Question {
         this.id = id;
     }
     
+    public void increaseLikeCount() {
+        this.likes += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likes -= 1;
+    }
     
    
 }
