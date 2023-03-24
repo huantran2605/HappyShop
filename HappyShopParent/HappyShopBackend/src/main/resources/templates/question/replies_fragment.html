@@ -1,0 +1,113 @@
+
+	<div th:fragment = "content" class="container-fluid">
+		
+		<!-- search-->
+			
+		<form th:action="@{'/reply/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+			class="form-inline m-2" id="replySearchForm">
+			<div class="row">
+				<div class="col-sm-3">		
+					<label for="replyStatus">Reply Status: </label> 
+					<select name="replyStatus" id=""
+						class="form-control">
+						<option value="NAp" th:selected="${'NAp' == replyStatus}">Not Approved</option>
+						<option value="ARR" th:selected="${'ARR' == replyStatus}">Admin Reply Required</option>
+						
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<label for="keyWord">Filter: </label> <input
+						class="form-control " th:value="${keyWord}"
+						name="keyWord" type="search" placeholder="Search by reply content or replyTime"
+						aria-label="Search">
+				</div>
+				<div class="col-sm-3">
+					<button class="btn btn-outline-success " type="submit">
+						<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+					</button>
+					<a th:href="@{/reply/listReply}"
+						class="btn btn-outline-success m-3 "> <i
+						class="fa-sharp fa-solid fa-eraser"></i>
+					</a>
+				</div>
+			</div>
+				<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+					type="hidden" name="sortDir" th:value="${sortDir}" />
+		</form>	
+			
+
+		<div class="full-details" th:if="${totalElement > 0}">
+			<table
+				class="table table-active table-striped table-inverse
+				table-hover table-responsive mt-4 ">
+				<thead class="thead-inverse ">
+					<tr>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
+						<th th:replace="fragments :: column_link('reply_content', 'Reply Content')"></th>
+						<th th:replace="fragments :: column_link('customer', 'Person')"></th>
+						<th th:replace="fragments :: column_link('replyTime', 'Reply Time')"></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each=" reply: ${replies}">
+						<td scope="row" th:text="${reply.id}"></td>
+						<td>
+							[[${reply.reply_content}]]
+						</td>
+						<td>
+							<a th:href="@{'/customer/detail/' + ${reply.customer.id}}"
+									title="Detail customer" 
+									th:if="${reply.customer != null}" class="me-3 link-detail-customer">
+									[[${reply.customer.getFullName}]] 
+							</a>
+							<p th:if="${reply.personReply != null}">[[${reply.personReply.fullName}]]</p>
+						</td>
+						<td>	
+							<div th:replace="fragments :: format_time(${reply.replyTime})"></div>						
+						</td>
+						<td>
+							<div class="d-flex justify-content-center align-items-center">
+								
+								<a th:href="@{'/reply/delete/' + ${reply.id}}"
+									class="deleteQuestion me-5" th:replyId = "${reply.id}"
+									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+								</a>
+								
+								<button class="btn btn-primary" title="answer ">Answer</button>															  
+							</div>
+							
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="less-details">
+			<div th:each=" reply: ${replies}" class="row">
+				<div class="">
+					<p>Id: [[${reply.id}]]</p>
+				</div>
+				<div class="d-flex justify-content-start">
+										
+					<a th:href="@{'/reply/delete/' + ${reply.id}}"
+						class="deleteQuestion me-3" th:replyId = "${reply.id}"
+						title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+					</a>
+				
+				</div>
+				<hr />
+			</div>
+		</div>
+		
+		<div th:replace="fragments :: countElement('Question')"></div>
+		<!-- pagination -->
+		<div th:replace="fragments :: pagination()"></div>
+		<!-- modal -->
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+		<div th:replace="modal_fragments :: detailModal('detailModalCustomer')"></div>
+	</div>
+
+
+
+	

@@ -39,12 +39,11 @@ public class QuestionController {
     @Autowired
     UserUtility userUtility;
     
-    
-    String defaultUrl = "redirect:/question/page/1?sortField=askTime&sortDir=des&keyWord=";
+    String defaultUrl = "redirect:/question/page/1?sortField=askTime&sortDir=des&keyWord=&questionStatus=";
     @GetMapping("/listQuestion")
-    public String viewFirstQuestionPage() {
+    public String viewListQuestion() {
        
-        return defaultUrl;
+        return defaultUrl + "NAp";
     }
     
     @GetMapping("/page/{pageNum}")
@@ -52,7 +51,7 @@ public class QuestionController {
             @Param("sortField") String sortField,
             @Param("sortDir") String sortDir,
             @Param("keyWord") String keyWord, 
-            
+            @Param("questionStatus") String questionStatus, 
             Model model) {
         //sort
         Sort sort = Sort.by(sortField);
@@ -61,13 +60,20 @@ public class QuestionController {
         else  sort = Sort.by(sortField).descending();  
         
         Pageable pageable = PageRequest.of(pageNum - 1,  
-                QuestionService.SIZE_PAGE_PRODUCT, sort);
+                QuestionService.SIZE_PAGE_QUESTION, sort);
         
-        Page<Question> pageQuestion = questionService.findAll(keyWord, pageable); 
+        Page<Question> pageQuestion = questionService.findAllNotApproved(keyWord, pageable);             
+        
+        if(questionStatus.equals("NAn")) {
+            pageQuestion = questionService.findAllNotAnswered(keyWord, pageable);                       
+        }else if(questionStatus.equals("NApANAn")) {
+            pageQuestion = questionService.findAllNotApprovedAndNotAnswered(keyWord, pageable);            
+        }
+        
         List<Question> questions = pageQuestion.getContent();
         
-        long startCount = (pageNum - 1) * QuestionService.SIZE_PAGE_PRODUCT + 1;
-        long endCount = startCount + QuestionService.SIZE_PAGE_PRODUCT - 1 ;
+        long startCount = (pageNum - 1) * QuestionService.SIZE_PAGE_QUESTION + 1;
+        long endCount = startCount + QuestionService.SIZE_PAGE_QUESTION - 1 ;
         if(endCount > pageQuestion.getTotalElements() )
             endCount = pageQuestion.getTotalElements();
         
@@ -86,16 +92,20 @@ public class QuestionController {
         model.addAttribute("totalElement", pageQuestion.getTotalElements());
         
         model.addAttribute("elementsCurrentPerPage", pageQuestion.getNumberOfElements());
-        model.addAttribute("elementsPerPage", QuestionService.SIZE_PAGE_PRODUCT);
+        model.addAttribute("elementsPerPage", QuestionService.SIZE_PAGE_QUESTION);
         
         model.addAttribute("keyWord", keyWord);
         model.addAttribute("moduleURL", "/question");
+        model.addAttribute("questionStatus", questionStatus);
+        
+        
         
         return"question/listQuestion";
     }
     
     @GetMapping("delete/{id}")
     private String deleteQuestion(@PathVariable("id") Integer id,
+            @Param("questionStatus") String questionStatus,
             RedirectAttributes re,Model model) throws IOException {
         try {
             questionService.deleteById(id);
@@ -103,42 +113,35 @@ public class QuestionController {
         } catch (QuestionNotFoundException e) {
             re.addFlashAttribute("message", e.getMessage());
         }
-        return defaultUrl;   
+        
+        
+        return defaultUrl + questionStatus;   
     }
     
-    @GetMapping("update/{id}")
-    private String updateQuestion(Reply reply, @PathVariable("id") Integer  id,
-            RedirectAttributes re,
-            Model model) {
-        try {
-            Question r = questionService.findById(id);
-            model.addAttribute("question", r);     
-            model.addAttribute("reply", reply);     
-            
-            return "question/question_form";
-            
-        } catch (QuestionNotFoundException e) {
-            re.addFlashAttribute("message", e.getMessage());
-            return defaultUrl;
+    @GetMapping("/approve")
+    private String approveQuestion(@RequestParam(name="questionId", required = false) Integer questionId,
+            @RequestParam(name="questionsSelectedId", required = false) Integer[] questionIds,
+            RedirectAttributes re) throws QuestionNotFoundException {
+        if(questionId != null) {
+            Question q = questionService.findById(questionId);
+            q.setApprovalStatus(true);
+            questionService.save(q);
+            re.addFlashAttribute("message", "Approve question Id " + questionId + " successfully!");            
         }
-
+        else if(questionIds != null) { 
+            for (Integer id : questionIds) {
+                Question q = questionService.findById(id);
+                q.setApprovalStatus(true);
+                questionService.save(q);
+            }
+            re.addFlashAttribute("message", "Approve questions Id successfully!"); 
+        }
+            
+                
+        return defaultUrl + "NAp";
     }
+   
     
-//    @PostMapping("/save")
-//    private String saveReply(Reply reply, Review review,
-//            RedirectAttributes re, HttpServletRequest request,
-//            @RequestParam("questionId") Integer questionId) {        
-//        
-//        User user = userUtility.getAuthenticationUser(request);
-//        reply.setReplyTime(new Date());
-//        reply.setAdmin(user);
-//        reply.setQuestion(new Question(questionId));
-//        
-//        System.out.println();
-//        
-//        
-//                 
-//        return defaultUrl;
-//    }
+    
         
 }

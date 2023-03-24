@@ -18,14 +18,30 @@ import com.happyshop.common.exception.ReviewNotFoundException;
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     QuestionRepository repo;
-    
-    public Page<Question> findAll(String keyword, Pageable pageable) {
-        if(!keyword.isBlank() || !keyword.isEmpty()) {
-            return repo.findAll(keyword, pageable);                      
-        }
-        return repo.findAll(pageable);
-    }
 
+        
+    public Page<Question> findAllNotApproved(String keyword, Pageable pageable) {
+        if(!keyword.isBlank() || !keyword.isEmpty()) {
+            return repo.findAllNotApproved(keyword, pageable);                      
+        }
+        return repo.findAllNotApproved(pageable);
+    }
+    
+    public Page<Question> findAllNotAnswered(String keyword, Pageable pageable) {
+        if(!keyword.isBlank() || !keyword.isEmpty()) {
+            return repo.findAllNotAnswered(keyword, pageable);                      
+        }
+        return repo.findAllNotAnswered(pageable);
+    }
+    
+    public Page<Question> findAllNotApprovedAndNotAnswered(String keyword, Pageable pageable) {
+        if(!keyword.isBlank() || !keyword.isEmpty()) {
+            return repo.findAllNotApprovedAndNotAnswered(keyword, pageable);                      
+        }
+        return repo.findAllNotApprovedAndNotAnswered(pageable);
+    }
+    
+    
     public void deleteById(Integer id) throws QuestionNotFoundException {
         try {
             repo.deleteById(id);                     
@@ -33,7 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionNotFoundException("The question is not existed!");
         }
     }
-    
+
     public Question findById(Integer id) throws QuestionNotFoundException {  
         try {
             return repo.findById(id).get();                       
@@ -41,6 +57,11 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionNotFoundException("The question is not existed!");
         }
     }
+
+    public <S extends Question> S save(S entity) {
+        return repo.save(entity);
+    }
+    
     
     
 

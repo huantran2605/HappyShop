@@ -32,7 +32,9 @@
 			th:href="@{${moduleURL} + '/page/' + ${pageNum} +
 							'?sortField=' + ${sortField}+ '&sortDir=' +
 							 ${reserveDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''}
-							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
+							 +${categoryID != null ? '&categoryID=' + categoryID : ''}
+							 +${questionStatus != null ? '&questionStatus=' + questionStatus : ''}
+							 +${replyStatus != null ? '&replyStatus=' + replyStatus : ''}}">
 				[[${colTitle}]]</a> <i class="fa-sharp fa-solid fa-caret-up"
 			th:if="${sortDir == 'asc'}"></i> <i
 			class="fa-sharp fa-solid fa-caret-down" th:if="${sortDir == 'des'}"></i>
@@ -41,7 +43,9 @@
 			th:href="@{${moduleURL} + '/page/' + ${pageNum} +
 							'?sortField=' + ${fieldName} + '&sortDir=' + ${reserveDir} +
 							 ${keyWord != null ? '&keyWord=' + keyWord : ''}
-							 +${categoryID != null ? '&categoryID=' + categoryID : ''}}">
+							 +${categoryID != null ? '&categoryID=' + categoryID : ''}
+							 +${questionStatus != null ? '&questionStatus=' + questionStatus : ''}
+							 +${replyStatus != null ? '&replyStatus=' + replyStatus : ''}}">
 				[[${colTitle}]]</a>
 	</span></th>
 
@@ -62,7 +66,9 @@
 	<a th:fragment="page_link(pageNum, label)" class="page-link"
 		th:href="@{${moduleURL} + '/page/' +${pageNum} +'?sortField=' + ${sortField}+
 					   '&sortDir=' + ${sortDir} + ${keyWord != null ? '&keyWord=' + keyWord : ''} 
-					   +${categoryID != null ? '&categoryID=' + categoryID : ''}}">[[${label}]]</a>
+					   +${categoryID != null ? '&categoryID=' + categoryID : ''}
+					   +${questionStatus != null ? '&questionStatus=' + questionStatus : ''}
+					   +${replyStatus != null ? '&replyStatus=' + replyStatus : ''}}">[[${label}]]</a>
 
 	<!-- search-->
 	<div th:fragment="search(nameModule)">

@@ -61,6 +61,9 @@ public class Question {
     
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies  = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likeStatus  = new ArrayList<>();
 
     public Question(Integer id) {
         this.id = id;
