@@ -43,7 +43,7 @@ public class QuestionController {
     @GetMapping("/listQuestion")
     public String viewListQuestion() {
        
-        return defaultUrl + "NAp";
+        return defaultUrl + "NApANAn";
     }
     
     @GetMapping("/page/{pageNum}")
@@ -62,12 +62,12 @@ public class QuestionController {
         Pageable pageable = PageRequest.of(pageNum - 1,  
                 QuestionService.SIZE_PAGE_QUESTION, sort);
         
-        Page<Question> pageQuestion = questionService.findAllNotApproved(keyWord, pageable);             
+        Page<Question> pageQuestion = questionService.findAllNotApprovedAndNotAnswered(keyWord, pageable);             
         
         if(questionStatus.equals("NAn")) {
             pageQuestion = questionService.findAllNotAnswered(keyWord, pageable);                       
-        }else if(questionStatus.equals("NApANAn")) {
-            pageQuestion = questionService.findAllNotApprovedAndNotAnswered(keyWord, pageable);            
+        }else if(questionStatus.equals("NAp")) {
+            pageQuestion = questionService.findAllNotApproved(keyWord, pageable);            
         }
         
         List<Question> questions = pageQuestion.getContent();
@@ -121,7 +121,7 @@ public class QuestionController {
     @GetMapping("/approve")
     private String approveQuestion(@RequestParam(name="questionId", required = false) Integer questionId,
             @RequestParam(name="questionsSelectedId", required = false) Integer[] questionIds,
-            RedirectAttributes re) throws QuestionNotFoundException {
+            RedirectAttributes re, @Param("questionStatus") String questionStatus) throws QuestionNotFoundException {
         if(questionId != null) {
             Question q = questionService.findById(questionId);
             q.setApprovalStatus(true);
@@ -138,9 +138,18 @@ public class QuestionController {
         }
             
                 
-        return defaultUrl + "NAp";
+        return defaultUrl + questionStatus;
     }
    
+    @GetMapping("answer/{id}")
+    private String showFormAnwerQuestion(@PathVariable("id") Integer questionId, Model model)
+            throws QuestionNotFoundException {
+        Question q = questionService.findById(questionId);
+        model.addAttribute("question", q);
+        
+        return "question/question_answer_form";
+    }
+    
     
     
         

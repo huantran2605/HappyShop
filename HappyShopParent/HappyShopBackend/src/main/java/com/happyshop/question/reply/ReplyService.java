@@ -1,6 +1,7 @@
 package com.happyshop.question.reply;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,9 @@ public interface ReplyService {
     Page<Reply> findAllNotApproved(String keyword, Pageable pageable);
     
     Page<Reply> findAllAdminReplyRequired(String keyword, Pageable pageable);
+    
+    Optional<Reply> findById(Integer id);
+    
+    <S extends Reply> S save(S entity);
 }
+

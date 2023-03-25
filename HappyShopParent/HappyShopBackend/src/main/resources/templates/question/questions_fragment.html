@@ -9,9 +9,9 @@
 					<label for="questionStatus">Question Status: </label> 
 					<select name="questionStatus" id=""
 						class="form-control">
-						<option value="NAp" th:selected="${'NAp' == questionStatus}">Not Approved</option>
-						<option value="NAn" th:selected="${'NAn' == questionStatus}">Not Answered</option>
-						<option value="NApANAn" th:selected="${'NApANAn' == questionStatus}">Not Approved And Not Answered</option>
+						<option value="NApANAn" th:selected="${'NApANAn' == questionStatus}">Not Approved And Not Answered(New Question)</option>
+						<option value="NAp" th:selected="${'NAp' == questionStatus}">Not Approved(Answered)</option>
+						<option value="NAn" th:selected="${'NAn' == questionStatus}">Not Answered(Approved)</option>
 						
 					</select>
 				</div>
@@ -35,11 +35,11 @@
 					type="hidden" name="sortDir" th:value="${sortDir}" />
 		</form>	
 		
-		<div class="d-flex justify-content-start align-items-center" 
-			th:if="${questionStatus ==  'NAp' && totalElement > 0}" id="questionSelectDiv">
+		<div class="d-flex justify-content-start align-items-center selectAllDiv" 
+			th:if="${(questionStatus ==  'NAp' || questionStatus ==  'NApANAn'  ) && totalElement > 0}">
 			<p>Select All</p>
 			<input type="checkbox" class="ms-3"/> 
-			<button class="btn btn-primary ms-3" >Approve</button>
+			<button object="question" class="btn btn-primary ms-3" >Approve</button>
 		</div>	
 
 		<div class="full-details" th:if="${totalElement > 0}">
@@ -48,7 +48,7 @@
 				table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
-						<th th:if="${questionStatus ==  'NAp'}" ></th>
+						<th th:if="${questionStatus ==  'NAp' || questionStatus ==  'NApANAn'}" ></th>
 						<th th:replace="fragments :: column_link('id', 'ID')"></th>
 						<th th:replace="fragments :: column_link('question_content', 'Question')"></th>
 						<th th:replace="fragments :: column_link('customer', 'Asker')"></th>
@@ -58,9 +58,9 @@
 				</thead>
 				<tbody>
 					<tr th:each=" question: ${questions}">
-						<td th:if="${questionStatus ==  'NAp'}">
+						<td th:if="${questionStatus ==  'NAp' || questionStatus ==  'NApANAn' }">
 							 <input type="checkbox" name="questionsSelectedId"
-							 	th:value="${question.id}" class="questionCheckbox" />
+							 	th:value="${question.id}" class="checkbox" />
 					  	</td>
 						<td scope="row" th:text="${question.id}"></td>
 						<td>
@@ -85,9 +85,12 @@
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>
 								
-								<button class="btn btn-primary approveBtn" th:if="${questionStatus ==  'NAp'}"
-									th:questionId="${question.id}" title="approve ">Approve</button>															  
-								<button class="btn btn-primary AnswerBtn" th:if="${questionStatus ==  'NAn' || questionStatus ==  'NApANAn' }" 
+								<button class="btn btn-primary approveBtn" th:if="${questionStatus ==  'NAp' || questionStatus ==  'NApANAn' }"
+									th:objectId="${question.id}" object="question" title="approve ">Approve</button>															  
+								<button class="btn btn-primary answerBtn" 
+									th:objectId = "${question.id}"
+									object="question"
+									th:if="${questionStatus ==  'NAn'}" 
 									title="answer ">Answer</button>															  
 							</div>
 							
@@ -128,5 +131,11 @@
 		
 		<div th:replace="modal_fragments :: detailModal('detailModalCustomer')"></div>
 		
-	</div>
+		<div th:replace="modal_fragments :: detailModal('answerFormModal')"></div>
+		
+		
+
+		
+
+</div>
 

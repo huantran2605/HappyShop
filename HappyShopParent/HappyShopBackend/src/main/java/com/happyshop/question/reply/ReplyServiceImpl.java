@@ -2,6 +2,7 @@ package com.happyshop.question.reply;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,4 +36,15 @@ public class ReplyServiceImpl implements ReplyService {
         return repo.findAllAdminReplyRequired(pageable);
     }
 
+    public Optional<Reply> findById(Integer id) {
+        return repo.findById(id);
+    }
+
+    public <S extends Reply> S save(S entity) {
+        return repo.save(entity);
+    }
+    
+    
+
+    
 }

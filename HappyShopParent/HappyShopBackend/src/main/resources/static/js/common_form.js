@@ -31,8 +31,8 @@ function showThumbnail(fileInput) {
 }
 
 function showModal(title, message) {
-	$("#modal-title").text(title);
-	$("#modal-body").text(message);
+	$("#modalDialog #modal-title").text(title);
+	$("#modalDialog #modal-body").text(message);
 	$("#modalDialog").modal("show");
 }
 function showConfirmationModal(message) {

@@ -34,6 +34,13 @@
 				<input type="hidden" name="sortField" th:value="${sortField}" /> <input
 					type="hidden" name="sortDir" th:value="${sortDir}" />
 		</form>	
+		
+		<div class="d-flex justify-content-start align-items-center selectAllDiv"
+			th:if="${(replyStatus ==  'NAp' ) && totalElement > 0}">
+			<p>Select All</p>
+			<input type="checkbox" class="ms-3"/> 
+			<button class="btn btn-primary ms-3" object="reply">Approve</button>
+		</div>
 			
 
 		<div class="full-details" th:if="${totalElement > 0}">
@@ -42,6 +49,7 @@
 				table-hover table-responsive mt-4 ">
 				<thead class="thead-inverse ">
 					<tr>
+						<th></th>
 						<th th:replace="fragments :: column_link('id', 'ID')"></th>
 						<th th:replace="fragments :: column_link('reply_content', 'Reply Content')"></th>
 						<th th:replace="fragments :: column_link('customer', 'Person')"></th>
@@ -51,6 +59,10 @@
 				</thead>
 				<tbody>
 					<tr th:each=" reply: ${replies}">
+						<td th:if="${replyStatus ==  'NAp'}">
+							 <input type="checkbox" name="repliesSelectedId"
+							 	th:value="${reply.id}" class="checkbox" />
+					  	</td>
 						<td scope="row" th:text="${reply.id}"></td>
 						<td>
 							[[${reply.reply_content}]]
@@ -74,7 +86,16 @@
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>
 								
-								<button class="btn btn-primary" title="answer ">Answer</button>															  
+								<div class="replyApprovedBtnDiv" th:replyId = "${reply.id}" 
+									th:id="replyApprovedBtnDiv + ${reply.id}" >
+									
+								</div>
+								<button class="btn btn-primary answerBtn" th:if="${replyStatus == 'ARR' }" 
+									th:objectId = "${reply.id}"
+									object="reply"
+									title="answer ">Answer</button>															  
+								<button class="btn btn-primary approveBtn" th:if="${replyStatus == 'NAp' }" 
+									title="approve" th:objectId="${reply.id}" object="reply">Approve</button>															  
 							</div>
 							
 						</td>
@@ -105,6 +126,7 @@
 		<div th:replace="fragments :: pagination()"></div>
 		<!-- modal -->
 		<div th:replace="modal_fragments :: confirmationModal"></div>
+		<div th:replace="modal_fragments :: modal"></div>
 		<div th:replace="modal_fragments :: detailModal('detailModalCustomer')"></div>
 	</div>
 

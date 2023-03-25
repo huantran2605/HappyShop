@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.UserUtility;
+import com.happyshop.common.entity.Question;
 import com.happyshop.common.entity.Reply;
 import com.happyshop.common.entity.Reply;
 import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.User;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.exception.QuestionNotFoundException;
 import com.happyshop.common.exception.ReviewNotFoundException;
 import com.happyshop.review.ReviewService;
 
@@ -37,11 +39,11 @@ public class ReplyController {
     @Autowired 
     ReplyService replyService;
     
-    String defaultUrl = "redirect:/reply/page/1?sortField=replyTime&sortDir=des&keyWord=&replyStatus=NAp";
+    String defaultUrl = "redirect:/reply/page/1?sortField=replyTime&sortDir=des&keyWord=&replyStatus=";
     @GetMapping("/listReply")
     public String viewListReply() {
        
-        return defaultUrl;
+        return defaultUrl + "NAp";
     }
     
     @GetMapping("/page/{pageNum}")
@@ -96,5 +98,26 @@ public class ReplyController {
         return"question/listQuestion";
     }
     
-   
+    @GetMapping("/approve")
+    private String approveReply(@RequestParam(name="replyId", required = false) Integer replyId,
+            @RequestParam(name="repliesSelectedId", required = false) Integer[] replyIds,
+            @Param("replyStatus") String replyStatus,
+            RedirectAttributes re) {
+        if(replyId != null) {
+            Reply q = replyService.findById(replyId).get();
+            q.setApprovalStatus(true);
+            replyService.save(q);
+            re.addFlashAttribute("message", "Approve reply Id " + replyId + " successfully!");            
+        }
+        else if(replyIds != null) { 
+            for (Integer id : replyIds) {
+                Reply q = replyService.findById(id).get();
+                q.setApprovalStatus(true);
+                replyService.save(q);
+            }
+            re.addFlashAttribute("message", "Approve replies Id successfully!"); 
+        }
+                           
+        return defaultUrl + replyStatus;
+    }
 }

@@ -16,80 +16,117 @@ $(document).ready(function() {
 		$("#deleteOption").attr("href", $(this).attr("href"));
 	});
 
-	$(".approveBtn").on("click", function() {
-		questionId = $(this).attr("questionId");
-		showConfirmationModal("Are you sure to approve question id " + questionId);
-		url = contextPath + "question/approve?questionId=" + questionId;
+	$(document).on("click",".approveBtn", function() {
+		object = $(this).attr("object");
+		objectId = $(this).attr("objectId");
+		showConfirmationModal("Are you sure to approve " + object +" id " + objectId); 
+		objectStatus = object == 'question' ? questionStatus : replyStatus;
+		url = contextPath + object	+"/approve?"+ object+"Status="+objectStatus+"&" +  object +"Id=" + objectId;
 		$("#confirmationModal").find("#deleteOption").attr("href", url);
 	});
 
-	$(".questionCheckbox").on("click", function(){
+	$(".checkbox").on("click", function(){
 		if(checkAllCheckboxCheckedOrNot()){
-			$("#questionSelectDiv input").prop("checked", true);
+			$(".selectAllDiv input").prop("checked", true);
 			whenQuestionSelectAllCheckboxChecked();
 		}
 		else{
-			$("#questionSelectDiv input").prop("checked", false);
+			$(".selectAllDiv input").prop("checked", false);
 			whenQuestionSelectAllCheckboxChecked();
 		}
 	});
 
-	$("#questionSelectDiv input").on("click", function(){
+	$(".selectAllDiv input").on("click", function(){
 		whenQuestionSelectAllCheckboxChecked();
 		if($(this).prop("checked")){
-			$(".questionCheckbox").each(function(){
+			$(".checkbox").each(function(){
 				$(this).prop("checked", true);
 			});
 		}
 		else{
-			$(".questionCheckbox").each(function(){
+			$(".checkbox").each(function(){
 				$(this).prop("checked", false);
 			});
 		}		
 	});
 	
-	$("#questionSelectDiv button").on("click", function(){
+	$(".selectAllDiv button").on("click", function(){
+		object = $(this).attr("object");
 		validBtn = false;
-		$(".questionCheckbox").each(function(){
+		$(".checkbox").each(function(){
 				if( $(this).prop("checked") ){
 					validBtn = true;
 					return false;
 				}
 		});
 		if(validBtn){
-			showConfirmationModal("Are you sure to approve the selected questions!");
-			url = contextPath + "question/approve";
-			count = 0;
-			$(".questionCheckbox").each(function(){
-				if( $(this).prop("checked") && count == 0 ){
-					questionId = $(this).val();
-					url += '?questionsSelectedId=' + questionId;
-					count = -1;
-				}
-				else if($(this).prop("checked") && count == -1){
-					questionId = $(this).val();
-					url += '&questionsSelectedId=' + questionId;
+			objects = object == 'question' ? 'questions' : 'replies';
+			showConfirmationModal("Are you sure to approve the selected " + objects +"!");
+			objectStatus = object == 'question' ? questionStatus : replyStatus;
+			url = contextPath + object +"/approve?" + object+"Status=" + objectStatus;
+			$(".checkbox").each(function(){
+				if($(this).prop("checked")){
+					objectId = $(this).val();
+					url += '&'+objects +'SelectedId=' + objectId;
 				}
 			});
 			$("#confirmationModal").find("#deleteOption").attr("href", url);						
 		}
 	});
+	
+	
+	if(replyStatus == 'ARR'){
+		$(".replyApprovedBtnDiv").each(function(){
+			replyId = $(this).attr("replyId");
+			checkReplyApproved(replyId, $(this));		
+		});		
+	}
+	
+	$(".answerBtn").on("click", function() {
+		objectId = $(this).attr("objectId");
+		object = $(this).attr("object");
+		url = contextPath + object +"/answer/" + objectId;
+		if(object == 'reply'){
+			if ($("#replyApprovedBtnDiv" + objectId).find("button").length){
+				showModal('Warning', ' You need to approve the reply first!');
+			}
+		}		
+		$("#answerFormModal").modal("show").find(".modal-content").load(url);
+	});
+	
 
 });
 
+function checkReplyApproved(replyId, replyApprovedBtnDiv){
+	$.ajax({
+	    url: contextPath + "reply/checkApproved/" + replyId,
+	    method: "GET",
+	    success: function(data) {
+			if(!data){
+				htmlBtn = `<button class="btn btn-primary approveBtn me-2" 
+									title="approve" objectId="${replyId}" object="reply">Approve</button>`;
+				replyApprovedBtnDiv.append(htmlBtn);
+			}
+	    },
+	    error: function(xhr, status, error) {
+	        console.error(error);
+	    }
+	});
+}
+
 function whenQuestionSelectAllCheckboxChecked(){
-	if($("#questionSelectDiv input").prop("checked")){
-		$("#questionSelectDiv p").addClass("text-warning");		
+	if($(".selectAllDiv input").prop("checked")){
+		$(".selectAllDiv p").addClass("text-warning");		
 	}
 	else{
-		$("#questionSelectDiv p").removeClass("text-warning");
+		$(".selectAllDiv p").removeClass("text-warning");
 		
 	}
 }
 
 function checkAllCheckboxCheckedOrNot(){
 	var allChecked = true;
-	$(".questionCheckbox").each(function(){
+	$(".checkbox").each(function(){
 		if(!$(this).prop("checked")){
 			allChecked = false;			
 		}		
