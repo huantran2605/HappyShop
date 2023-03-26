@@ -11,10 +11,11 @@ $(document).ready(function() {
 
 	handleShowDetailModal('link-detail-customer', 'detailModalCustomer');
 
-	$(".deleteQuestion").click(function(e) {
+	$(".deleteObject").click(function(e) {
 		e.preventDefault();
-		questionId = $(this).attr("questionId");
-		showConfirmationModal("Are you sure to delete this question id: " + questionId);
+		objectId = $(this).attr("objectId");
+		object = $(this).attr("object");
+		showConfirmationModal("Are you sure to delete this "+ object +" id: " + objectId);
 		$("#deleteOption").attr("href", $(this).attr("href"));
 	});
 

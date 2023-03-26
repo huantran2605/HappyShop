@@ -43,6 +43,12 @@ public class ReplyServiceImpl implements ReplyService {
     public <S extends Reply> S save(S entity) {
         return repo.save(entity);
     }
+
+    public void deleteById(Integer id) {
+        repo.deleteById(id);
+    }
+    
+    
     
     
 

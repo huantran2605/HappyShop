@@ -12,7 +12,7 @@ import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.ReviewNotFoundException;
 
 public interface ReviewService {
-    int SIZE_PAGE_PRODUCT = 5;
+    int SIZE_PAGE_REVIEW = 10;
     
     public Page<Review> findAll(String keyword,Customer customer, Pageable pageable);
     

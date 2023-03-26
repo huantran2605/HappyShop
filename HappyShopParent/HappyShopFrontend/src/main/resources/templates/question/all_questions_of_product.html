@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('All Questions','none')"></head>
+<body>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3">
+				<img th:src="@{${product.getProductMainImagePath}}" alt="product image question" 
+					 style="width: 200px; height: 200px;"/>
+			</div>
+			<div class="col-sm-9">
+				<h5><strong>[[${product.shortName}]]</strong></h5>
+				<div class="mt-5 d-flex justify-content-start">
+					<label for="selectViewQuestion" >Sort by:</label>
+					<select class="form-control ms-3" id="selectViewQuestion" name = "selectViewQuestion" style="max-width: 200px;">
+						<option value="likes" th:selected="${sortField == 'likes'}">Total Likes</option>
+						<option value="askTime" th:selected="${sortField == 'askTime'}">Ask Time</option>
+					</select>
+				</div>
+			</div>
+		
+		</div>
+								
+		<div>
+			<th:block th:each="question : ${listQuestion}">
+				<div class="mt-5 question_div"
+					 th:questionId = ${question.id}
+					 th:question_likes = "${question.likes}">
+					 <div th:id="question_personName + ${question.id}">
+						<strong th:if="${question.customer != null}" th:id="test + ${question.id}">
+							[[${question.customer.FullName}]]</strong>
+						<strong th:unless="${question.customer != null}">[[${question.asker.fullName}]]</strong>						
+					 </div>
+					<p class="mt-2">[[${question.question_content}]]</p>
+					<div class="d-flex justify-content-start align-items-center " style="font-size: 14px;">
+						<a href="#" class="question_reply_btn" th:questionId="${question.id}">Reply</a>
+						
+						<a href="#" class="btn_like_question" th:questionId=${question.id}
+							likeStatus="0"> <i
+							class="fa-sharp fa-regular fa-thumbs-up me-2 ms-3"
+							th:id="like_icon_question + ${question.id}"></i>
+						</a>
+						<small th:id="like_text_question + ${question.id}">
+							Like (<span th:id="like_count_question + ${question.id}">[[${question.likes}]]</span>)
+						</small>
+						
+						<small class="ms-3"
+							th:text="${#dates.format(question.askTime, 'yyyy-MM-dd')}">
+						</small>
+					</div>
+					<div class="ms-5  ps-3 border-start border-primary border-5" 
+						th:id="reply_div + ${question.id}">
+												
+					</div>
+				</div>
+			</th:block>	
+		</div>
+		
+	</div>
+	<div th:replace="fragments :: countElement('Question')"></div> 
+	<div th:replace="fragments :: pagination()"></div>
+	
+	<script th:src="@{/js/product_detail.js}"></script>
+	<script>
+		contextPath = "[[@{/}]]";
+		loginURL = "[[@{/login}]]";
+		csrfHeaderName = "[[${_csrf.headerName}]]";
+		csrfValue = "[[${_csrf.token}]]";	
+		
+		customerFullName = "[[${customer != null ? customer.FullName : null}]]";
+		customerAuthentication = "[[${customerAuthentication}]]";
+		
+		pageNum = "[[${pageNum}]]";
+		productId = "[[${product.id}]]";
+		url = contextPath + "all-questions/page/"+ pageNum + "?productId=" + productId + "&sortField=";
+		
+		$(document).ready(function() {
+			
+			$("#selectViewQuestion").change(function(){
+				value = $(this).val();
+				if(value == 'likes'){
+					url += "likes";  
+					location.replace(url);
+				}
+				else{
+					url += "askTime";
+					location.replace(url);
+				}
+			});
+		
+		});
+		
+	</script>
+	
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+</body>
+</html>

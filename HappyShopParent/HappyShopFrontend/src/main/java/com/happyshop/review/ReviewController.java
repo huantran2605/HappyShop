@@ -71,13 +71,13 @@ public class ReviewController {
         else  sort = Sort.by(sortField).descending();  
         
         Pageable pageable = PageRequest.of(pageNum - 1,  
-                ReviewService.SIZE_PAGE_PRODUCT, sort);
+                ReviewService.SIZE_PAGE_REVIEW, sort);
         
         Page<Review> pageReview = reviewService.findAll(keyWord, customer, pageable); 
         List<Review> listReview = pageReview.getContent();
         
-        long startCount = (pageNum - 1) * ReviewService.SIZE_PAGE_PRODUCT + 1;
-        long endCount = startCount + ReviewService.SIZE_PAGE_PRODUCT - 1 ;
+        long startCount = (pageNum - 1) * ReviewService.SIZE_PAGE_REVIEW + 1;
+        long endCount = startCount + ReviewService.SIZE_PAGE_REVIEW - 1 ;
         if(endCount > pageReview.getTotalElements() )
             endCount = pageReview.getTotalElements();
         
@@ -96,7 +96,7 @@ public class ReviewController {
         model.addAttribute("totalElement", pageReview.getTotalElements());
         
         model.addAttribute("elementsCurrentPerPage", pageReview.getNumberOfElements());
-        model.addAttribute("elementsPerPage", ReviewService.SIZE_PAGE_PRODUCT);
+        model.addAttribute("elementsPerPage", ReviewService.SIZE_PAGE_REVIEW);
         
         model.addAttribute("keyWord", keyWord);
         model.addAttribute("moduleURL", "/review");
@@ -126,20 +126,17 @@ public class ReviewController {
             @PathVariable ("pageNum") Integer pageNum            
             ) throws ProductNotFoundException {
         Optional<Product> product = productService.findById(productId);
-        if(product.isEmpty()) {
-            re.addFlashAttribute("message", "Product is not existed!");
-            return defaultUrl;            
-        }
+       
         Sort sort = Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNum - 1,  
-                ReviewService.SIZE_PAGE_PRODUCT, sort);
+                ReviewService.SIZE_PAGE_REVIEW, sort);
         
         Page<Review> pageReview = reviewService.findByProduct(product.get(), pageable); 
         List<Review> listReview = pageReview.getContent();
         model.addAttribute("listReview", listReview);
         
-        long startCount = (pageNum - 1) * ReviewService.SIZE_PAGE_PRODUCT + 1;
-        long endCount = startCount + ReviewService.SIZE_PAGE_PRODUCT - 1 ;
+        long startCount = (pageNum - 1) * ReviewService.SIZE_PAGE_REVIEW + 1;
+        long endCount = startCount + ReviewService.SIZE_PAGE_REVIEW - 1 ;
         if(endCount > pageReview.getTotalElements() )
             endCount = pageReview.getTotalElements();
         
@@ -150,7 +147,7 @@ public class ReviewController {
         model.addAttribute("endCount", endCount);
         model.addAttribute("totalElement", pageReview.getTotalElements());       
         model.addAttribute("elementsCurrentPerPage", pageReview.getNumberOfElements());
-        model.addAttribute("elementsPerPage", ReviewService.SIZE_PAGE_PRODUCT);
+        model.addAttribute("elementsPerPage", ReviewService.SIZE_PAGE_REVIEW);
         model.addAttribute("moduleURL", "/all_reviews");
         
         model.addAttribute("product", product.get());

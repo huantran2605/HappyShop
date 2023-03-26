@@ -15,5 +15,6 @@ public class ReplyDTO {
     private String reply_content;
     private String adminName;
     private Date replyTime;
+    private String replyPersonName;
       
 }

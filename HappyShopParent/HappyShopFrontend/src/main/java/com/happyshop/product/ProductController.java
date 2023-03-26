@@ -147,6 +147,7 @@ public class ProductController {
             model.addAttribute("customerHadReviewed", true);
             model.addAttribute("reviewId", reviewId);
         }
+        model.addAttribute("totalQuestions", questionService.findByProductAndApprovalStatus(product).size());
         
         return "product/product_detail";
     }

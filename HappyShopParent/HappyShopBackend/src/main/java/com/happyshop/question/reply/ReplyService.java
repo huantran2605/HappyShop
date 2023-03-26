@@ -22,5 +22,7 @@ public interface ReplyService {
     Optional<Reply> findById(Integer id);
     
     <S extends Reply> S save(S entity);
+    
+    void deleteById(Integer id);
 }
 

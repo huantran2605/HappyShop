@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Customer;
@@ -35,9 +37,17 @@ public class QuestionServiceImpl implements QuestionService {
         
         return recentQuestions;
     }
+    
+       
+    
+    public List<Question> findByProductAndApprovalStatus(Product product) {
+        return repo.findByProductAndApprovalStatus(product);
+    }
 
-    
-    
+
+
+
+
     public Optional<Question> findById(Integer id) {
         return repo.findById(id);
     }
@@ -47,6 +57,13 @@ public class QuestionServiceImpl implements QuestionService {
     public <S extends Question> S save(S entity) {
         return repo.save(entity);
     }
+
+
+
+    public Page<Question> findByProductAndApprovalStatus(Product product, Pageable pageable) {
+        return repo.findByProductAndApprovalStatus(product, pageable);
+    }
+    
     
     
     

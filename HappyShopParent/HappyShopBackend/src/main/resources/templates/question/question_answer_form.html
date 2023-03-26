@@ -71,10 +71,11 @@
 			lengthTag = tag.length;
 			
 			$("#reply_input_text").on('keydown', function(event) {
-				if (this.value.length <= lengthTag && event.key === 'Backspace') {
+				cursorPosition  = $(this).prop("selectionStart");
+				if (cursorPosition < lengthTag && event.key === 'Backspace') {
 					event.preventDefault();
 				}
-			});
+			})
 		
 		});
 		

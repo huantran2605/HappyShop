@@ -86,8 +86,8 @@
 						<td>
 							<div class="d-flex justify-content-center align-items-center">
 								
-								<a th:href="@{'/reply/delete/' + ${reply.id}}"
-									class="deleteQuestion me-5" th:replyId = "${reply.id}"
+								<a th:href="@{'/reply/delete/' + ${reply.id}} + '?replyStatus=' + ${replyStatus}"
+									class="deleteObject me-5" th:objectId = "${reply.id}" object = "reply"
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>
 								
@@ -137,7 +137,7 @@
 							th:objectId="${reply.id}" object="reply">Approve</button>
 
 					<a th:href="@{'/reply/delete/' + ${reply.id}} + '?replyStatus=' + ${replyStatus}"
-								class="deleteQuestion me-5" th:replyId = "${reply.id}"
+								class="deleteObject me-5" th:objectId = "${reply.id}" object="reply"
 								title="Delete"> <i class="fa-solid fa-trash fa-red ms-3"></i>
 							</a>				
 					</div>

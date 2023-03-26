@@ -14,7 +14,18 @@ $(document).ready(function() {
 
 	$("#viewAllReviewsBtn").on("click", function(e) {
 		e.preventDefault();
-		$("#viewAllReviewsModal").modal("show");
+		$("#viewAllModal").find(".modal-title").text("All Reviews");
+		url = contextPath + "all_reviews/page/1?productId=" + productId + "&sortField=reviewTime";
+		$("#viewAllModal iframe").attr("src", url);
+		$("#viewAllModal").modal("show");
+	});
+	
+	$("#viewAllQuestionsBtn").on("click", function(e) {
+		e.preventDefault();
+		$("#viewAllModal").find(".modal-title").text("All Questions");
+		url = contextPath + "all-questions/page/1?productId=" + productId + "&sortField=askTime";
+		$("#viewAllModal iframe").attr("src", url);		
+		$("#viewAllModal").modal("show");
 	});
 	
 	
@@ -116,11 +127,10 @@ $(document).ready(function() {
 		
 		personName = $("#question_personName" + questionId).text().trim();
 		
-		showReplyFormAndSaveReply(questionId, customerAuthentication, false, personName);
-		
-
-			
-		
+		if($("#reply_form" + questionId).children().length == 0){
+			showReplyFormAndSaveReply(questionId, customerAuthentication, false, personName);
+		}
+							
 	});
 	
 	$(document).on("click",".reply_reply_btn",function(e){
@@ -134,8 +144,9 @@ $(document).ready(function() {
 			adminReplyRequired = true;
 		}
 		
-		showReplyFormAndSaveReply(questionId, customerAuthentication, adminReplyRequired, personName);
-				
+		if($("#reply_form" + questionId).children().length == 0){
+			showReplyFormAndSaveReply(questionId, customerAuthentication, adminReplyRequired, personName);
+		}	
 	});
 	
 	
@@ -143,19 +154,18 @@ $(document).ready(function() {
 });
 
 function showReplyFormAndSaveReply(questionId, customerAuthentication, adminReplyRequired, personName){
-	if(!$("#reply_form" + questionId).length){
-			html = generateReplyForm(customerAuthentication, personName, questionId);
-			$("#reply_div" + questionId).prepend(html);
-			
-			//prevent user delete tag at textarea
-			tag = '@' + personName + ': ';
-			lengthTag = tag.length;
-			$("#reply_form" + questionId).find("textarea").on('keydown', function(event) {
-				if (this.value.length <= lengthTag && event.key === 'Backspace') {
-					event.preventDefault();
-				}
-			});
-		}
+		html = generateReplyForm(customerAuthentication, personName, questionId);
+		$("#reply_div" + questionId).prepend(html);
+		
+		//prevent user delete tag at textarea
+		tag = '@' + personName + ': ';
+		lengthTag = tag.length;
+		$("#reply_input_text").on('keydown', function(event) {
+			cursorPosition  = $(this).prop("selectionStart");
+			if (cursorPosition < lengthTag && event.key === 'Backspace') {
+				event.preventDefault();
+			}
+		})
 		
 		$("#reply_form" + questionId).submit(function(e) {
 			e.preventDefault();
@@ -321,13 +331,15 @@ function getAllRepliesOfProduct(questionId, question_likes){
 			response.forEach(function(r) {
 				replier = "";
 				person = "";
-				if(r.customerName == null){
+				if(r.adminName != null){
 					replier = r.adminName;
 					person = "admin";
 				}
-				else{
+				else if(r.customerName != null){
 					replier = r.customerName;
-					person = "customer";
+				}
+				else{
+					replier = r.replyPersonName;
 				}
 				html = generateNewReplyDiv(replier, r.reply_content, r.replyTime,questionId, r.id, question_likes, person);
 				$("#reply_div" + questionId).append(html);
@@ -346,7 +358,7 @@ function generateNewReplyDiv(replier, reply_content, replyTime, questionId, repl
 	html = ``;
 	const date = replyTime.slice(0, 10);
 	person_reply = "reply_person" + replyId;
-	if(person == "customer"){
+	if(person != "admin"){
 		html += `
 			<div class="mt-3">
 				<strong id = ${person_reply} >${replier}</strong>
@@ -390,7 +402,6 @@ function checkCustomerLikeObject(objectId, btn_like, object, typeLikeIconId, typ
 			_csrf: csrfValue
 		},
 		success: function(response) {
-			console.log(response);
 			if(response == object + " " + objectId + " liked"){
 				$(typeLikeIconId + objectId).removeClass("fa-regular");
 				$(typeLikeIconId + objectId).addClass("fa-solid");

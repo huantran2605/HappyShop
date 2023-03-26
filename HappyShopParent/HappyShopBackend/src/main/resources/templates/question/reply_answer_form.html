@@ -46,7 +46,7 @@
 	<script>
 		replyIdNeedAnswer = "[[${replyId}]]";
 		questionId = "[[${question.id}]]";
-		personName = "[[${question.customer != null ? question.customer.FullName : question.asker.fullName}]]";
+		personName = "[[${reply.customer != null ? reply.customer.FullName : reply.personReply.fullName}]]";
 		url = "[[@{/reply/save-answer}]]";  
 		csrfValue = "[[${_csrf.token}]]";
 		$(document).ready(function(){
@@ -58,10 +58,11 @@
 			tag = '@' + personName + ': ';
 			lengthTag = tag.length;
 			$("#reply_input_text").on('keydown', function(event) {
-				if (this.value.length <= lengthTag && event.key === 'Backspace') {
+				cursorPosition  = $(this).prop("selectionStart");
+				if (cursorPosition < lengthTag && event.key === 'Backspace') {
 					event.preventDefault();
 				}
-			});
+			})
 		});
 		
 		function appendAnswerReplyForm(){

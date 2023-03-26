@@ -46,14 +46,18 @@ public class ReplyRestController {
         for (Reply r : replies) {
             String customerName = null;
             String adminName = null;
+            String replyPersonName = null;
             if(r.getCustomer() != null) {
                 customerName = r.getCustomer().getFullName();
             }
-            else {
+            else if(r.getAdmin() != null) {
                 adminName = r.getAdmin().getFullName();
             }
+            else {
+                replyPersonName = r.getPersonReply().getFullName();
+            }
             ReplyDTO rD = new ReplyDTO(r.getId(), customerName, r.getReply_content(), 
-                    adminName, r.getReplyTime());
+                    adminName, r.getReplyTime(), replyPersonName);
             repliesDTO.add(rD);
         }
         

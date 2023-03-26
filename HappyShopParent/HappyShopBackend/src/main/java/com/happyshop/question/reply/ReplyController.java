@@ -173,8 +173,26 @@ public class ReplyController {
         
         model.addAttribute("question", r.getQuestion());
         model.addAttribute("replyId", replyId);
+        model.addAttribute("reply", r);
+        
         model.addAttribute("replies", r.getQuestion().getReplies());
         
         return "question/reply_answer_form";
+    }
+    
+    @GetMapping("delete/{id}")
+    private String deleteReply(@PathVariable("id") Integer id,
+            @Param("replyStatus") String replyStatus,
+            RedirectAttributes re,Model model) throws IOException {
+       
+        if(replyService.findById(id).isEmpty()) {
+            re.addFlashAttribute("message","The reply is not existed!");
+        }
+        else {
+            replyService.deleteById(id);
+            re.addFlashAttribute("message", "Delete the reply id: " + id + " successfully!");                        
+        }
+               
+        return defaultUrl + replyStatus;   
     }
 }

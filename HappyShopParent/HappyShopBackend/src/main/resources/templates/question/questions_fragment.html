@@ -88,7 +88,7 @@
 							<div class="d-flex justify-content-center align-items-center">
 								
 								<a th:href="@{'/question/delete/' + ${question.id}} + '?questionStatus=' + ${questionStatus}"
-									class="deleteQuestion me-5" th:questionId = "${question.id}"
+									class="deleteObject me-5" th:objectId = "${question.id}" object = "question"
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>
 								
@@ -135,7 +135,7 @@
 							th:if="${questionStatus ==  'NAn'}" title="answer ">Answer</button>
 						<a
 							th:href="@{'/question/delete/' + ${question.id}} + '?questionStatus=' + ${questionStatus}"
-							class="deleteQuestion ms-3" th:questionId="${question.id}"
+							class="deleteObject ms-3" th:objectId="${question.id}" object = "question"
 							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 						</a>
 				</div>
