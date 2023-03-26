@@ -30,6 +30,7 @@ import com.happyshop.common.entity.User;
 import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.exception.QuestionNotFoundException;
 import com.happyshop.common.exception.ReviewNotFoundException;
+import com.happyshop.question.QuestionService;
 import com.happyshop.review.ReviewService;
 
 @Controller
@@ -38,6 +39,10 @@ public class ReplyController {
     
     @Autowired 
     ReplyService replyService;
+    @Autowired
+    QuestionService questionService;
+    @Autowired
+    UserUtility userUtility;
     
     String defaultUrl = "redirect:/reply/page/1?sortField=replyTime&sortDir=des&keyWord=&replyStatus=";
     @GetMapping("/listReply")
@@ -94,6 +99,11 @@ public class ReplyController {
         model.addAttribute("keyWord", keyWord);
         model.addAttribute("moduleURL", "/reply");
         model.addAttribute("replyStatus", replyStatus);
+        
+        model.addAttribute("sizeListReplyNotApproved",
+                replyService.findAllNotApproved("", pageable).getContent().size());
+        model.addAttribute("sizeListReplyAdminReplyRequired",
+                replyService.findAllAdminReplyRequired("", pageable).getContent().size());
                
         return"question/listQuestion";
     }
@@ -119,5 +129,52 @@ public class ReplyController {
         }
                            
         return defaultUrl + replyStatus;
+    }
+    
+    @PostMapping("/save-answer")
+    private String saveAnswer(@RequestParam("reply_content") String reply_content,
+            @RequestParam("questionId") Integer questionId,
+            @RequestParam(name = "replyId", required = false) Integer replyId,
+            @RequestParam("object") String object,
+            RedirectAttributes re,
+            HttpServletRequest request) throws QuestionNotFoundException {
+        
+        Question q = questionService.findById(questionId);
+        q.setAnswerStatus(true);
+        if(replyId != null) {
+            Reply  r = replyService.findById(replyId).get();
+            r.setAdminReplyRequired(false);
+        }
+        User admin = userUtility.getAuthenticationUser(request);
+        Reply  r = new Reply();
+        r.setQuestion(q);
+        r.setAdmin(admin);
+        r.setAdminReplyRequired(false);
+        r.setApprovalStatus(true);
+        r.setReply_content(reply_content);
+        r.setReplyTime(new Date());
+        
+        replyService.save(r);
+        String redirectUrl  = "";
+        if(object.equals("question")) {
+            re.addFlashAttribute("message", "Answer question id " + questionId +" successfully!");  
+            redirectUrl = "redirect:/question/page/1?sortField=askTime&sortDir=des&keyWord=&questionStatus=NAn";
+        }
+        else {
+            re.addFlashAttribute("message", "Answer reply id " + replyId +" successfully!");                        
+            redirectUrl = "redirect:/reply/page/1?sortField=replyTime&sortDir=des&keyWord=&replyStatus=ARR";
+        }
+        return redirectUrl;
+    }
+    
+    @GetMapping("answer/{id}")
+    private String showFormAnwerReply(@PathVariable("id") Integer replyId, Model model){
+        Reply r = replyService.findById(replyId).get();
+        
+        model.addAttribute("question", r.getQuestion());
+        model.addAttribute("replyId", replyId);
+        model.addAttribute("replies", r.getQuestion().getReplies());
+        
+        return "question/reply_answer_form";
     }
 }

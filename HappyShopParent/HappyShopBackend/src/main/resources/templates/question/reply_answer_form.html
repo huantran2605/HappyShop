@@ -18,32 +18,12 @@
 		<div style="font-size: 13px;">
 			<div th:replace="fragments :: format_time(${question.askTime})"></div>
 		</div>	
-		
-		<div class="row mt-3" id="answer_form">
-			<div class="col-sm-8 p-3">
-				<form th:action="@{/reply/save-answer}" method="post">
-					<input type="hidden" th:value="${question.id}" name="questionId" />
-					<input type="hidden" value="question" name="object" />
-					<div class="form-floating mb-2">
-						<textarea class="form-control" id="reply_input_text"
-							name="reply_content" maxlength="300" required
-							style="height: 90px">@[[${question.customer != null ? 
-							question.customer.FullName : question.asker.fullName}]]:</textarea>
-						<label for="reply_input_text">Write your answer</label>
-					</div>
-									
-					<div class="d-flex justify-content-end">
-						<button class="btn btn-primary " type="submit">Send</button>
-					</div>
-				</form>
-			</div>
-		
-		</div>
+				
 							
 		<div class="ps-5 p-4">
 			<div class="border-start border-primary">
-				<th:block th:each="reply : ${replies}">
-					<div class="p-2 mt-3 border-bottom border-secondary">
+				<th:block th:each="reply : ${replies}" >
+					<div class="p-2 mt-3 border-bottom border-secondary" th:id="reply + ${reply.id}">
 						<strong th:if="${reply.customer != null}">[[${reply.customer.FullName}]]</strong>
 						<div class="d-flex justify-content-start" th:if="${reply.admin != null}">
 							<strong>[[${reply.admin.getFullName}]]</strong>
@@ -64,20 +44,52 @@
 	</div>
 	
 	<script>
+		replyIdNeedAnswer = "[[${replyId}]]";
+		questionId = "[[${question.id}]]";
 		personName = "[[${question.customer != null ? question.customer.FullName : question.asker.fullName}]]";
-		//prevent user delete tag at textarea
+		url = "[[@{/reply/save-answer}]]";  
+		csrfValue = "[[${_csrf.token}]]";
 		$(document).ready(function(){
+			$("#reply" + replyIdNeedAnswer).addClass("bg-info");
+			html = appendAnswerReplyForm();
+			$("#reply" + replyIdNeedAnswer).append(html);
+			
+			//prevent user delete tag at textarea
 			tag = '@' + personName + ': ';
 			lengthTag = tag.length;
-			
 			$("#reply_input_text").on('keydown', function(event) {
 				if (this.value.length <= lengthTag && event.key === 'Backspace') {
 					event.preventDefault();
 				}
 			});
-		
 		});
 		
+		function appendAnswerReplyForm(){
+			html = `
+				<div class="row mt-3" id="answer_form">
+					<div class="col-sm-8 p-3">
+						<form action= ${url} method="post">
+							<input type="hidden" name="_csrf" value=${csrfValue} />
+							<input type="hidden" value=${questionId} name="questionId" />
+							<input type="hidden" value="reply" name="object" />
+							<input type="hidden" value=${replyIdNeedAnswer} name="replyId" />
+							<div class="form-floating mb-2">
+								<textarea class="form-control" id="reply_input_text"
+									name="reply_content" maxlength="300" required
+									style="height: 90px">@${personName}:</textarea>
+								<label for="reply_input_text">Write your answer</label>
+							</div>
+											
+							<div class="d-flex justify-content-end">
+								<button class="btn btn-primary " type="submit">Send</button>
+							</div>
+						</form>
+					</div>
+			
+				</div>
+			`;
+			return html;
+		};
 	</script>
 	
 </div>

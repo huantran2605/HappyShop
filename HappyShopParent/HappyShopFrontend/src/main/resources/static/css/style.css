@@ -70,8 +70,6 @@ a{
 .input-group-addon .fa{
     font-size: 18px;
 }
-
-
 @media screen and (max-width: 576px){
 	/* small screen */
 	.full-details{display: none;}
@@ -82,3 +80,4 @@ a{
 	.full-details{display: block;}
 	.less-details{display:none;}
 }
+

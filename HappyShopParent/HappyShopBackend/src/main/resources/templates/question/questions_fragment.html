@@ -1,6 +1,13 @@
 
 	<div th:fragment = "content" class="container-fluid">
-		
+		<div class="mt-2">Total
+			<ul>
+				<li>Questions are not approved and not answered(new questions): 
+					[[${sizeListQuestionNotApprovedAndNotAnswered}]]</li>
+				<li>Questions are not approved(answered): [[${sizeListQuestionNotApproved}]]</li>
+				<li>Questions are not answered(approved): [[${sizeListQuestionNotAnswered}]]</li>
+			</ul>
+		</div>
 		<!-- search-->
 		<form th:action="@{'/question/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
 			class="form-inline m-2" id="questionSearchForm">
@@ -101,26 +108,40 @@
 		</div>
 
 		<div class="less-details">
-			<div th:each=" question: ${questions}" class="row">
-				<div class="">
-					<p>Id: [[${question.id}]]</p>
-				</div>
-				<div class="d-flex justify-content-start">
-					<a th:href="@{'/question/detail/' + ${question.id}}"
-						title="Detail question" class="ms-3 me-3 link-detail-question"> <i
-						class="fa-sharp fa-solid fa-circle-info"></i>
-					</a>
-					
-					<a th:href="@{'/question/delete/' + ${question.id}}"
-						class="deleteQuestion me-3" th:questionId = "${question.id}"
-						title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-					</a>
-				
-					<div th:replace="fragments :: update(${question.id})">
+			<th:block th:each=" question: ${questions}" >
+				<div class="row ">
+					<div class="d-flex justify-content-start">
+						<input th:if="${questionStatus ==  'NAp' || questionStatus ==  'NApANAn' }"
+							 type="checkbox" name="questionsSelectedId"
+							 	th:value="${question.id}" class="checkbox" />
+						<div class="me-2 ms-2">[[${question.id}]].</div>
+						<div th:if="${question.customer != null}">[[${question.customer.FullName}]]</div>
+						<div th:if="${question.asker != null}">[[${question.asker.fullName}]]</div>
 					</div>
+					<div class="mt-2">
+						<div>[[${question.question_content}]]</div>
+						<div style="font-size:13px;" class="mt-2">
+							<div th:replace="fragments :: format_time(${question.askTime})"></div>
+						</div>
+					</div>
+					
+					<div class="d-flex justify-content-start align-items-center mt-2 mb-2">
+	
+						<button class="btn btn-primary approveBtn"
+							th:if="${questionStatus ==  'NAp' || questionStatus ==  'NApANAn' }"
+							th:objectId="${question.id}" object="question" title="approve ">Approve</button>
+						<button class="btn btn-primary answerBtn"
+							th:objectId="${question.id}" object="question"
+							th:if="${questionStatus ==  'NAn'}" title="answer ">Answer</button>
+						<a
+							th:href="@{'/question/delete/' + ${question.id}} + '?questionStatus=' + ${questionStatus}"
+							class="deleteQuestion ms-3" th:questionId="${question.id}"
+							title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+						</a>
 				</div>
-				<hr />
-			</div>
+					<hr />
+				</div>
+			</th:block>
 		</div>
 		
 		<div th:replace="fragments :: countElement('Question')"></div>

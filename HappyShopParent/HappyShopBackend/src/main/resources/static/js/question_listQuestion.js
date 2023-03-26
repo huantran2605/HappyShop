@@ -1,5 +1,7 @@
 
 $(document).ready(function() {
+		
+
 	$('select[name="questionStatus"]').on("change", function() {
 		$("#questionSearchForm").submit();
 	});
@@ -35,6 +37,7 @@ $(document).ready(function() {
 			whenQuestionSelectAllCheckboxChecked();
 		}
 	});
+
 
 	$(".selectAllDiv input").on("click", function(){
 		whenQuestionSelectAllCheckboxChecked();
@@ -89,10 +92,16 @@ $(document).ready(function() {
 		if(object == 'reply'){
 			if ($("#replyApprovedBtnDiv" + objectId).find("button").length){
 				showModal('Warning', ' You need to approve the reply first!');
+			}else{
+				$("#answerFormModal").modal("show").find(".modal-content").load(url);				
 			}
-		}		
-		$("#answerFormModal").modal("show").find(".modal-content").load(url);
+		}
+		else{
+			$("#answerFormModal").modal("show").find(".modal-content").load(url);			
+		}	
 	});
+	
+	
 	
 
 });
@@ -126,11 +135,21 @@ function whenQuestionSelectAllCheckboxChecked(){
 
 function checkAllCheckboxCheckedOrNot(){
 	var allChecked = true;
-	$(".checkbox").each(function(){
-		if(!$(this).prop("checked")){
-			allChecked = false;			
-		}		
-	});
+	screenWidth = $(window).width();
+	if(screenWidth >= 576){
+		$(".full-details .checkbox").each(function(){
+			if(!$(this).prop("checked")){
+				allChecked = false;			
+			}		
+		});
+	}
+	else{
+		$(".less-details .checkbox").each(function(){
+			if(!$(this).prop("checked")){
+				allChecked = false;			
+			}		
+		});
+	}
 	return allChecked;
 }
 

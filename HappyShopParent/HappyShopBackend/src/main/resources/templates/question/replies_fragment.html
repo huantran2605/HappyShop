@@ -1,6 +1,11 @@
 
 	<div th:fragment = "content" class="container-fluid">
-		
+		<div class="mt-2">Total
+			<ul>
+				<li>Replies are not approved(approved): [[${sizeListReplyNotApproved}]]</li>
+				<li>Replies are admin reply required(answered): [[${sizeListReplyAdminReplyRequired}]]</li>
+			</ul>
+		</div>
 		<!-- search-->
 			
 		<form th:action="@{'/reply/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
@@ -100,25 +105,45 @@
 							
 						</td>
 					</tr>
-				</tbody>
+				</tbody> 
 			</table>
 		</div>
 
 		<div class="less-details">
-			<div th:each=" reply: ${replies}" class="row">
-				<div class="">
-					<p>Id: [[${reply.id}]]</p>
+			<th:block th:each=" reply: ${replies}" > 
+				<div class="row ">
+					<div class="d-flex justify-content-start">
+						<input th:if="${replyStatus ==  'NAp'}" type="checkbox" name="repliesSelectedId"
+							 	th:value="${reply.id}" class="checkbox" />
+						<div class="me-2">[[${reply.id}]].</div>
+						<div th:if="${reply.customer != null}">[[${reply.customer.FullName}]]</div>
+						<div th:if="${reply.personReply != null}">[[${reply.personReply.fullName}]]</div>
+					</div>
+					<div class="mt-2">
+						<div>[[${reply.reply_content}]]</div>
+						<div style="font-size:13px;" class="mt-2">
+							<div th:replace="fragments :: format_time(${reply.replyTime})"></div>
+						</div>
+					</div>
+					
+					<div class="d-flex justify-content-start align-items-center mt-2 mb-2">
+						<div class="replyApprovedBtnDiv" th:replyId="${reply.id}"
+							th:id="replyApprovedBtnDiv + ${reply.id}"></div>
+						<button class="btn btn-primary answerBtn"
+							th:if="${replyStatus == 'ARR' }" th:objectId="${reply.id}"
+							object="reply" title="answer ">Answer</button>
+						<button class="btn btn-primary approveBtn"
+							th:if="${replyStatus == 'NAp' }" title="approve"
+							th:objectId="${reply.id}" object="reply">Approve</button>
+
+					<a th:href="@{'/reply/delete/' + ${reply.id}} + '?replyStatus=' + ${replyStatus}"
+								class="deleteQuestion me-5" th:replyId = "${reply.id}"
+								title="Delete"> <i class="fa-solid fa-trash fa-red ms-3"></i>
+							</a>				
+					</div>
+					<hr />
 				</div>
-				<div class="d-flex justify-content-start">
-										
-					<a th:href="@{'/reply/delete/' + ${reply.id}}"
-						class="deleteQuestion me-3" th:replyId = "${reply.id}"
-						title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
-					</a>
-				
-				</div>
-				<hr />
-			</div>
+			</th:block>
 		</div>
 		
 		<div th:replace="fragments :: countElement('Question')"></div>
@@ -127,6 +152,7 @@
 		<!-- modal -->
 		<div th:replace="modal_fragments :: confirmationModal"></div>
 		<div th:replace="modal_fragments :: modal"></div>
+		<div th:replace="modal_fragments :: detailModal('answerFormModal')"></div>
 		<div th:replace="modal_fragments :: detailModal('detailModalCustomer')"></div>
 	</div>
 

@@ -98,8 +98,13 @@ public class QuestionController {
         model.addAttribute("moduleURL", "/question");
         model.addAttribute("questionStatus", questionStatus);
         
-        
-        
+        model.addAttribute("sizeListQuestionNotAnswered",
+                questionService.findAllNotAnswered("", pageable).getContent().size());
+        model.addAttribute("sizeListQuestionNotApproved",
+                questionService.findAllNotApproved("", pageable).getContent().size());
+        model.addAttribute("sizeListQuestionNotApprovedAndNotAnswered",
+                questionService.findAllNotApprovedAndNotAnswered("", pageable).getContent().size());
+      
         return"question/listQuestion";
     }
     
@@ -146,6 +151,7 @@ public class QuestionController {
             throws QuestionNotFoundException {
         Question q = questionService.findById(questionId);
         model.addAttribute("question", q);
+        model.addAttribute("replies", q.getReplies());
         
         return "question/question_answer_form";
     }
