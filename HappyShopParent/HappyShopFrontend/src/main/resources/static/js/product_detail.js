@@ -395,16 +395,19 @@ function generateNewReplyDiv(replyPersonName, reply_content, replyTime, question
 }
 
 function checkCustomerLikeObject(objectId, btn_like, objectName, typeLikeIconId, typeLikeTextId){
-	objectNameId = objectName + 'Id';
+	var data;
+	if(objectName == 'question'){
+		data = {questionId: objectId, _csrf: csrfValue};
+	}
+	else if(objectName == 'review'){
+		data = {reviewId: objectId, _csrf: csrfValue};
+	}
 	$.ajax({
 		url: contextPath + objectName + '/like_check',
 		type: 'POST',
-		data: {
-			objectNameId: objectId,
-			_csrf: csrfValue
-		},
+		data: data,
 		success: function(response) {
-			if(response == "review id " + objectId + " liked"){
+			if(response == objectName + " id " + objectId + " liked"){
 				$(typeLikeIconId + objectId).removeClass("fa-regular");
 				$(typeLikeIconId + objectId).addClass("fa-solid");
 				btn_like.attr("likeStatus", "1");
@@ -412,15 +415,19 @@ function checkCustomerLikeObject(objectId, btn_like, objectName, typeLikeIconId,
 			}
 		},
 		error: function(xhr, status, error) {
-			console.log("Error status: " + xhr.status);
-        	console.log("Error message: " + xhr.responseText);
+			console.log("fail to check customer like " + objectName + " id "  + objectId);
 		}
 	});
 }
 
 function likeAction(objectId, btn_like, objectName, typeLikeIconId, typeLikeTextId, typeLikeCountId ) {
-	objectNameId = objectName + 'Id';
-	data = {objectNameId: objectId, _csrf: csrfValue};
+	var data;
+	if(objectName == 'question'){
+		data = {questionId: objectId, _csrf: csrfValue};
+	}
+	else if(objectName == 'review'){
+		data = {reviewId: objectId, _csrf: csrfValue};
+	}
 	$.ajax({
 		url: contextPath + objectName +'/like',
 		type: 'POST',
@@ -433,22 +440,24 @@ function likeAction(objectId, btn_like, objectName, typeLikeIconId, typeLikeText
 			increaseLikeCount(objectId, typeLikeCountId);
 		},
 		error: function(xhr, status, error) {
-			console.log("Error status: " + xhr.status);
-        	console.log("Error message: " + xhr.responseText);
+			console.log("fail to like " + objectName + " id "  + objectId);
 		}
 	});
 }
 
 
 function unlikeAction(objectId, btn_like, objectName, typeLikeIconId, typeLikeTextId, typeLikeCountId){
-	objectNameId = objectName + 'Id';
+	var data;
+	if(objectName == 'question'){
+		data = {questionId: objectId, _csrf: csrfValue};
+	}
+	else if(objectName == 'review'){
+		data = {reviewId: objectId, _csrf: csrfValue};
+	}
 	$.ajax({
 		url: contextPath + objectName + '/unlike',
 		type: 'POST',
-		data: {
-			objectNameId: objectId,
-			_csrf: csrfValue
-		},
+		data: data,
 		success: function(response) {
 			$(typeLikeIconId + objectId).removeClass("fa-solid");
 			$(typeLikeIconId + objectId).addClass("fa-regular");
@@ -457,8 +466,7 @@ function unlikeAction(objectId, btn_like, objectName, typeLikeIconId, typeLikeTe
 			decreaseLikeCount(objectId, typeLikeCountId);		
 		},
 		error: function(xhr, status, error) {
-			console.log("Error status: " + xhr.status);
-        	console.log("Error message: " + xhr.responseText);
+			console.log("fail to unlike " + objectName + " id "  + objectId);
 		}
 	});
 }

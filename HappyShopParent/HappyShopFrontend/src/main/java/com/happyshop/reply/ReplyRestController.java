@@ -1,4 +1,4 @@
-package com.happyshop.reply;
+    package com.happyshop.reply;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,8 +40,9 @@ public class ReplyRestController {
     public List<ReplyDTO> getAllRepliesOfQuestion(@PathVariable("questionId") Integer questionId ) {
         
         List<Reply> replies = replyService.findByQuestionAndApprovalStatus(questionId);
+        System.out.println(replies.size());
         List<ReplyDTO> repliesDTO = new ArrayList<>();
-        
+      
         for (Reply r : replies) {
             String customerName = null;
             String adminName = null;

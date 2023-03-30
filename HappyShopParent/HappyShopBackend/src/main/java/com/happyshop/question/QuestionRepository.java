@@ -15,7 +15,7 @@ import com.happyshop.common.entity.question.Question;
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
     
     @Query("SELECT q FROM Question q WHERE q.approvalStatus = false AND q.answerStatus = true AND"
-            + " CONCAT(q.question_content,' ',q.product.name,' ',"
+            + " CONCAT(q.content,' ',q.product.name,' ',"
             + " q.askTime) LIKE %?1%")          
     public Page<Question> findAllNotApproved(String keyWord, Pageable pageable);  
     
@@ -23,7 +23,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     public Page<Question> findAllNotApproved(Pageable pageable);
     
     @Query("SELECT q FROM Question q WHERE q.answerStatus = false AND q.approvalStatus = true  AND"
-            + " CONCAT(q.question_content,' ',q.product.name,' ',"
+            + " CONCAT(q.content,' ',q.product.name,' ',"
             + " q.askTime) LIKE %?1%")           
     public Page<Question> findAllNotAnswered(String keyWord, Pageable pageable); 
     
@@ -31,7 +31,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     public Page<Question> findAllNotAnswered(Pageable pageable);
     
     @Query("SELECT q FROM Question q WHERE q.approvalStatus = false AND q.answerStatus = false AND"
-            + " CONCAT(q.question_content,' ',q.product.name,' ',"
+            + " CONCAT(q.content,' ',q.product.name,' ',"
             + " q.askTime) LIKE %?1%")
     public Page<Question> findAllNotApprovedAndNotAnswered(String keyWord, Pageable pageable);
     

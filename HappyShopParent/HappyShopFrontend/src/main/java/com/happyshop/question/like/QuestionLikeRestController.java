@@ -61,6 +61,7 @@ public class QuestionLikeRestController {
     public ResponseEntity<String> checkCustomerLikeReview(
             @RequestParam("questionId") Integer questionId, 
             HttpServletRequest request) throws ReviewNotFoundException { 
+        System.out.println("question id " + questionId);
         Customer customer =  customerUtility.getAuthenticationCustomer(request);
         
         Question question = questionService.findById(questionId).get();

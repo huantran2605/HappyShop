@@ -15,6 +15,9 @@ public class QuestionVisitor extends VisitorAbstract {
     public QuestionVisitor(String fullName, String phoneNumber, String email) {
         super(fullName, phoneNumber, email);
     }
+    public QuestionVisitor() {
+        super();
+    }
     
     
 }

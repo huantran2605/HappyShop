@@ -1,4 +1,4 @@
-package com.happyshop.question.reply;
+package com.happyshop.reply;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import com.happyshop.common.entity.reply.Reply;
 public interface ReplyRepository extends JpaRepository<Reply, Integer> {
     
     @Query("SELECT r FROM Reply r WHERE r.approvalStatus = false AND"
-            + " CONCAT(r.reply_content,' ',r.replyTime) LIKE %?1%")          
+            + " CONCAT(r.content,' ',r.replyTime) LIKE %?1%")          
     public Page<Reply> findAllNotApproved(String keyWord, Pageable pageable);  
     
     @Query("SELECT r FROM Reply r WHERE r.adminReplyRequired = true AND"
-            + " CONCAT(r.reply_content,' ',r.replyTime) LIKE %?1%") 
+            + " CONCAT(r.content,' ',r.replyTime) LIKE %?1%") 
     public Page<Reply> findAllAdminReplyRequired(String keyWord, Pageable pageable);
     
     @Query("SELECT r FROM Reply r WHERE r.approvalStatus = false ")          

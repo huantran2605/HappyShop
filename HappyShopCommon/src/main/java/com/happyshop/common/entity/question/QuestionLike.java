@@ -9,9 +9,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.abstractEntity.LikeAbstract;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -19,18 +21,10 @@ import lombok.NoArgsConstructor;
 @Data 
 @NoArgsConstructor
 @Table(name = "question_likes")
-public class QuestionLike { 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    
+public class QuestionLike extends LikeAbstract { 
     @ManyToOne
     @JoinColumn(name="question_id")
     private Question question;    
-    
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer;
 
     public QuestionLike(Customer customer, Question question) {
         this.question = question;

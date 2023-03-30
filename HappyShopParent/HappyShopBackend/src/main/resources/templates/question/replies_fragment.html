@@ -56,7 +56,7 @@
 					<tr>
 						<th></th>
 						<th th:replace="fragments :: column_link('id', 'ID')"></th>
-						<th th:replace="fragments :: column_link('reply_content', 'Reply Content')"></th>
+						<th th:replace="fragments :: column_link('content', 'Reply Content')"></th>
 						<th th:replace="fragments :: column_link('customer', 'Person')"></th>
 						<th th:replace="fragments :: column_link('replyTime', 'Reply Time')"></th>
 						<th></th>
@@ -70,7 +70,7 @@
 					  	</td>
 						<td scope="row" th:text="${reply.id}"></td>
 						<td>
-							[[${reply.reply_content}]]
+							[[${reply.content}]]
 						</td>
 						<td>
 							<a th:href="@{'/customer/detail/' + ${reply.customer.id}}"
@@ -78,7 +78,7 @@
 									th:if="${reply.customer != null}" class="me-3 link-detail-customer">
 									[[${reply.customer.getFullName}]] 
 							</a>
-							<p th:if="${reply.personReply != null}">[[${reply.personReply.fullName}]]</p>
+							<p th:if="${reply.visitor != null}">[[${reply.visitor.fullName}]]</p>
 						</td>
 						<td>	
 							<div th:replace="fragments :: format_time(${reply.replyTime})"></div>						
@@ -117,10 +117,10 @@
 							 	th:value="${reply.id}" class="checkbox" />
 						<div class="me-2">[[${reply.id}]].</div>
 						<div th:if="${reply.customer != null}">[[${reply.customer.FullName}]]</div>
-						<div th:if="${reply.personReply != null}">[[${reply.personReply.fullName}]]</div>
+						<div th:if="${reply.visitor != null}">[[${reply.visitor.fullName}]]</div>
 					</div>
 					<div class="mt-2">
-						<div>[[${reply.reply_content}]]</div>
+						<div>[[${reply.content}]]</div>
 						<div style="font-size:13px;" class="mt-2">
 							<div th:replace="fragments :: format_time(${reply.replyTime})"></div>
 						</div>

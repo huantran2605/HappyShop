@@ -11,9 +11,9 @@
 	
 	<div class="mt-3 row ms-5">		
 		<strong th:if="${question.customer != null}">[[${question.customer.FullName}]]</strong>
-		<strong th:if="${question.asker != null}">[[${question.asker.fullName}]]</strong>
+		<strong th:if="${question.visitor != null}">[[${question.visitor.fullName}]]</strong>
 		
-		<p class="mt-2">[[${question.question_content}]]</p>
+		<p class="mt-2">[[${question.content}]]</p>
 		
 		<div style="font-size: 13px;">
 			<div th:replace="fragments :: format_time(${question.askTime})"></div>
@@ -30,9 +30,9 @@
 							<i style="font-size: 13px;" class="ms-2 fa-sharp fa-solid fa-circle-check d-flex align-items-center"></i>
 							<span class="d-flex align-items-start ms-2" style="font-size: 13px;">admin</span>
 						</div>
-						<strong th:if="${reply.personReply != null}">[[${reply.personReply.fullName}]]</strong>
+						<strong th:if="${reply.visitor != null}">[[${reply.visitor.fullName}]]</strong>
 		
-						<p class="mt-2">[[${reply.reply_content}]]</p>
+						<p class="mt-2">[[${reply.content}]]</p>
 		
 						<div style="font-size: 13px;">
 							<div th:replace="fragments :: format_time(${reply.replyTime})"></div>
@@ -46,7 +46,7 @@
 	<script>
 		replyIdNeedAnswer = "[[${replyId}]]";
 		questionId = "[[${question.id}]]";
-		personName = "[[${reply.customer != null ? reply.customer.FullName : reply.personReply.fullName}]]";
+		personName = "[[${reply.customer != null ? reply.customer.FullName : reply.visitor.fullName}]]";
 		url = "[[@{/reply/save-answer}]]";  
 		csrfValue = "[[${_csrf.token}]]";
 		$(document).ready(function(){
@@ -72,11 +72,10 @@
 						<form action= ${url} method="post">
 							<input type="hidden" name="_csrf" value=${csrfValue} />
 							<input type="hidden" value=${questionId} name="questionId" />
-							<input type="hidden" value="reply" name="object" />
-							<input type="hidden" value=${replyIdNeedAnswer} name="replyId" />
+							<input type="hidden" value=${replyIdNeedAnswer} name="replyIdNeedAnswer" />
 							<div class="form-floating mb-2">
 								<textarea class="form-control" id="reply_input_text"
-									name="reply_content" maxlength="300" required
+									name="content" maxlength="300" required
 									style="height: 90px">@${personName}:</textarea>
 								<label for="reply_input_text">Write your answer</label>
 							</div>

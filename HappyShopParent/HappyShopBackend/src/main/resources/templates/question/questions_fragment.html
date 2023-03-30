@@ -57,7 +57,7 @@
 					<tr>
 						<th th:if="${questionStatus ==  'NAp' || questionStatus ==  'NApANAn'}" ></th>
 						<th th:replace="fragments :: column_link('id', 'ID')"></th>
-						<th th:replace="fragments :: column_link('question_content', 'Question')"></th>
+						<th th:replace="fragments :: column_link('content', 'Question')"></th>
 						<th th:replace="fragments :: column_link('customer', 'Asker')"></th>
 						<th th:replace="fragments :: column_link('askTime', 'Ask Time')"></th>
 						<th></th>
@@ -71,7 +71,7 @@
 					  	</td>
 						<td scope="row" th:text="${question.id}"></td>
 						<td>
-							[[${question.question_content}]]
+							[[${question.content}]]
 						</td>
 						<td>
 							<a th:href="@{'/customer/detail/' + ${question.customer.id}}"
@@ -79,7 +79,7 @@
 									th:if="${question.customer != null}" class="me-3 link-detail-customer">
 									[[${question.customer.getFullName}]] 
 							</a>
-							<p th:if="${question.asker != null}">[[${question.asker.fullName}]]</p>
+							<p th:if="${question.visitor != null}">[[${question.visitor.fullName}]]</p>
 						</td>
 						<td>	
 							<div th:replace="fragments :: format_time(${question.askTime})"></div>						
@@ -116,10 +116,10 @@
 							 	th:value="${question.id}" class="checkbox" />
 						<div class="me-2 ms-2">[[${question.id}]].</div>
 						<div th:if="${question.customer != null}">[[${question.customer.FullName}]]</div>
-						<div th:if="${question.asker != null}">[[${question.asker.fullName}]]</div>
+						<div th:if="${question.visitor != null}">[[${question.visitor.fullName}]]</div>
 					</div>
 					<div class="mt-2">
-						<div>[[${question.question_content}]]</div>
+						<div>[[${question.content}]]</div>
 						<div style="font-size:13px;" class="mt-2">
 							<div th:replace="fragments :: format_time(${question.askTime})"></div>
 						</div>

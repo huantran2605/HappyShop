@@ -1,4 +1,4 @@
-package com.happyshop.question.reply;
+package com.happyshop.reply;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -13,5 +13,11 @@ public class ReplyVisitor extends VisitorAbstract {
 
     public ReplyVisitor(String fullName, String phoneNumber, String email) {
         super(fullName, phoneNumber, email);
+    }
+
+    public ReplyVisitor() {
+        super();
     }  
+    
+    
 }

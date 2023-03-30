@@ -11,9 +11,9 @@
 	
 	<div class="mt-3 row ms-5">		
 		<strong th:if="${question.customer != null}">[[${question.customer.FullName}]]</strong>
-		<strong th:if="${question.asker != null}">[[${question.asker.fullName}]]</strong>
+		<strong th:if="${question.visitor != null}">[[${question.visitor.fullName}]]</strong>
 		
-		<p class="mt-2">[[${question.question_content}]]</p>
+		<p class="mt-2">[[${question.content}]]</p>
 		
 		<div style="font-size: 13px;">
 			<div th:replace="fragments :: format_time(${question.askTime})"></div>
@@ -21,15 +21,14 @@
 		
 		<div class="row mt-3" id="answer_form">
 			<div class="col-sm-8 p-3">
-				<form th:action="@{/reply/save-answer}" method="post">
+				<form th:action="@{/question/save-answer}" method="post">
 					<input type="hidden" th:value="${question.id}" name="questionId" />
-					<input type="hidden" value="question" name="object" />
 					<div class="form-floating mb-2">
-						<textarea class="form-control" id="reply_input_text"
-							name="reply_content" maxlength="300" required
+						<textarea class="form-control" id="answer_input_text"
+							name="content" maxlength="300" required
 							style="height: 90px">@[[${question.customer != null ? 
-							question.customer.FullName : question.asker.fullName}]]:</textarea>
-						<label for="reply_input_text">Write your answer</label>
+							question.customer.FullName : question.visitor.fullName}]]:</textarea>
+						<label for="answer_input_text">Write your answer</label>
 					</div>
 									
 					<div class="d-flex justify-content-end">
@@ -64,13 +63,13 @@
 	</div>
 	
 	<script>
-		personName = "[[${question.customer != null ? question.customer.FullName : question.asker.fullName}]]";
+		personName = "[[${question.customer != null ? question.customer.FullName : question.visitor.fullName}]]";
 		//prevent user delete tag at textarea
 		$(document).ready(function(){
 			tag = '@' + personName + ': ';
 			lengthTag = tag.length;
 			
-			$("#reply_input_text").on('keydown', function(event) {
+			$("#answer_input_text").on('keydown', function(event) {
 				cursorPosition  = $(this).prop("selectionStart");
 				if (cursorPosition < lengthTag && event.key === 'Backspace') {
 					event.preventDefault();

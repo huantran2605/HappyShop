@@ -9,28 +9,23 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.abstractEntity.LikeAbstract;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "review_likes")
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class ReviewLike { 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Table(name = "review_likes")
+public class ReviewLike extends LikeAbstract { 
     
     @ManyToOne
     @JoinColumn(name="review_id")
     private Review review;    
-    
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer;
 
     public ReviewLike(Customer customer, Review review) {
         this.review = review;

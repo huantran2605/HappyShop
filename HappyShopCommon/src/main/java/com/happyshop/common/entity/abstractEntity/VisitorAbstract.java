@@ -18,16 +18,16 @@ public class VisitorAbstract {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
     
     @Column(name = "full_name", nullable = false, length = 30)
-    private String fullName;
+    protected String fullName;
     
     @Column(name = "phone_number")
-    private String phoneNumber;
+    protected String phoneNumber;
     
     @Column
-    private String email;
+    protected String email;
 
     public VisitorAbstract(String fullName, String phoneNumber, String email) {
         this.fullName = fullName;

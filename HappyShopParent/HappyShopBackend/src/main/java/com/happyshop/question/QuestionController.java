@@ -29,11 +29,14 @@ import com.happyshop.common.entity.reply.Reply;
 import com.happyshop.common.entity.review.Review;
 import com.happyshop.common.exception.QuestionNotFoundException;
 import com.happyshop.common.exception.ReviewNotFoundException;
+import com.happyshop.reply.ReplyService;
 import com.happyshop.review.ReviewService;
 
 @Controller
 @RequestMapping("/question")
 public class QuestionController {
+    @Autowired 
+    ReplyService replyService;
     @Autowired
     QuestionService questionService;
     @Autowired
@@ -154,6 +157,30 @@ public class QuestionController {
         model.addAttribute("replies", q.getReplies());
         
         return "question/question_answer_form";
+    }
+    
+    @PostMapping("/save-answer")
+    private String saveAnswer(@RequestParam("questionId") Integer questionId,
+            @RequestParam("content") String content,
+            RedirectAttributes re,
+            HttpServletRequest request) throws QuestionNotFoundException {
+        
+        Question q = questionService.findById(questionId);
+        q.setAnswerStatus(true);
+        
+        User admin = userUtility.getAuthenticationUser(request);
+        
+        Reply  r = new Reply();
+        r.setQuestion(q);
+        r.setAdmin(admin);
+        r.setAdminReplyRequired(false);
+        r.setApprovalStatus(true);
+        r.setContent(content);
+        r.setReplyTime(new Date());
+        
+        replyService.save(r);
+        re.addFlashAttribute("message", "Answer question id " + questionId +" successfully!"); 
+        return "redirect:/question/page/1?sortField=askTime&sortDir=des&keyWord=&questionStatus=NAn";
     }
     
     

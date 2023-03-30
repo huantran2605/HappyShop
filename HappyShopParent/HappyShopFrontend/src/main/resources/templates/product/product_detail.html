@@ -47,7 +47,7 @@
 						th:id="review_count +  ${product.id}" /> 
 					<div th:id="star_rating +${product.id}"></div>
 										
-					<a href="#questionsAndAnswers" class="ms-2">[[${totalQuestions}]] questions</a>
+					<a href="#questionsAndAnswers" th:if="${totalQuestions > 0}" class="ms-2">[[${totalQuestions}]] questions</a>
 					
 				</div>
 
