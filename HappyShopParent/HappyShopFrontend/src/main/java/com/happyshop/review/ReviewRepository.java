@@ -11,9 +11,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.review.Review;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {

@@ -1,4 +1,4 @@
-package com.happyshop.common.entity;
+package com.happyshop.common.entity.question;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.happyshop.common.entity.Customer;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.reply.Reply;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,9 +39,9 @@ public class Question {
     private Customer customer;
     
     @Column(nullable = false,length = 300)
-    private String question_content;
+    private String content;
     
-    @Column(name = "aks_time", nullable = false)
+    @Column(name = "ask_time", nullable = false)
     private Date askTime;
     
     @Column(name = "answer_status", nullable = false)
@@ -50,8 +52,8 @@ public class Question {
     private Product product;
     
     @ManyToOne
-    @JoinColumn(name = "asker_id")
-    private Question_Asker asker;
+    @JoinColumn(name = "visitor_id")
+    private QuestionVisitor visitor;
     
     @Column(name = "approval_status", nullable = false)
     private boolean approvalStatus;
@@ -60,10 +62,10 @@ public class Question {
     private int likes;
     
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reply> replies  = new ArrayList<>();
+    private List<Reply> replies = new ArrayList<>();
     
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likeStatus  = new ArrayList<>();
+    private List<QuestionLike> likeStatus  = new ArrayList<>();
 
     public Question(Integer id) {
         this.id = id;

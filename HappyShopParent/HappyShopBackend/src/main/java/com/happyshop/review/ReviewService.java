@@ -3,7 +3,7 @@ package com.happyshop.review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.happyshop.common.entity.Review;
+import com.happyshop.common.entity.review.Review;
 import com.happyshop.common.exception.ReviewNotFoundException;
 
 public interface ReviewService {

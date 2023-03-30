@@ -13,8 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.review.Review;
 import com.happyshop.review.ReviewRepository;
 
 @DataJpaTest

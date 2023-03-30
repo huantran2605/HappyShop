@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.order.Order;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.review.Review;
 import com.happyshop.common.exception.ReviewNotFoundException;
 
 @Service

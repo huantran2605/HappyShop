@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.happyshop.common.entity.Reply;
+import com.happyshop.common.entity.reply.Reply;
 
 @Repository
 public interface ReplyRepository extends JpaRepository<Reply, Integer> {

@@ -247,9 +247,9 @@
 								 <div th:id="question_personName + ${question.id}">
 									<strong th:if="${question.customer != null}" th:id="test + ${question.id}">
 										[[${question.customer.FullName}]]</strong>
-									<strong th:unless="${question.customer != null}">[[${question.asker.fullName}]]</strong>						
+									<strong th:unless="${question.customer != null}">[[${question.visitor.fullName}]]</strong>						
 								 </div>
-								<p class="mt-2">[[${question.question_content}]]</p>
+								<p class="mt-2">[[${question.content}]]</p>
 								<div class="d-flex justify-content-start align-items-center " style="font-size: 14px;">
 									<a href="#" class="question_reply_btn" th:questionId="${question.id}">Reply</a>
 									

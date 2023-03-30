@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.happyshop.common.entity.Question;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
 
 public interface QuestionService {
     int SIZE_PAGE_QUESTION = 10;

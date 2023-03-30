@@ -1,4 +1,4 @@
-package com.happyshop.question.reply;
+package com.happyshop.question.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,18 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
-import com.happyshop.common.entity.Question_Asker;
-import com.happyshop.common.entity.Reply_Person;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
+import com.happyshop.common.entity.question.QuestionVisitor;
 import com.happyshop.common.exception.QuestionNotFoundException;
 
 @Service
-public class Reply_PersonServiceImpl implements  Reply_PersonService {
+public class QuestionVisitorServiceImpl implements QuestionVisitorService {
     @Autowired
-    Reply_PersonRepository repo;
+    QuestionVisitorRepository repo;
     
-    public <S extends Reply_Person> S save(S entity) {
+    public <S extends QuestionVisitor> S save(S entity) {
         return repo.save(entity);
     }
     

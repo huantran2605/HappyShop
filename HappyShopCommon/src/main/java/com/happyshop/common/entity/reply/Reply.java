@@ -1,4 +1,4 @@
-package com.happyshop.common.entity;
+package com.happyshop.common.entity.reply;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.happyshop.common.entity.Customer;
+import com.happyshop.common.entity.User;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +32,7 @@ public class Reply {
     private Integer id;
     
     @Column(length = 300, nullable = false)
-    private String reply_content;
+    private String content;
     
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -40,8 +43,8 @@ public class Reply {
     private User admin;
     
     @ManyToOne
-    @JoinColumn(name = "person_reply_id")
-    private Reply_Person personReply;
+    @JoinColumn(name = "visitor_id")
+    private ReplyVisitor visitor;
     
     @Column(name = "reply_time", nullable = false)
     private Date replyTime;

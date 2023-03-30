@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
 import com.happyshop.common.exception.QuestionNotFoundException;
 
 @Service
@@ -45,9 +45,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
-
-
-
     public Optional<Question> findById(Integer id) {
         return repo.findById(id);
     }
@@ -65,12 +62,4 @@ public class QuestionServiceImpl implements QuestionService {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-
 }

@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Integer> {

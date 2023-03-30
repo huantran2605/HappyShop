@@ -1,4 +1,4 @@
-package com.happyshop.common.entity;
+package com.happyshop.common.entity.question;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,42 +8,32 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.happyshop.common.entity.Customer;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "likes")
 @AllArgsConstructor
-@Data
+@Data 
 @NoArgsConstructor
-public class Like { 
+@Table(name = "question_likes")
+public class QuestionLike { 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer;
-    
-    @ManyToOne
-    @JoinColumn(name="review_id")
-    private Review review;
     
     @ManyToOne
     @JoinColumn(name="question_id")
     private Question question;    
+    
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    private Customer customer;
 
-    public Like(Customer customer, Review review) {
-        this.customer = customer;
-        this.review = review;
-    }
-    
-    public Like(Customer customer, Question question) {
-        this.customer = customer;
+    public QuestionLike(Customer customer, Question question) {
         this.question = question;
-    }
-    
-    
-    
+        this.customer = customer;
+    }   
 }

@@ -20,8 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.CustomerUtility;
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
 import com.happyshop.common.exception.ProductNotFoundException;
 import com.happyshop.product.ProductService;
 import com.happyshop.question.QuestionService;

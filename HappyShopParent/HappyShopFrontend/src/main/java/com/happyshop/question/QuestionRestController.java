@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.happyshop.CustomerUtility;
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
-import com.happyshop.common.entity.Question_Asker;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
+import com.happyshop.common.entity.question.QuestionVisitor;
 import com.happyshop.product.ProductService;
+import com.happyshop.question.visitor.QuestionVisitorService;
 
 @RestController
 public class QuestionRestController {
@@ -28,12 +29,12 @@ public class QuestionRestController {
     @Autowired
     QuestionService questionService;
     @Autowired
-    Question_AskerService question_AskerService;
+    QuestionVisitorService questionVisitorService;
     
     @PostMapping("/question/save")
     private String saveQuestion(
             @RequestParam("productId") Integer productId,
-            @RequestParam("question_content") String question_content,
+            @RequestParam("content") String content,
             @RequestParam(name = "fullName", required = false) String fullName,
             @RequestParam(name = "phoneNumber", required = false) String phoneNumber,
             @RequestParam(name = "email", required = false) String email,
@@ -45,7 +46,7 @@ public class QuestionRestController {
         Product product = productService.findById(productId).get();
         
         Question q = new Question();
-        q.setQuestion_content(question_content);
+        q.setContent(content);
         q.setCustomer(customer);
         q.setProduct(product);
         q.setAskTime(new Date());
@@ -54,9 +55,9 @@ public class QuestionRestController {
         q.setApprovalStatus(false);
         
         if(customer == null) {
-            Question_Asker asker = new Question_Asker(fullName, phoneNumber, email);     
-            question_AskerService.save(asker);           
-            q.setAsker(asker);
+            QuestionVisitor visitor = new QuestionVisitor(fullName, phoneNumber, email);     
+            questionVisitorService.save(visitor);           
+            q.setVisitor(visitor);
         }
         questionService.save(q); 
         

@@ -22,8 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.admin.AmazonS3Util;
-import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.review.Review;
 import com.happyshop.common.exception.ReviewNotFoundException;
 import com.happyshop.product.ProductSaveHelper;
 import com.happyshop.product.ProductService;

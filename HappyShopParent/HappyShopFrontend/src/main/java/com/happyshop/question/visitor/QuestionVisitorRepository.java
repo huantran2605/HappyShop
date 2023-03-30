@@ -1,4 +1,4 @@
-package com.happyshop.question.reply;
+package com.happyshop.question.visitor;
 
 import java.util.List;
 
@@ -7,13 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
-import com.happyshop.common.entity.Question_Asker;
-import com.happyshop.common.entity.Reply_Person;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
+import com.happyshop.common.entity.question.QuestionVisitor;
 
 @Repository
-public interface Reply_PersonRepository extends JpaRepository<Reply_Person, Integer> {
+public interface QuestionVisitorRepository extends JpaRepository<QuestionVisitor, Integer> {
     
    
 }

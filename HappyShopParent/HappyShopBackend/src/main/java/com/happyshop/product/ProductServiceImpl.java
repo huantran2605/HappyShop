@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.happyshop.common.entity.Brand;
 import com.happyshop.common.entity.Category;
-import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.review.Review;
 import com.happyshop.review.ReviewRepository;
 
 @Service

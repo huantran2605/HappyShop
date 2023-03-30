@@ -1,22 +1,21 @@
-package com.happyshop.common.entity;
+package com.happyshop.common.entity.abstractEntity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@MappedSuperclass
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Table(name="reply_persons")
-public class Reply_Person {
+public class VisitorAbstract {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -30,11 +29,12 @@ public class Reply_Person {
     @Column
     private String email;
 
-    public Reply_Person(String fullName, String phoneNumber, String email) {
+    public VisitorAbstract(String fullName, String phoneNumber, String email) {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+    
     
     
 }

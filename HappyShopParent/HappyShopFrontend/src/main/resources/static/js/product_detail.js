@@ -196,7 +196,7 @@ function saveReply(questionId, reply_content, adminReplyRequired, fullName, phon
 		type: 'POST',
 		data: {
 			questionId: questionId,
-			reply_content: reply_content,
+			content: reply_content,
 			adminReplyRequired: adminReplyRequired,
 			
 			fullName: fullName,
@@ -297,7 +297,7 @@ function saveQuestion(productId, question_content, fullName, phoneNumber, email)
 		type: 'POST',
 		data: {
 			productId: productId,
-			question_content: question_content,
+			content: question_content,
 			
 			fullName: fullName,
 			phoneNumber: phoneNumber,
@@ -308,11 +308,11 @@ function saveQuestion(productId, question_content, fullName, phoneNumber, email)
 			//hide form add question
 			$('#question_form').hide();
 			//add auto to 'most recent questions' wait to approve
-			askerName = fullName;
-			if(askerName == null && customerFullName != null){
-				askerName = customerFullName;
+			visitorName = fullName;
+			if(visitorName == null && customerFullName != null){
+				visitorName = customerFullName;
 			}			
-			html = generateNewQuestionDiv(askerName, question_content);
+			html = generateNewQuestionDiv(visitorName, question_content);
 			$("#new_quesion_div").prepend(html);
 		},
 		error: function(xhr, status, error) {
@@ -329,19 +329,19 @@ function getAllRepliesOfProduct(questionId, question_likes){
 		type: 'GET',
 		success: function(response) {
 			response.forEach(function(r) {
-				replier = "";
-				person = "";
+				replyPersonName = "";
+				personType = "";
 				if(r.adminName != null){
-					replier = r.adminName;
-					person = "admin";
+					replyPersonName = r.adminName;
+					personType = "admin";
 				}
 				else if(r.customerName != null){
-					replier = r.customerName;
+					replyPersonName = r.customerName;
 				}
 				else{
-					replier = r.replyPersonName;
+					replyPersonName = r.visitorName;
 				}
-				html = generateNewReplyDiv(replier, r.reply_content, r.replyTime,questionId, r.id, question_likes, person);
+				html = generateNewReplyDiv(replyPersonName, r.content, r.replyTime,questionId, r.id, question_likes, personType);
 				$("#reply_div" + questionId).append(html);
 				
 				
@@ -354,14 +354,15 @@ function getAllRepliesOfProduct(questionId, question_likes){
 	});
 }
 
-function generateNewReplyDiv(replier, reply_content, replyTime, questionId, replyId, question_likes, person){
+function generateNewReplyDiv(replyPersonName, reply_content, replyTime, questionId, 
+	replyId, question_likes, personType){
 	html = ``;
 	const date = replyTime.slice(0, 10);
 	person_reply = "reply_person" + replyId;
-	if(person != "admin"){
+	if(personType != "admin"){
 		html += `
 			<div class="mt-3">
-				<strong id = ${person_reply} >${replier}</strong>
+				<strong id = ${person_reply} >${replyPersonName}</strong>
 				<p class="mt-2">${reply_content}</p>
 				<div class="d-flex justify-content-start align-items-center" style="font-size: 14px;">
 					<a href="#" class="reply_reply_btn" questionId=${questionId} replyId = ${replyId}>Reply</a>					
@@ -374,7 +375,7 @@ function generateNewReplyDiv(replier, reply_content, replyTime, questionId, repl
 		html += `
 			<div class="mt-3">
 				<div class="d-flex justify-content-start">
-					<strong class="me-3" id = ${person_reply} >${replier}</strong>
+					<strong class="me-3" id = ${person_reply} >${replyPersonName}</strong>
 					<i style="font-size: 13px;" class="fa-sharp fa-solid fa-circle-check d-flex align-items-center"></i>
 					<span class="d-flex align-items-start ms-2" style="font-size: 13px;">admin</span>
 				</div>
@@ -393,16 +394,17 @@ function generateNewReplyDiv(replier, reply_content, replyTime, questionId, repl
 	return html;
 }
 
-function checkCustomerLikeObject(objectId, btn_like, object, typeLikeIconId, typeLikeTextId){
+function checkCustomerLikeObject(objectId, btn_like, objectName, typeLikeIconId, typeLikeTextId){
+	objectNameId = objectName + 'Id';
 	$.ajax({
-		url: contextPath + 'like_check/' + object,
+		url: contextPath + objectName + '/like_check',
 		type: 'POST',
 		data: {
-			objectId: objectId,
+			objectNameId: objectId,
 			_csrf: csrfValue
 		},
 		success: function(response) {
-			if(response == object + " " + objectId + " liked"){
+			if(response == "review id " + objectId + " liked"){
 				$(typeLikeIconId + objectId).removeClass("fa-regular");
 				$(typeLikeIconId + objectId).addClass("fa-solid");
 				btn_like.attr("likeStatus", "1");
@@ -416,10 +418,11 @@ function checkCustomerLikeObject(objectId, btn_like, object, typeLikeIconId, typ
 	});
 }
 
-function likeAction(objectId, btn_like, object, typeLikeIconId, typeLikeTextId, typeLikeCountId ) {
-	data = {objectId: objectId, _csrf: csrfValue};
+function likeAction(objectId, btn_like, objectName, typeLikeIconId, typeLikeTextId, typeLikeCountId ) {
+	objectNameId = objectName + 'Id';
+	data = {objectNameId: objectId, _csrf: csrfValue};
 	$.ajax({
-		url: contextPath + 'like/' + object,
+		url: contextPath + objectName +'/like',
 		type: 'POST',
 		data: data,
 		success: function(response) {
@@ -437,12 +440,13 @@ function likeAction(objectId, btn_like, object, typeLikeIconId, typeLikeTextId, 
 }
 
 
-function unlikeAction(objectId, btn_like, object, typeLikeIconId, typeLikeTextId, typeLikeCountId){
+function unlikeAction(objectId, btn_like, objectName, typeLikeIconId, typeLikeTextId, typeLikeCountId){
+	objectNameId = objectName + 'Id';
 	$.ajax({
-		url: contextPath + 'unlike/' + object,
+		url: contextPath + objectName + '/unlike',
 		type: 'POST',
 		data: {
-			objectId: objectId,
+			objectNameId: objectId,
 			_csrf: csrfValue
 		},
 		success: function(response) {

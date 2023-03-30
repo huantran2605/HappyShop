@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.happyshop.common.entity.Question;
-import com.happyshop.common.entity.Reply;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
+import com.happyshop.common.entity.reply.Reply;
 import com.happyshop.common.exception.QuestionNotFoundException;
 
 public interface ReplyService {

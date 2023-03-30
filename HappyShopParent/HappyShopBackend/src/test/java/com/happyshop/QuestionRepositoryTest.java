@@ -16,9 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
 import com.happyshop.common.entity.Customer;
-import com.happyshop.common.entity.Question;
-import com.happyshop.common.entity.Review;
 import com.happyshop.common.entity.product.Product;
+import com.happyshop.common.entity.question.Question;
+import com.happyshop.common.entity.review.Review;
 import com.happyshop.question.QuestionRepository;
 import com.happyshop.review.ReviewRepository;
 
@@ -37,7 +37,7 @@ public class QuestionRepositoryTest {
         assertThat(list.size()).isGreaterThan(0);
         
         for (Question question : list) {
-            System.out.println(question.getQuestion_content());
+            //System.out.println(question.getQuestion_content());
         }
     }
     
