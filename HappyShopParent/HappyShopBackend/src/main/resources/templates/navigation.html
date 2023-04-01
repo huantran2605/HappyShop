@@ -104,7 +104,7 @@
 					class="nav-link" th:href="@{/order/listOrder}">Orders</a></li>
 				<li class="nav-item"
 					sec:authorize="hasAnyAuthority('Admin', 'Editor')"><a
-					class="nav-link" href="#">Articles</a></li>
+					class="nav-link" th:href="@{/article/listArticle}">Articles</a></li>
 				<li class="nav-item dropdown" 
 					sec:authorize="hasAuthority('Admin')">
 					<a

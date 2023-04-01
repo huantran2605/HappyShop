@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: page_head('Home','none')"></head>
+<body>
+	<div th:fragment="content" class="container-fluid mt-2">
+		<p>All Topics</p>
+		
+		<div class="d-flex justify-content-start">
+			<p class="me-2">Sort By:</p>
+			<div th:replace="fragments :: column_link('createdTime', 'Created Time')"></div>
+			<div th:replace="fragments :: column_link('name', 'Name')"></div>
+			<div th:replace="fragments :: column_link('total-articles', 'Total Articles')"></div>
+		</div>
+				
+		<div class="row">
+			<th:block th:each="topic : ${topics}">
+				<div class="col-md-6 p-2">
+					<div class="row">
+						<div class="col-sm-5 ">
+							<img th:src="@{${topic.image}}" class="img-thumbnail img-fluid"  alt="topic image" />
+						</div>
+						<div class="col-sm-7 ">
+							[[${topic.name}]]
+							<div style="font-size: 13px;" class="d-flex justify-content-start mt-3">
+								<div class="me-3">
+									[[${topic.getSizeOfArticles}]] articles
+								</div>
+								<div th:replace="fragments :: format_time(${topic.createdTime})" ></div>
+							</div>
+						</div>
+					</div>
+				</div>
+		
+			</th:block>
+		</div>
+		
+		<div th:replace="fragments :: countElement('Topic')"></div>
+		<div th:replace="fragments :: pagination"></div>
+		
+	</div>
+	
+	
+	
+	
+	
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+
+</body>
+</html>
