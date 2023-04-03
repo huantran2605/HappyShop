@@ -1,28 +1,71 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: page_head('Home','none')"></head>
 <body>
 	<div th:fragment="content" class="container-fluid mt-2">
-		<p>All Topics</p>
+		<h3 class="text-center">All Topics</h3>
 		
+		<!-- Search -->
+		<div class="row">
+			<form
+				th:action="@{${moduleURL} +'/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+				class="form-inline">
+				<div class="row d-flex justify-content-start">
+					<div class="col-sm-3">
+						<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+							type="hidden" name="sortDir" th:value="${sortDir}" /> <input
+							class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
+							type="search" placeholder="Search" aria-label="Search">
+					</div>
+					<div class="col-sm-3">
+						<button class="btn btn-outline-success m-3 ms-0" type="submit">
+							<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+						</button>
+						<a th:href="@{${moduleURL}}"
+							class="btn btn-outline-success m-3 "> <i
+							class="fa-sharp fa-solid fa-eraser"></i>
+						</a>
+					</div>
+				
+				</div>
+
+			</form>
+		</div>
+		
+		<a th:href="@{/article-topic/new}" class="btn btn-success mb-2">Add new topic</a>
 		<div class="d-flex justify-content-start">
 			<p class="me-2">Sort By:</p>
-			<div th:replace="fragments :: column_link('createdTime', 'Created Time')"></div>
-			<div th:replace="fragments :: column_link('name', 'Name')"></div>
-			<div th:replace="fragments :: column_link('total-articles', 'Total Articles')"></div>
+			<div class="me-3" id="sort-createdTime">
+				<span th:replace="fragments :: column_link('createdTime', 'Created Time')"></span>				
+			</div>
+			<div class="me-3 " id="sort-name">
+				<span th:replace="fragments :: column_link('name', 'Name')"></span>
+			</div>
+			<div id="sort-total-articles">
+				<span th:replace="fragments :: column_link('total-articles', 'Total Articles')"></span>
+			</div>
 		</div>
-				
 		<div class="row">
 			<th:block th:each="topic : ${topics}">
 				<div class="col-md-6 p-2">
 					<div class="row">
 						<div class="col-sm-5 ">
-							<img th:src="@{${topic.image}}" class="img-thumbnail img-fluid"  alt="topic image" />
+							<a th:href="@{'/article/topic/' + ${topic.id}}">							
+								<img th:src="@{${topic.getArticleTopicImagePath}}" class="img-thumbnail"  alt="topic image" />
+							</a>
+							
 						</div>
 						<div class="col-sm-7 ">
-							[[${topic.name}]]
+							<div class="d-flex justify-content-end mb-2">
+								<a th:href="@{'/article-topic/delete/' + ${topic.id}}"
+										class="delete-article-topic me-3" th:name="${topic.name}"
+										title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+								</a>								
+								<div th:replace="fragments :: update(${topic.id})">
+								</div>
+							</div>
+						
+							<a th:href="@{'/article/topic/' + ${topic.id}}" style="text-decoration: none">[[${topic.name}]]</a>
 							<div style="font-size: 13px;" class="d-flex justify-content-start mt-3">
 								<div class="me-3">
 									[[${topic.getSizeOfArticles}]] articles
@@ -38,23 +81,37 @@
 		
 		<div th:replace="fragments :: countElement('Topic')"></div>
 		<div th:replace="fragments :: pagination"></div>
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+		
+		<script>
+			sortField = "[[${sortField}]]";
+			
+			$(document).ready(function(){
+				if(sortField == 'createdTime'){
+					$("#sort-createdTime").addClass("text-danger");
+				}
+				else if(sortField == 'name'){
+					$("#sort-name").addClass("text-danger");					
+				}
+				else{
+					$("#sort-total-articles").addClass("text-danger");
+				}
+				
+				$(".delete-article-topic").click(
+					function(e) {
+						e.preventDefault();
+						confirmToDelete("topic", this);
+				});
+				
+				
+			});
+			
+		</script>
+		
+		<script th:src="@{/js/common_form.js}"></script>
 		
 	</div>
-	
-	
-	
-	
-	
-	<!-- Bootstrap JavaScript Libraries -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-		crossorigin="anonymous"></script>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
-		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
-		crossorigin="anonymous"></script>
 
 </body>
 </html>

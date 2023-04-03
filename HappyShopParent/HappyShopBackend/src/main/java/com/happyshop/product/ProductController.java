@@ -1,20 +1,11 @@
 package com.happyshop.product;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,14 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.happyshop.FileUploadUtil;
 import com.happyshop.admin.AmazonS3Util;
 import com.happyshop.brand.BrandService;
-import com.happyshop.category.CategoryCsvExporter;
 import com.happyshop.category.CategoryService;
-import com.happyshop.common.entity.Category;
 import com.happyshop.common.entity.product.Product;
-import com.happyshop.common.entity.product.ProductImage;
 import com.happyshop.security.UserDetailsClass;
 
 @Controller

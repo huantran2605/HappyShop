@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="content" class="container-fluid mt-2">
+		<h3 class="text-center">[[${topicName}]]</h3>
+		
+		<!-- search-->
+		<th:block th:if="${elementsCurrentPerPage > 0}">			
+			<div class="row">
+				<div class="col-6 d-flex justify-content-start ">
+					<form
+						th:action="@{${moduleURL} +'/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }"
+						class="form-inline ">
+						<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+							type="hidden" name="sortDir" th:value="${sortDir}" /> <input
+							class="form-control m-3 ms-0" th:value="${keyWord}" name="keyWord"
+							type="search" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-success m-3 ms-0" type="submit">
+							<i class="fa-sharp fa-solid fa-magnifying-glass "></i>
+						</button>
+						<a th:href="@{${moduleURL}}"
+							class="btn btn-outline-success m-3 "> <i
+							class="fa-sharp fa-solid fa-eraser"></i>
+						</a>
+	
+					</form>
+				</div>
+			</div>	
+		</th:block>		
+		
+		<div class="full-details" th:if="${totalElement > 0}">
+			<table
+				class="table table-active table-striped table-inverse
+					table-hover table-responsive mt-4 ">
+				<thead class="thead-inverse ">
+					<tr>
+						<th th:replace="fragments :: column_link('id', 'ID')"></th>
+						<th
+							th:replace="fragments :: column_link('title', 'Title')"></th>
+
+						<th
+							th:replace="fragments :: column_link('author', 'Author')"></th>
+						<th
+							th:replace="fragments :: column_link('createdTime', 'Created Time')"></th>
+						<th
+							th:replace="fragments :: column_link('published', 'Published')"></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each=" article: ${articles}">
+						<td scope="row" th:text="${article.id}"></td>
+						
+						<td th:text="${article.title}"></td>
+						<td th:text="${article.author.getFullName}"></td>
+						<td th:text="${article.createdTime}"></td>
+						<td>
+							<div
+								th:replace="fragments :: status_enable(${article.id}, ${article.published})">
+							</div>
+						</td>
+						<td>
+							<div class="float-start">
+								<a th:href="@{'/article/detail/' + ${article.id}}"
+									title="Detail article" class="me-3 link-detail"> <i
+									class="fa-sharp fa-solid fa-circle-info"></i>
+								</a> 
+								<a th:href="@{'/article/delete/' + ${article.id}}"
+									class="deletearticle me-3" th:name="${article.title}"
+									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
+								</a>
+							</div>
+							<div th:replace="fragments :: update(${article.id})">
+							</div>
+						</td>
+
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="less-details">
+			<div th:each=" product: ${products}" class="row">
+				
+			</div>
+		</div>
+		
+		
+		
+		<div th:replace="fragments :: countElement('Article')"></div>
+		<div th:replace="fragments :: pagination"></div>
+		
+		
+	</div>
+	
+
+
+</body>
+</html>

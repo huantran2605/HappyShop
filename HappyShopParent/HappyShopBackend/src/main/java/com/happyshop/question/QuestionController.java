@@ -23,14 +23,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.UserUtility;
 import com.happyshop.common.entity.User;
-import com.happyshop.common.entity.product.Product;
 import com.happyshop.common.entity.question.Question;
 import com.happyshop.common.entity.reply.Reply;
-import com.happyshop.common.entity.review.Review;
 import com.happyshop.common.exception.QuestionNotFoundException;
-import com.happyshop.common.exception.ReviewNotFoundException;
 import com.happyshop.reply.ReplyService;
-import com.happyshop.review.ReviewService;
 
 @Controller
 @RequestMapping("/question")

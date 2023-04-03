@@ -159,12 +159,12 @@ public class ProductController {
     }
     
     @GetMapping("/search/page/{pageNum}")
-    public String searchProduct (@Param("keyword") String keyword,
+    public String searchProduct (@Param("keyWord") String keyWord,
             @PathVariable("pageNum") int pageNum,
             Model model) {
-        model.addAttribute("keyword", keyword);
+        model.addAttribute("keyword", keyWord);
         Pageable pageable = PageRequest.of(pageNum - 1, ProductService.SIZE_RESULT_PAGE_PRODUCT);
-        Page<Product> page = productService.searchProduct(keyword, pageable);
+        Page<Product> page = productService.searchProduct(keyWord, pageable);
         List<Product> listProduct = page.getContent();
         
         long startCount = (pageNum - 1) * ProductService.SIZE_PAGE_PRODUCT + 1;
@@ -180,9 +180,10 @@ public class ProductController {
         model.addAttribute("elementsCurrentPerPage", page.getNumberOfElements());
         model.addAttribute("elementsPerPage", ProductService.SIZE_PAGE_PRODUCT);
         
-        model.addAttribute("titlePage", "Search Result '" + keyword+"'");
+        model.addAttribute("titlePage", "Search Result '" + keyWord+"'");
         model.addAttribute("listProduct", listProduct);
         model.addAttribute("moduleURL", "/search");
+        model.addAttribute("keyWord", keyWord);
         
         return "product/search_result";
     }

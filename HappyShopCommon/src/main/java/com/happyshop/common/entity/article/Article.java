@@ -42,6 +42,9 @@ public class Article {
     @Column(nullable = false)
     private Date createdTime;
     
+    @Column
+    private boolean published;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ArticleType type;

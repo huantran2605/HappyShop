@@ -79,7 +79,6 @@ public class AmazonS3Util {
             DeleteObjectRequest request = DeleteObjectRequest.builder().bucket(BUCKET_NAME)
                     .key(object.key()).build();
             client.deleteObject(request);
-            System.out.println("Deleted " + object.key());
         }       
     }
 }

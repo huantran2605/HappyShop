@@ -65,8 +65,8 @@ public class BrandController {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             brand.setLogo(fileName);
-            Brand savedCate = brandService.save(brand);
-            String uploadDir = "brand-logos/" + savedCate.getId();
+            Brand savedBrand = brandService.save(brand);
+            String uploadDir = "brand-logos/" + savedBrand.getId();
             // delete old photos if have  
             AmazonS3Util.removeFolder(uploadDir);
             AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());

@@ -1,5 +1,7 @@
 package com.happyshop.article.topic;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,5 +59,22 @@ public class ArticleTopicServiceImpl implements ArticleTopicService{
         }
                 
     }
+
+    public Optional<ArticleTopic> findById(Integer id) {
+        return repo.findById(id);
+    }
+
+    public void deleteById(Integer id) {
+        repo.deleteById(id);
+    }
+
+    public <S extends ArticleTopic> S save(S entity) {
+        return repo.save(entity);
+    }
+    
+    
+    
+    
+    
     
 }

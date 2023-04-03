@@ -21,6 +21,11 @@ public class ArticleImage extends Media {
         super(url, description, createdTime);
         this.article = article;
     }
+
+    public ArticleImage() {
+        super();
+    }
+    
     
     
 }

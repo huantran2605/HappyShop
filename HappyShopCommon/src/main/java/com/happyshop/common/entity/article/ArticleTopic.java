@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.springframework.data.annotation.Transient;
 
+import com.happyshop.common.Constants;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +35,7 @@ public class ArticleTopic {
     private String name;
     
     @Column(nullable = false)
-    private String image;
+    private String image;  
     
     @Column(nullable = false)
     private Date createdTime;
@@ -48,8 +50,15 @@ public class ArticleTopic {
     }
     
     @Transient
+    public String getArticleTopicImagePath () {
+        return Constants.S3_BASE_URI+ "/article-topic-images/"+this.id + "/" +this.image; 
+    }
+    
+    @Transient
     public int getSizeOfArticles() {
         return this.articles.size();
     }
+    
+    
 }
 

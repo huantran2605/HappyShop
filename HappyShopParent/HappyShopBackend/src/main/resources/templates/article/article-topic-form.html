@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: page_head('Update Article Topic','none')"></head>
+<body>
+	<div class="container-fluid">
+		<!-- navigation -->
+		<div th:replace="navigation :: nav"></div>
+		
+		<h2 class="text-center">Manage Articles | <span>[[${titlePage}]]</span></h2>
+		
+		<form th:action="@{/article-topic/save}" method="post" enctype="multipart/form-data"
+			style="margin: 0 auto; max-width: 600px; background-color: rgb(179, 179, 179);" 
+			class="p-3 border border-secondary" th:object="${topic}">
+			<input type="hidden" th:field="*{id}"/>
+			<div class="row" th:if="${topic.id != null}">
+				<div class="col-sm-2">
+					<p>Id:</p>
+				</div>
+				<div class="col-sm-10" >
+					[[${topic.id}]]
+				</div>
+			</div>
+			
+			<div class="row mt-2">
+				<div class="col-sm-2">
+					<p>Name:</p>
+				</div>
+				<div class="col-sm-10">
+					<textarea  class="form-control" rows ="4"  name="name" maxlength="300" th:field="*{name}">
+					</textarea>
+				</div>
+			</div>
+			
+			<div class="row mt-2">
+				<div class="col-sm-2">
+					<p>Image:</p>
+				</div>
+				<div class="col-sm-10 ">
+					<input th:if="${topic.image != null}" type="file" accept="image/*" id="fileImage" name="imageFile"/>
+					<input th:if="${topic.image == null}" required="required" type="file" accept="image/*" id="fileImage" name="imageFile"/>
+					<img th:if="${topic.image != null}" th:src="@{${topic.getArticleTopicImagePath}}" alt="topicImage" 
+						id="thumbnail"	class="mt-1 img-thumbnail"/>
+					<img th:if="${topic.image == null}" th:src="@{/images/default-thumbnail.jpg}" alt="topicImage" 
+					id="thumbnail"	class="mt-1 img-thumbnail"/>
+				</div>
+			</div>
+			
+			<div class="row mt-2" th:if="${topic.image != null}">
+				<div class="col-sm-2">
+					<p>Created Time:</p>
+				</div>
+				<div class="col-sm-10">
+					[[${topic.createdTime}]]
+				</div>
+			</div>
+			
+			<div class="row mt-2" th:if="${topic.id != null}">
+				<div class="col-sm-2">
+					<p>Articles:</p>
+				</div>
+				<div class="col-sm-10">
+					[[${topic.getSizeOfArticles}]]
+				</div>
+			</div>
+			
+			<div class="text-center mt-2">
+				<button type="submit" th:if="${titlePage == 'Create New Brand'}" class="btn btn-primary me-2">Save</button>
+				<button type="submit" th:if="${titlePage != 'Create New Brand'}" class="btn btn-primary me-2">Update</button>
+				<a th:href="@{/article-topic/}" class="btn btn-secondary">Cancel </a> 
+			</div>
+		</form>
+		
+		
+		
+		<!-- footer -->
+		<div th:replace="fragments :: footer"></div>
+	</div>
+	
+	
+	<script>
+	MAX_FILE_SIZE = 1048576 * 2;
+	
+	</script>
+	<script th:src="@{/js/common_form.js}"></script>
+	
+	<!-- Bootstrap JavaScript Libraries -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
+
+</body>
+</html>
