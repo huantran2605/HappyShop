@@ -1,5 +1,6 @@
 package com.happyshop.article.topic;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -16,4 +17,6 @@ public interface ArticleTopicService {
     void deleteById(Integer id);
     
     <S extends ArticleTopic> S save(S entity);
+    
+    List<ArticleTopic> findAll();
 }

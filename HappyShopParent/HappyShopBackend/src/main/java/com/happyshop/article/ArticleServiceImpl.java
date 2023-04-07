@@ -20,6 +20,10 @@ public class ArticleServiceImpl implements ArticleService{
         }        
         return repo.findByTopic(topic, pageable);
     }
+
+    public <S extends Article> S save(S entity) {
+        return repo.save(entity);
+    }
     
     
     

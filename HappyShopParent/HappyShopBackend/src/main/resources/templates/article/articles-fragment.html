@@ -3,7 +3,7 @@
 
 <body>
 	<div th:fragment="content" class="container-fluid mt-2">
-		<h3 class="text-center">[[${topicName}]]</h3>
+		<h3 class="text-center">[[${topic.name}]]</h3>
 		
 		<!-- search-->
 		<th:block th:if="${elementsCurrentPerPage > 0}">			
@@ -27,7 +27,10 @@
 					</form>
 				</div>
 			</div>	
-		</th:block>		
+		</th:block>	
+		
+		<a th:href="@{'/article/new?topicId=' + ${topic.id}}" class="btn btn-primary">Create new article</a>
+			
 		
 		<div class="full-details" th:if="${totalElement > 0}">
 			<table

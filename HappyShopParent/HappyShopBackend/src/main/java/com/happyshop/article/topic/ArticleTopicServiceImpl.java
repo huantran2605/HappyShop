@@ -1,5 +1,6 @@
 package com.happyshop.article.topic;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,10 @@ public class ArticleTopicServiceImpl implements ArticleTopicService{
 
     public <S extends ArticleTopic> S save(S entity) {
         return repo.save(entity);
+    }
+
+    public List<ArticleTopic> findAll() {
+        return repo.findAll();
     }
     
     

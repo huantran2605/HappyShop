@@ -10,20 +10,28 @@ import javax.persistence.Table;
 import com.happyshop.common.entity.abstractEntity.Media;
 
 @Entity
-@Table(name = "article_images")
-public class ArticleImage extends Media {
+@Table(name = "article_media")
+public class ArticleMedia extends Media {
     
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
 
-    public ArticleImage(String url, String description, Date createdTime, Article article) {
-        super(url, description, createdTime);
+    public ArticleMedia(String name, String description, Date createdTime, Article article) {
+        super(name, description, createdTime);
         this.article = article;
     }
 
-    public ArticleImage() {
+    public ArticleMedia() {
         super();
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
     
     

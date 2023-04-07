@@ -22,7 +22,7 @@ public class Media {
     protected Integer id;
     
     @Column(nullable = false)
-    protected String url;
+    protected String name;
     
     @Column(length = 200)
     protected String description;
@@ -30,9 +30,9 @@ public class Media {
     @Column(nullable = false, name = "created_time")
     protected Date createdTime;
 
-    public Media(String url, String description, Date createdTime) {
+    public Media(String name, String description, Date createdTime) {
         super();
-        this.url = url;
+        this.name = name;
         this.description = description;
         this.createdTime = createdTime;
     }

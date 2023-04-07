@@ -1,6 +1,9 @@
 package com.happyshop.article;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,12 +15,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.happyshop.UserUtility;
+import com.happyshop.article.media.ArticleMediaService;
 import com.happyshop.article.topic.ArticleTopicService;
+import com.happyshop.common.entity.User;
 import com.happyshop.common.entity.article.Article;
+import com.happyshop.common.entity.article.ArticleMedia;
 import com.happyshop.common.entity.article.ArticleTopic;
-import com.happyshop.question.QuestionService;
+import com.happyshop.common.entity.article.ArticleType;
 
 @Controller
 @RequestMapping("/article")
@@ -26,6 +35,10 @@ public class ArticleController {
     ArticleTopicService articleTopicService;
     @Autowired
     ArticleService articleService;
+    @Autowired
+    ArticleMediaService articleMediaService;
+    @Autowired
+    UserUtility userUtilit;
     
     @GetMapping("/topic/{topicId}")
     public String viewArticlesFirstPage(@PathVariable("topicId") Integer topicId) {
@@ -81,11 +94,81 @@ public class ArticleController {
         model.addAttribute("keyWord", keyWord);
         model.addAttribute("moduleURL", "/article/topic/" + topicId);
         model.addAttribute("moduleURL", "/article/topic/" + topicId);
-        model.addAttribute("topicName", topic.getName());
+        model.addAttribute("topic", topic);
         
 
         return "article/listArticle";
     }
     
-   
+    @GetMapping("/new")
+    public String viewArticleForm(Article article, Model model,
+            @RequestParam(name ="topicId", required = false) Integer topicId, 
+            HttpServletRequest request) {
+        User user = userUtilit.getAuthenticationUser(request);
+        List<ArticleTopic> listTopic = articleTopicService.findAll();
+        
+        if(topicId != null) {
+            ArticleTopic topic = articleTopicService.findById(topicId).get();
+            model.addAttribute("topicName", topic.getName());            
+            model.addAttribute("topicId", topic.getId());            
+        }else {
+            
+            model.addAttribute("listTopic", listTopic);
+        }
+        
+        model.addAttribute("article", article);
+        model.addAttribute("authorName", user.getFullName());
+        model.addAttribute("titlePage", "Create new article");
+        return "article/article-form";
+    }
+    
+   @PostMapping("/save")
+   public String saveArticle(Article article,
+           @RequestParam(name ="topicId") Integer topicId,
+           @RequestParam(name = "videoUrl", required = false) String[] videoUrls, 
+           @RequestParam(name = "imageName", required = false) String[] imageNames, 
+           @RequestParam(name = "imageDes", required = false) String[] imageDescriptions,            
+           HttpServletRequest request) {
+       ArticleTopic topic = articleTopicService.findById(topicId).get();
+       User user = userUtilit.getAuthenticationUser(request);
+       article.setAuthor(user);       
+       article.setCreatedTime(new Date());
+       
+       article.setType(ArticleType.FREE);
+       article.setTopic(topic);
+       
+       articleService.save(article);
+       List<ArticleMedia> media = article.getMedia();
+       
+       if(imageNames != null) {
+           for (int i = 0; i < imageNames.length; i++) {
+               ArticleMedia image = new ArticleMedia();
+               image.setCreatedTime(new Date());
+               image.setName(imageNames[i]);
+               if(imageDescriptions.length > 0 && imageDescriptions[i] != null) {
+                   image.setDescription(imageDescriptions[i]);                                    
+               }
+               image.setArticle(article);
+               
+               articleMediaService.save(image);
+               media.add(image);
+           }          
+       }
+       
+       if(videoUrls != null) {
+           for (String videoUrl : videoUrls) {
+               ArticleMedia video = new ArticleMedia();
+               video.setCreatedTime(new Date());
+               video.setName(videoUrl);
+               video.setArticle(article);
+               
+               articleMediaService.save(video);
+               media.add(video);
+           }          
+       }
+              
+       articleService.save(article);
+       return "redirect:/";             
+   }
 }
+

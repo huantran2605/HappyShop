@@ -11,11 +11,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
-import com.happyshop.article.image.ArticleImageRepository;
+import com.happyshop.article.media.ArticleMediaRepository;
 import com.happyshop.article.topic.ArticleTopicRepository;
 import com.happyshop.common.entity.User;
 import com.happyshop.common.entity.article.Article;
-import com.happyshop.common.entity.article.ArticleImage;
+import com.happyshop.common.entity.article.ArticleMedia;
 import com.happyshop.common.entity.article.ArticleTopic;
 import com.happyshop.common.entity.article.ArticleType;
 
@@ -26,7 +26,7 @@ public class ArticleRepositoryTest {
     @Autowired
     private ArticleRepository articleRepo;
     @Autowired
-    private ArticleImageRepository articleImageRepo;
+    private ArticleMediaRepository articleImageRepo;
     @Autowired
     private ArticleTopicRepository articleTopicRepo;
     
@@ -40,7 +40,7 @@ public class ArticleRepositoryTest {
     
     @Test
     public  void testCreateArticleImage() {
-        ArticleImage aI = new ArticleImage("https://cdn2.cellphones.com.vn/358x358,webp,q100/media/"
+        ArticleMedia aI = new ArticleMedia("https://cdn2.cellphones.com.vn/358x358,webp,q100/media/"
                 + "catalog/product/s/m/sm-s908_galaxys22ultra_front_burgundy_211119_2.jpg",
                 "description1", new Date(), new Article(4));
         articleImageRepo.save(aI);

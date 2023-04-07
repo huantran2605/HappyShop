@@ -33,9 +33,10 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
+    
     @Column(nullable = false, length = 200)
     private String title;
-    
+        
     @Column(nullable = false)
     private String content;
     
@@ -54,11 +55,8 @@ public class Article {
     private User author;
     
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)    
-    private List<ArticleImage> images = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)    
-    private List<ArticleVideo> videos = new ArrayList<>();
-    
+    private List<ArticleMedia> media = new ArrayList<>();
+        
     @Column
     private int likes;
         

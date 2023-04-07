@@ -10,4 +10,6 @@ public interface ArticleService {
     int SIZE_PAGE_ARTICLE = 10;
     
     Page<Article> findByTopic(ArticleTopic topic, String keyWord, Pageable pageable);
+    
+    <S extends Article> S save(S entity);
 }
