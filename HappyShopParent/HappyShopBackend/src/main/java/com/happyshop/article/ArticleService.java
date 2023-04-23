@@ -1,5 +1,7 @@
 package com.happyshop.article;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,4 +14,10 @@ public interface ArticleService {
     Page<Article> findByTopic(ArticleTopic topic, String keyWord, Pageable pageable);
     
     <S extends Article> S save(S entity);
+    
+    Optional<Article> findById(Integer id);
+    
+    int updatePublishedById(boolean published, Integer id);
+    
+    void deleteById(Integer id);
 }

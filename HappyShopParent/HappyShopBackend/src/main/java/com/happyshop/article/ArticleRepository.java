@@ -1,8 +1,11 @@
 package com.happyshop.article;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +20,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     public Page<Article> findByTopic(ArticleTopic topic, String keyWord, Pageable pageable);
     
     public Page<Article> findByTopic(ArticleTopic topic, Pageable pageable);
+    
+    @Modifying
+    @Transactional
+    @Query("UPDATE Article a SET a.published = ?1 WHERE a.id = ?2")
+    int updatePublishedById(boolean published, Integer id);
     
 }

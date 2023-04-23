@@ -3,7 +3,12 @@
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 	<head th:replace="fragments :: page_head(${titlePage}, 'tag')"></head>
-	 <script src="https://cdn.tiny.cloud/1/ertzsca1soj7gvp7siyeqwl94wacj1wxgv8bsze48k510ja1/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+	 <script th:src="@{/tinymce/tinymce.min.js}" referrerpolicy="origin"></script>
+	<style>
+	  .delete-icon {
+	    cursor: pointer;
+	  }
+	</style>
 </head>
 <body>
 	<div class="container-fluid">
@@ -11,13 +16,81 @@
 		<div th:replace="navigation :: nav"></div>
 		
 		<h2 class="text-center">Manage Articles | <span>[[${titlePage}]]</span></h2>
-
-		<form th:action="@{/article/save}" method="post" th:object="${article}" id="form">
 		
+		<button class="btn btn-dark" type="button"
+			data-bs-toggle="collapse" data-bs-target="#form-upload-media"
+			aria-expanded="false" aria-controls="form-upload-media">
+			Upload Images & Videos</button>
+
+		<form id="form-upload-media" class="collapse" >
+			<input type="hidden" name="articleId" th:value="${article.id}"/>
+			<p>Upload images/videos to server and get their url. Use that url to add images/videos to content.</p>
 			<div class="row mb-3" th:if="${listTopic != null}">
 				<div class="col-sm-1">Topic:</div>
 				<div class="col-sm-3">
-					<select class="form-control" name="topicId">
+					<select class="form-control" name="topicId" required="required"> 
+						<option value="">-- Please select --</option>
+						<th:block th:each="topic : ${listTopic}">
+							<option th:value="${topic.id}">[[${topic.name}]]</option>
+						</th:block>
+					</select>
+				</div>
+			</div>
+			<div>
+				Images:<input type="file" id="image-input" accept="image/png, image/jpeg, image/gif, image/jpg" 
+				name="imageFile"  />
+			</div>
+			<div id="image-preview" class="row row-cols-auto mt-5" >		
+					
+			</div>
+			<div class="mt-2">
+				Videos:<input type="file" id="video-input" accept="video/mp4" name="videoFile" />
+			</div>
+			<div id="video-preview" class="row row-cols-auto mt-5">
+			</div>
+			<button class="btn btn-primary" type="submit">Upload</button>
+			<hr />
+			<div id="media-uploaded">
+				<p class="text-bg-success d-inline-block p-1">Media Uploaded </p>
+				<div id="image-uploaded" class="row row-cols-auto mt-2">
+					<th:block th:each="media : ${media}">
+						<div th:unless="${#strings.endsWith(media.getMediaPath, '.mp4')}"
+							class="image-container col m-2 position-relative">
+							<img th:src="@{${media.getMediaPath}}" alt="" style="height: auto; width: 150px;" />
+							<i class="position-absolute delete-icon fa-sharp fa-solid fa-x"></i>
+							<div class="text-center copy-link" style="cursor: pointer;">
+								<i class="fa-sharp fa-solid fa-copy" title="Copy link"></i> <span
+									th:link="${media.getMediaPath}">Copy link</span>
+							</div>
+						</div>
+					</th:block>
+				</div>
+				<div id="video-uploaded" class="row row-cols-auto mt-3">
+					<th:block th:each="media : ${media}">
+						<div th:if="${#strings.endsWith(media.getMediaPath, '.mp4')}"
+							class="video-container col m-2 position-relative">
+							<video th:src = "${media.getMediaPath}" id="video-player" style="height: auto; width: 350px;" controls></video>
+					    	<i class="position-absolute delete-icon fa-sharp fa-solid fa-x"></i> 
+							<div class="text-center copy-link" style="cursor: pointer;">
+								<i class="fa-sharp fa-solid fa-copy" title="Copy link"></i> <span
+									th:link="${media.getMediaPath}">Copy link</span>
+							</div>
+						</div>
+					</th:block>
+				</div>
+			</div>	
+					
+			<hr />
+
+		</form>
+
+		<form th:action="@{/article/save}" method="post" th:object="${article}" id="mainForm" class="mt-3">
+			<input type="hidden" th:field="*{id}" />
+			<div class="row mb-3" th:if="${listTopic != null}">
+				<div class="col-sm-1">Topic:</div>
+				<div class="col-sm-3">
+					<select class="form-control" name="topicId" required="required">
+						<option value="">-- Please select --</option>
 						<th:block th:each="topic : ${listTopic}">
 							<option th:value="${topic.id}">[[${topic.name}]]</option>
 						</th:block>
@@ -34,12 +107,12 @@
 			<div class="row mb-3">
 				<div class="col-sm-1">Title:</div>
 				<div class="col-sm-6">
-					<textarea class="form-control" th:field="*{title}"></textarea>
+					<textarea class="form-control" required="required" th:field="*{title}" maxlength="200"></textarea>
 				</div>
 			</div>
-
+			
 			<p class="mb-2">Content:</p>
-			<textarea id="content" th:field="*{content}"></textarea>
+			<textarea id="content" required="required" th:field="*{content}" maxlength="10000"></textarea>
 
 			<div class="mb-3 mt-3 d-flex justify-content-start">
 				<p class="me-5">Published:</p>
@@ -48,61 +121,40 @@
 
 			</div>
 
-			<p class="mt-2">Author: [[${authorName}]]</p>
+			<p class="mt-2" >Author: [[${authorName}]]</p>
 			<div class="text-center">
-				<button type="submit" class="btn btn-primary">Save</button>
+				<button type="submit" th:if="${titlePage == 'Create new article'}" class="btn btn-primary">Save</button>
+				<button type="submit" th:unless="${titlePage == 'Create new article'}" class="btn btn-primary">Update</button>
 			</div>
 		</form>
 
-
-
-
+		<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog"  
+			data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<div class="spinner-border text-primary" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<h5 class="mt-2">Uploading...</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+				
 		<!-- footer -->
 		<div th:replace="fragments :: footer"></div>
+		<div th:replace="modal_fragments :: confirmationModal"></div>
+		
 	</div>
 	
 	<script>
-		$(document).ready(function() {	
-			tinymce.init({
-			      selector: '#content',
-			      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
-			      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-			      tinycomments_mode: 'embedded',
-			      tinycomments_author: 'Author name',
-			      mergetags_list: [
-			        { value: 'First.Name', title: 'First Name' },
-			        { value: 'Email', title: 'Email' },
-			      ]
-			    });
-			
-			$("#form").submit(function(e){
-				var htmlString = $('#content').val();
-				$(htmlString).find('img').each(function() {
-					  	imgSrc = $(this).attr('src');
-						imageName = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);	
-						imageDes = $(this).attr('alt');
-					  htmlInput= `
-					  	<input type="hidden" name="imageName" value= "${imageName}" />
-					  	<input type="hidden" name="imageDes" value= "${imageDes}" />
-					  `;
-					  $('#form').append(htmlInput);
-				});
-				
-				$(htmlString).find('iframe').each(function() {
-					videoUrl = $(this).attr('src');
-					htmlInput= `
-					  	<input type="hidden" name="videoUrl" value= "${videoUrl}" />
-					  `;
-					  $('#form').append(htmlInput);
-					
-				});
+	contextPath = "[[@{/}]]";
+	csrfHeaderName = "[[${_csrf.headerName}]]";
+	csrfValue = "[[${_csrf.token}]]";
 		
-			})
-		
-		});
 	</script>
-	
-	
+	<script th:src="@{/js/article_form.js}"></script>
 	<!-- Bootstrap JavaScript Libraries -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

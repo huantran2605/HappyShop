@@ -3,6 +3,7 @@ package com.happyshop.article;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,15 @@ public class ArticleRepositoryTest {
        System.out.println(a.getTitle() + " " + a.getContent() + a.getAuthor().getFullName());
     }
     
+    @Test
+    public void testArticleMedia() {
+        Article article = articleRepo.findById(60).get();
+        List<ArticleMedia> listMedia = article.getMedia();
+        for (ArticleMedia articleMedia : listMedia) {
+            System.out.println(articleMedia.getName());
+        }
+        assertThat(listMedia.size()).isGreaterThan(0);
+    }
     
     
 }

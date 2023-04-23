@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<head th:replace="fragments :: page_head('articles','none')">
 <body>
 	<div th:fragment="content" class="container-fluid mt-2">
 		<h3 class="text-center">[[${topic.name}]]</h3>
-		
+				
 		<!-- search-->
 		<th:block th:if="${elementsCurrentPerPage > 0}">			
 			<div class="row">
@@ -59,23 +59,27 @@
 						<td th:text="${article.author.getFullName}"></td>
 						<td th:text="${article.createdTime}"></td>
 						<td>
-							<div
-								th:replace="fragments :: status_enable(${article.id}, ${article.published})">
-							</div>
+							<a th:href="@{'/article/published/' + ${article.id} + '?topicId=' + ${topic.id}}"
+								title="published"> <i th:if="${article.published == true}"
+								class="fa-solid fa-circle-check"></i> <i
+								th:if="${article.published == false}"
+								class="fa-solid fa-circle fa-gray"></i>
+							</a>
 						</td>
 						<td>
 							<div class="float-start">
 								<a th:href="@{'/article/detail/' + ${article.id}}"
-									title="Detail article" class="me-3 link-detail"> <i
+									title="article detail" class="me-3 article-detail-link"> <i
 									class="fa-sharp fa-solid fa-circle-info"></i>
 								</a> 
-								<a th:href="@{'/article/delete/' + ${article.id}}"
-									class="deletearticle me-3" th:name="${article.title}"
+								<a th:href="@{'/article/delete/' + ${article.id} + '?topicId=' +${topic.id}}"
+									class="delete-article-link me-3" th:name="${article.title}"
 									title="Delete"> <i class="fa-solid fa-trash fa-red"></i>
 								</a>
 							</div>
-							<div th:replace="fragments :: update(${article.id})">
-							</div>
+							<a th:href="@{'/article/update/' + ${article.id} + '?topicId=' + ${topic.id}}" id="update"
+								title="Update"> <i class="fa-solid fa-pen-to-square fa-red"></i>
+							</a>
 						</td>
 
 					</tr>
@@ -89,15 +93,44 @@
 				
 			</div>
 		</div>
+			
 		
-		
-		
+		<div th:replace="modal_fragments :: detailModal('articleDetailModal')"></div>
 		<div th:replace="fragments :: countElement('Article')"></div>
 		<div th:replace="fragments :: pagination"></div>
+		<div th:replace="modal_fragments :: confirmationModal"></div>
 		
+		<script>
+			moduleUrl = "[[@{/}]]";
+			$(document).ready(
+					function() {
+						$(".article-detail-link").on("click",function(e) {
+							e.preventDefault();
+							linkDetailUrl = $(this).attr("href");
+							$("#articleDetailModal").modal("show").find(".modal-content").load(linkDetailUrl);
+							
+						});
+						
+						$(".delete-article-link").click(
+							function(e) {
+								e.preventDefault();
+								confirmToDelete("article", this);
+						});
+				}); 
+		
+		</script>
+		<script th:src="@{/js/common_form.js}"></script>
 		
 	</div>
 	
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+		integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+		crossorigin="anonymous"></script>
 
 
 </body>

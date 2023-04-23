@@ -24,16 +24,12 @@ public class Media {
     @Column(nullable = false)
     protected String name;
     
-    @Column(length = 200)
-    protected String description;
-    
     @Column(nullable = false, name = "created_time")
     protected Date createdTime;
 
     public Media(String name, String description, Date createdTime) {
         super();
         this.name = name;
-        this.description = description;
         this.createdTime = createdTime;
     }
     

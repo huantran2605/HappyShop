@@ -1,5 +1,7 @@
 package com.happyshop.article;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,19 @@ public class ArticleServiceImpl implements ArticleService{
     public <S extends Article> S save(S entity) {
         return repo.save(entity);
     }
+
+    public Optional<Article> findById(Integer id) {
+        return repo.findById(id);
+    }
+
+    public int updatePublishedById(boolean published, Integer id) {
+        return repo.updatePublishedById(published, id);
+    }
+
+    public void deleteById(Integer id) {
+        repo.deleteById(id);
+    }
+    
     
     
     
